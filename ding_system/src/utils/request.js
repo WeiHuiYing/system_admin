@@ -41,7 +41,7 @@ const errorHandler = error => {
       url
     } = response;
     notification.error({
-      message: `请求错误 ${status}: ${url}`,
+      message: `请求错误`,
       description: errorText,
     });
   } else if (!response) {

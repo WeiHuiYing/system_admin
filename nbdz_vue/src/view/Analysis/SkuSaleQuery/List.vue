@@ -81,6 +81,9 @@
         <FormItem prop="sku" label="SKU">
           <Input style="width:200px" v-model="filters.sku" placeholder="请输入搜索的sku"></Input>
         </FormItem>
+        <FormItem prop="ProductCategory" label="商品类型">
+          <Input style="width:200px" v-model="filters.ProductCategory" placeholder="请输入搜索的商品类型"></Input>
+        </FormItem>
         <FormItem prop="refNo" label="参考单号">
           <Input style="width:200px" v-model="filters.refNo" placeholder="请输入搜索的参考单号"></Input>
         </FormItem>
@@ -158,7 +161,8 @@ export default {
         startTime: "",
         endTime: "",
         sku: "",
-        plateform: ""
+        plateform: "",
+        ProductCategory: ""
       },
       listData: [],
       listColumns: [
@@ -261,6 +265,18 @@ export default {
         };
         filterQuery.push(skuObj);
       }
+      if (
+        _this.filters.ProductCategory &&
+        _this.filters.ProductCategory != ""
+      ) {
+        let ProductCategoryObj = {
+          key: "ProductCategory",
+          binaryop: "eq",
+          value: _this.filters.ProductCategory,
+          andorop: "and"
+        };
+        filterQuery.push(ProductCategoryObj);
+      }
       if (_this.filters.refNo && _this.filters.refNo != "") {
         let refNoObj = {
           key: "refNo",
@@ -273,7 +289,6 @@ export default {
       if (filterCreate.length > 0) {
         filterQuery = filterQuery.concat(filterCreate);
       }
-      console.log(filterQuery);
       return filterQuery;
     },
     filtersDate(keyString, startTime, endTime) {

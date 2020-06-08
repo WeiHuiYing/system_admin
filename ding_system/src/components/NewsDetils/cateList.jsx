@@ -51,7 +51,6 @@ class cateList extends React.Component {
   handleCancel() {}
   render() {
     const { modalVisible, onCancel, onSubmit, typeList, classfiyId } = this.props;
-    console.log(this.props);
     const { editCate, cateVisible } = this.state;
     return (
       <Modal width={700} title="分类列表" visible={modalVisible} onCancel={onCancel} footer={null}>

@@ -8,13 +8,13 @@ export async function GetTypes(params) {
 }
 // 获取新闻列表
 export async function GetNews(params) {
-  if (params.id) {
-    return request(`/api/DingTalkNews/GetNews?id=` + params.id, {
+  if (params.classfiyid) {
+    return request(`/api/DingTalkNews/GetNews?classifyid=` + params.classfiyid + '&classId=' + params.id, {
       method: 'POST',
       data: params.data,
     });
   } else {
-    return request(`/api/DingTalkNews/GetNews`, {
+    return request(`/api/DingTalkNews/GetNews?classId=` + params.id, {
       method: 'POST',
       data: params.data,
     });

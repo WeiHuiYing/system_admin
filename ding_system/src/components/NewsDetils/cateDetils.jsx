@@ -26,7 +26,6 @@ class cateDetils extends React.Component {
   }
   render() {
     const { modalVisible, onCancel, onSubmit, classfiyId } = this.props;
-    console.log(this.props);
     return (
       <Modal
         title="分类详情"

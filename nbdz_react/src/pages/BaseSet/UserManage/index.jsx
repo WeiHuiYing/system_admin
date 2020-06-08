@@ -5,13 +5,13 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { formatMessage } from 'umi-plugin-react/locale';
 import UserDetils from './components/detilsForm';
 
-import { DeptGetList } from '@/services/baseSet';
+import { DeptGetList, RoleGetPage } from '@/services/baseSet';
 
 @connect(({ userManage, loading }) => ({
   userManage,
   loading: loading.models.userManage,
 }))
-class TaskList extends React.Component {
+class UserList extends React.Component {
   state = {
     pageCurrent: 1,
     pageSize: 100,
@@ -21,6 +21,7 @@ class TaskList extends React.Component {
     isAdd: false,
     deptList: [],
     deptTreeData: [],
+    roleList: [],
   };
   TableColumns = [
     {
@@ -80,7 +81,14 @@ class TaskList extends React.Component {
             >
               编辑
             </Button>
-            <Button type="primary" size="small" danger>
+            <Button
+              onClick={() => {
+                console.log(text);
+              }}
+              type="primary"
+              size="small"
+              danger
+            >
               删除
             </Button>
           </Space>
@@ -91,6 +99,7 @@ class TaskList extends React.Component {
   componentDidMount() {
     this.loadData();
     this.deptLoad();
+    this.roleLoad();
   }
   loadData() {
     const { dispatch } = this.props;
@@ -140,9 +149,8 @@ class TaskList extends React.Component {
     let deptItem = {};
     this.state.deptList.forEach(item => {
       deptItem = {
-        key: item.id,
         title: item.deptName,
-        value: item.deptCode,
+        value: item.id,
         children: this.deptChlid(item.childrenDept),
       };
       deptTree.push(deptItem);
@@ -151,15 +159,15 @@ class TaskList extends React.Component {
       deptTreeData: deptTree,
     });
   };
+  // 加载部门下的子部门
   deptChlid = data => {
     let deptItem = {};
     let deptTree = [];
     if (data.length > 0) {
       data.forEach(item => {
         deptItem = {
-          key: item.id,
           title: item.deptName,
-          value: item.deptCode,
+          value: item.id,
           children: this.deptChlid(item.childrenDept),
         };
         deptTree.push(deptItem);
@@ -167,6 +175,20 @@ class TaskList extends React.Component {
     }
     return deptTree;
   };
+  roleLoad = async () => {
+    const _this = this;
+    try {
+      const success = await RoleGetPage({
+        pageSize: 1000,
+      });
+      if (success.code == 200) {
+        this.setState({
+          roleList: success.data,
+        });
+      }
+    } catch (error) {}
+  };
+  // 搜索
   handleSearch = values => {
     let filterData = {};
     if (values.userName) {
@@ -183,6 +205,7 @@ class TaskList extends React.Component {
   };
   sizeChange() {}
   changePage() {}
+  // 搜索的dom
   renderSearchForm() {
     return (
       <div className="layout-header-form">
@@ -230,7 +253,15 @@ class TaskList extends React.Component {
       userManage: { userListData, userPage },
       loading,
     } = this.props;
-    let { pageCurrent, pageSize, userVisible, editForm, isAdd } = this.state;
+    let {
+      pageCurrent,
+      pageSize,
+      userVisible,
+      editForm,
+      isAdd,
+      deptTreeData,
+      roleList,
+    } = this.state;
     return (
       <PageHeaderWrapper>
         {this.renderSearchForm()}
@@ -266,10 +297,12 @@ class TaskList extends React.Component {
           isAdd={isAdd}
           editForm={editForm}
           modalVisible={userVisible}
+          deptDataTree={deptTreeData}
+          roleList={roleList}
         ></UserDetils>
       </PageHeaderWrapper>
     );
   }
 }
 
-export default TaskList;
+export default UserList;

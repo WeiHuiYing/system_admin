@@ -52,7 +52,7 @@ class NewsList extends React.Component {
   }
   loadData() {
     const { dispatch } = this.props;
-    const { pageCurrent, pageSize, filters, cateCurrent, statusCurrent } = this.state;
+    const { pageCurrent, pageSize, filters, cateCurrent, statusCurrent, classfiyId } = this.state;
     let filtersQuery = [];
     if (filters.author && filters.author != '') {
       filtersQuery.push({
@@ -77,7 +77,8 @@ class NewsList extends React.Component {
         pageSize: pageSize,
         query: filtersQuery,
       },
-      id: cateCurrent,
+      classfiyid: cateCurrent,
+      id: classfiyId,
     };
     dispatch({
       type: 'NewsModel/newsList',
@@ -221,30 +222,13 @@ class NewsList extends React.Component {
                 this.handleAdd();
               }}
             >
-              创建
+              添加新闻
             </Button>
           </Col>
         </Row>
         <Row className="layout-header-row">
           <Col span={1}>状态：</Col>
           <Col span={23}>
-            <Tag
-              onClick={() => {
-                if (statusCurrent != '') {
-                  this.setState(
-                    {
-                      statusCurrent: '',
-                    },
-                    () => {
-                      this.loadData();
-                    },
-                  );
-                }
-              }}
-              color={statusCurrent == '' ? '#1890ff' : ''}
-            >
-              全部
-            </Tag>
             <Tag
               onClick={() => {
                 if (statusCurrent != '1') {
@@ -278,23 +262,6 @@ class NewsList extends React.Component {
               color={statusCurrent == '0' ? '#1890ff' : ''}
             >
               未发布
-            </Tag>
-            <Tag
-              onClick={() => {
-                if (statusCurrent != '2') {
-                  this.setState(
-                    {
-                      statusCurrent: '2',
-                    },
-                    () => {
-                      this.loadData();
-                    },
-                  );
-                }
-              }}
-              color={statusCurrent == '2' ? '#1890ff' : ''}
-            >
-              已删除
             </Tag>
           </Col>
         </Row>

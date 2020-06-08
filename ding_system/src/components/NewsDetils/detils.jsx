@@ -69,7 +69,6 @@ class Detils extends React.Component {
     return isJpgOrPng && isLt2M;
   };
   saveCommit = status => {
-    console.log(this.props.isAdd);
     if (this.props.isAdd) {
       this.handleAddData(status);
     } else {
@@ -114,6 +113,7 @@ class Detils extends React.Component {
     } catch (error) {}
   };
   handleAddData = async status => {
+    const { onSubmit } = this.props;
     try {
       if (this.state.dingClassify && this.state.dingClassify.id) {
         let editData = {
@@ -131,18 +131,18 @@ class Detils extends React.Component {
         const success = await addNews(editData);
         if (success.code == 200) {
           message.success('操作成功');
-          if (status == 1) {
-            this.setState(
-              {
-                id: success.data.id,
-              },
-              () => {
+          this.setState(
+            {
+              id: success.data.id,
+            },
+            () => {
+              if (status == 1) {
                 this.handleUpdateData(status);
-              },
-            );
-          } else {
-            onSubmit();
-          }
+              } else {
+                onSubmit();
+              }
+            },
+          );
         } else {
           notification.error({
             message: `请求错误`,
@@ -194,7 +194,7 @@ class Detils extends React.Component {
             >
               关闭
             </Button>
-            {this.state.status && this.state.status == 1 ? (
+            {this.state.status && this.state.status === 1 ? (
               ''
             ) : (
               <Button
@@ -207,14 +207,18 @@ class Detils extends React.Component {
                 保存
               </Button>
             )}
-            <Button
-              onClick={() => {
-                this.saveCommit(1);
-              }}
-              type="primary"
-            >
-              发布
-            </Button>
+            {this.state.status === 0 ? (
+              <Button
+                onClick={() => {
+                  this.saveCommit(1);
+                }}
+                type="primary"
+              >
+                发布
+              </Button>
+            ) : (
+              ''
+            )}
           </div>
         }
       >
