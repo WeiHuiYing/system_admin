@@ -56,18 +56,63 @@ class Detils extends React.Component {
       htmlContent: content.html,
     });
   };
-  // 图片大小限制
-  beforeUpload = file => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    if (!isJpgOrPng) {
-      message.error('You can only upload JPG/PNG file!');
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      message.error('Image must smaller than 2MB!');
-    }
-    return isJpgOrPng && isLt2M;
+  // 图片类型判断与压缩
+  canvasCompress = file => {
+    let _this = this;
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader(),
+        img = new Image();
+      reader.readAsDataURL(file);
+      // 文件base64格式化
+      reader.onload = function() {
+        img.src = this.result;
+      };
+      // canvas对象 缩放图片需要用到
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      img.onload = function() {
+        // 原始尺寸
+        const originWidth = this.width,
+          originHeight = this.height;
+        // 限定的最大尺寸
+        const maxWidth = 400,
+          maxHeight = 400;
+        // 目标尺寸
+        let targetWidth = originWidth,
+          targetHeight = originHeight;
+        // 图片尺寸超过400x400的限制
+        if (originWidth > maxWidth || originHeight > maxHeight) {
+          if (originWidth / originHeight > maxWidth / maxHeight) {
+            targetWidth = maxWidth;
+            targetHeight = Math.round(maxWidth * (originHeight / originWidth));
+          } else {
+            targetHeight = maxHeight;
+            targetWidth = Math.round(maxHeight * (originWidth / originHeight));
+          }
+        }
+        // 设置最终尺寸
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        // 清除画布
+        context.clearRect(0, 0, targetWidth, targetHeight);
+        // 图片压缩
+        context.drawImage(img, 0, 0, targetWidth, targetHeight);
+        const imgurl = canvas.toDataURL('image/png');
+        resolve(_this.canvastoFile(imgurl, file.name));
+      };
+    });
   };
+  canvastoFile(url, fileName) {
+    var arr = url.split(','),
+      fileType = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], fileName, { type: fileType });
+  }
   saveCommit = status => {
     if (this.props.isAdd) {
       this.handleAddData(status);
@@ -158,19 +203,30 @@ class Detils extends React.Component {
       }
     } catch (error) {}
   };
-  // 图片上传
   handleImageUpload = async file => {
-    const formData = new FormData();
-    formData.append('picName', file);
-    let _this = this;
-    try {
-      if (_this.beforeUpload(file)) {
+    if (file.type === 'image/jpeg' || file.type === 'image/png') {
+      const formData = new FormData();
+      const fileData = await this.canvasCompress(file);
+      formData.append('picName', fileData, 'image.png');
+      try {
         const success = await picUpload(formData);
         return 'http://8000.bitcoding.top:8888' + success.data.url;
-      }
-    } catch (error) {}
+      } catch (error) {}
+    } else {
+      message.error('请上传img/png图片文件');
+    }
   };
-
+  beforeUpload = file => {
+    const isImg = file.type === 'image/jpeg' || file.type === 'image/png';
+    const imgSize = file.size < 1024 * 1024 * 2;
+    if (!isImg) {
+      message.error('请上传img/png图片文件');
+    }
+    if (!imgSize) {
+      message.error('图片文件大于2M');
+    }
+    return isImg && imgSize;
+  };
   render() {
     const { modalVisible, onCancel } = this.props;
     return (

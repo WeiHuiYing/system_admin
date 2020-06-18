@@ -13,3 +13,10 @@ export async function Get(params) {
     data: params,
   });
 }
+
+// 获取财务汇总报表  商品类型列表
+export async function GetProductCategoryList() {
+  return request('/api/TotalSale/GetProductCategoryList', {
+    method: 'POST',
+  });
+}

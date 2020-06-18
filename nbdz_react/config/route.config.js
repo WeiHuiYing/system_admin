@@ -62,16 +62,42 @@ export default [{
             ],
           },
           {
-            path: '/SalesAnalysis',
-            name: 'SalesAnalysis',
+            path: '/AnalysisSale',
+            name: 'AnalysisSale',
             icon: 'table',
-            component: './SalesAnalysis',
-          },
-          {
-            path: '/NewsList',
-            name: 'NewsList',
-            icon: 'table',
-            component: './NewsList',
+            routes: [{
+              path: '/AnalysisSale/SaleAnalysis',
+              name: 'SaleAnalysis',
+              component: './AnalysisSale/SaleAnalysis',
+            }, {
+              path: '/AnalysisSale/SaleTotal',
+              name: 'SaleTotal',
+              component: './AnalysisSale/SaleTotal',
+            }, {
+              path: '/AnalysisSale/WeavingBlock',
+              name: 'WeavingBlock',
+              component: './AnalysisSale/WeavingBlock',
+            }, {
+              path: '/AnalysisSale/GetDensity',
+              name: 'GetDensity',
+              component: './AnalysisSale/GetDensity',
+            }, {
+              path: '/AnalysisSale/OrderRatio',
+              name: 'OrderRatio',
+              component: './AnalysisSale/OrderRatio',
+            }, {
+              path: '/AnalysisSale/ChannelLevelSalesCount',
+              name: 'ChannelLevelSalesCount',
+              component: './AnalysisSale/ChannelLevelSalesCount',
+            }, {
+              path: '/AnalysisSale/HairWeftStyleSale',
+              name: 'HairWeftStyleSale',
+              component: './AnalysisSale/HairWeftStyleSale',
+            }, {
+              path: '/AnalysisSale/ProductImage',
+              name: 'ProductImage',
+              component: './AnalysisSale/ProductImage',
+            }, ],
           },
           {
             path: '/Flow',

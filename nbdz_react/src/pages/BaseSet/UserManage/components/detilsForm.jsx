@@ -49,6 +49,7 @@ class userDetils extends React.Component {
     const _this = this;
     try {
       const success = await UserEdit(values);
+      console.log(success);
     } catch (error) {}
   };
   render() {

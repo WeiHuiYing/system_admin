@@ -6,4 +6,9 @@ export default {
   'sale.field.sevenDaysSales': 'sevenDaysSales',
   'sale.field.forteenDaysSales': 'fourteenDaysSales',
   'sale.field.thirtyDaysSales': 'thirtyDaysSales',
+  'sale.field.filterTime': "Date",
+  'sale.field.productCategory': "productCategory",
+  'sale.field.saleQty': "saleQty",
+  'sale.field.startTime': "startTime",
+  'sale.field.endTime': "endTime"
 };

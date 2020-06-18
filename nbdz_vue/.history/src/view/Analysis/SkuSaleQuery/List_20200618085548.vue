@@ -5,10 +5,10 @@
         <Col :span="23">
           <Form ref="formInline" label-position="right" :label-width="85" inline>
             <FormItem prop="sku" label="SKU">
-              <Input clearable style="width:200px" v-model="filters.sku" placeholder="请输入搜索的sku"></Input>
+              <Input style="width:200px" v-model="filters.sku" placeholder="请输入搜索的sku"></Input>
             </FormItem>
             <FormItem prop="refNo" label="参考单号">
-              <Input clearable style="width:200px" v-model="filters.refNo" placeholder="请输入搜索的参考单号"></Input>
+              <Input style="width:200px" v-model="filters.refNo" placeholder="请输入搜索的参考单号"></Input>
             </FormItem>
             <FormItem prop="startTime" label="创建开始时间">
               <DatePicker
@@ -16,7 +16,6 @@
                 type="datetime"
                 placeholder="请选择开始时间"
                 style="width: 200px"
-                clearable
               ></DatePicker>
             </FormItem>
             <FormItem prop="endTime" label="创建结束时间">
@@ -25,7 +24,6 @@
                 type="datetime"
                 placeholder="请选择结束时间"
                 style="width: 200px"
-                clearable
               ></DatePicker>
             </FormItem>
             <FormItem>
@@ -81,21 +79,13 @@
     >
       <Form ref="formInline" label-position="right" :label-width="85" inline>
         <FormItem prop="sku" label="SKU">
-          <Input clearable style="width:200px" v-model="filters.sku" placeholder="请输入搜索的sku"></Input>
+          <Input style="width:200px" v-model="filters.sku" placeholder="请输入搜索的sku"></Input>
         </FormItem>
         <FormItem prop="ProductCategory" label="商品类型">
-          <Input
-            clearable
-            style="width:200px"
-            v-model="filters.ProductCategory"
-            placeholder="请输入搜索的商品类型"
-          ></Input>
-        </FormItem>
-        <FormItem prop="CountryCode" label="国家">
-          <Input clearable style="width:200px" v-model="filters.CountryCode" placeholder="请输入搜索的国家"></Input>
+          <Input style="width:200px" v-model="filters.ProductCategory" placeholder="请输入搜索的商品类型"></Input>
         </FormItem>
         <FormItem prop="refNo" label="参考单号">
-          <Input clearable style="width:200px" v-model="filters.refNo" placeholder="请输入搜索的参考单号"></Input>
+          <Input style="width:200px" v-model="filters.refNo" placeholder="请输入搜索的参考单号"></Input>
         </FormItem>
         <FormItem prop="startTime" label="创建开始时间">
           <DatePicker
@@ -103,7 +93,6 @@
             type="datetime"
             placeholder="请选择开始时间"
             style="width: 200px"
-            clearable
           ></DatePicker>
         </FormItem>
         <FormItem prop="endTime" label="创建结束时间">
@@ -112,7 +101,6 @@
             type="datetime"
             placeholder="请选择结束时间"
             style="width: 200px"
-            clearable
           ></DatePicker>
         </FormItem>
         <FormItem prop="plateform" label="平台">
@@ -174,22 +162,13 @@ export default {
         endTime: "",
         sku: "",
         plateform: "",
-        ProductCategory: "",
-        CountryCode: ""
+        ProductCategory: ""
       },
       listData: [],
       listColumns: [
         {
           title: "店铺",
           key: "storeName"
-        },
-        {
-          title: "国家",
-          key: "countryCode"
-        },
-        {
-          title: "商品类型",
-          key: "productCategory"
         },
         {
           title: "子sku",
@@ -298,16 +277,6 @@ export default {
         };
         filterQuery.push(ProductCategoryObj);
       }
-      if (_this.filters.CountryCode && _this.filters.CountryCode != "") {
-        let CountryCodeObj = {
-          key: "CountryCode",
-          binaryop: "eq",
-          value: _this.filters.CountryCode,
-          andorop: "and"
-        };
-        filterQuery.push(CountryCodeObj);
-      }
-
       if (_this.filters.refNo && _this.filters.refNo != "") {
         let refNoObj = {
           key: "refNo",

@@ -1,5 +1,5 @@
 import {
-  GetPage
+  SalesGetPage as GetPage
 } from '@/services/analysis';
 import {
   notification
@@ -19,15 +19,9 @@ const SalesModel = {
     }) {
       const response = yield call(GetPage, payload);
       if (response.code == 200) {
-        response.data.forEach((item, index) => {
-          item.key = index;
-        });
-        let pageData = {
-          total: response.count,
-        };
         let res = {
           data: response.data,
-          pageData: pageData,
+          pageData: response.count,
         };
         yield put({
           type: 'loadData',
