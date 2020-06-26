@@ -23,7 +23,12 @@
             ></DatePicker>
           </FormItem>
           <FormItem>
-            <Button style="margin-right:5px" @click="loadData()" class="search-btn" type="primary">
+            <Button
+              style="margin-right:5px"
+              @click="loadFilter()"
+              class="search-btn"
+              type="primary"
+            >
               <Icon type="search" />&nbsp;&nbsp;搜索
             </Button>
             <Button @click="filtersData()" class="search-btn" type="primary">
@@ -329,6 +334,12 @@ export default {
     filtersLoad() {
       let _this = this;
       _this.modelFilters = false;
+      _this.pageCurrent = 1;
+      _this.loadData();
+    },
+    loadFilter() {
+      const _this = this;
+      _this.pageCurrent = 1;
       _this.loadData();
     },
     loadShop() {

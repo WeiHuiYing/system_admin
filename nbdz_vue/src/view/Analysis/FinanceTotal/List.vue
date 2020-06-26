@@ -22,7 +22,7 @@
             </FormItem>
             <FormItem>
               <Button
-                @click="loadData()"
+                @click="loadFilter()"
                 style="margin-right:5px"
                 class="search-btn"
                 type="primary"
@@ -487,6 +487,13 @@ export default {
     filtersLoad() {
       let _this = this;
       _this.modelFilters = false;
+      _this.pageCurrent = 1;
+      _this.loadData();
+    },
+
+    loadFilter() {
+      const _this = this;
+      _this.pageCurrent = 1;
       _this.loadData();
     },
     // 切换tab

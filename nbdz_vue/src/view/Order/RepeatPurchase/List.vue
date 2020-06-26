@@ -30,7 +30,7 @@
               </Select>
             </FormItem>
             <FormItem>
-              <Button @click="loadData()" class="search-btn" type="primary">搜索</Button>
+              <Button @click="loadFilter()" class="search-btn" type="primary">搜索</Button>
             </FormItem>
           </Form>
         </Col>
@@ -227,6 +227,11 @@ export default {
     changePageSize(val) {
       let _this = this;
       _this.pageSize = val;
+      _this.loadData();
+    },
+    loadFilter() {
+      const _this = this;
+      _this.pageCurrent = 1;
       _this.loadData();
     },
     handleSuccess(response, file, fileList) {

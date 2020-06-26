@@ -23,7 +23,7 @@
           </Select>
         </FormItem>
         <FormItem>
-          <Button @click="loadData()" class="search-btn" type="primary">
+          <Button @click="loadFilter()" class="search-btn" type="primary">
             <Icon type="search" />&nbsp;&nbsp;搜索
           </Button>
         </FormItem>
@@ -185,6 +185,11 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    loadFilter() {
+      const _this = this;
+      _this.pageCurrent = 1;
+      _this.loadData();
     },
     changePage(val) {
       let _this = this;

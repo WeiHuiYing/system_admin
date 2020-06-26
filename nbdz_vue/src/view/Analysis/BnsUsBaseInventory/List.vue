@@ -17,7 +17,7 @@
               </Select>
             </FormItem>
             <FormItem>
-              <Button @click="loadData()" class="search-btn" type="primary">搜索</Button>
+              <Button @click="loadFilter()" class="search-btn" type="primary">搜索</Button>
             </FormItem>
           </Form>
         </Col>
@@ -134,6 +134,11 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    loadFilter() {
+      const _this = this;
+      _this.pageCurrent = 1;
+      _this.loadData();
     },
     loadWare() {
       let _this = this;

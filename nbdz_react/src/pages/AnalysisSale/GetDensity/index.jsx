@@ -5,11 +5,11 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { formatMessage } from 'umi-plugin-react/locale';
 import moment from 'moment';
 const { Column, ColumnGroup } = Table;
-@connect(({ weavingBlock, loading }) => ({
-  weavingBlock,
-  loading: loading.models.weavingBlock,
+@connect(({ GetDensity, loading }) => ({
+  GetDensity,
+  loading: loading.models.GetDensity,
 }))
-class weavingBlockAnalysis extends React.Component {
+class GetDensityAnalysis extends React.Component {
   state = {
     startTime: '',
     endTime: '',
@@ -20,7 +20,7 @@ class weavingBlockAnalysis extends React.Component {
     const { dispatch } = this.props;
     const { type, startTime, endTime } = this.state;
     dispatch({
-      type: 'weavingBlock/fetchList',
+      type: 'GetDensity/fetchList',
       payload: {
         startTime: startTime,
         endTime: endTime,
@@ -45,35 +45,48 @@ class weavingBlockAnalysis extends React.Component {
   renderSearchForm() {}
   render() {
     const {
-      weavingBlock: { listData },
+      GetDensity: { listData },
       loading,
     } = this.props;
     return (
       <PageHeaderWrapper>
         <Table loading={loading} dataSource={listData} pagination={false} rowKey="index">
-          <Column title="尺寸" dataIndex="size" key="size" />
+          <Column title="商品款式" dataIndex="style" key="style" />
           <Column title="总销量" dataIndex="total" key="total" />
-          <Column title="单尺寸销量" dataIndex="sizeTotal" key="sizeTotal" />
-          <Column title="尺寸总占比" dataIndex="sizeTotalRatio" key="sizeTotalRatio" />
-          <ColumnGroup title="速卖通">
-            <Column title="销量" dataIndex="aliSizeTotal" key="aliSizeTotal" />
-            <Column title="占比" dataIndex="aliSizeTotalRatio" key="aliSizeTotalRatio" />
+          <ColumnGroup title="13*4">
+            <Column title="130%销量" dataIndex="density134130Total" key="density134130Total" />
+            <Column title="150%销量" dataIndex="density134150Total" key="density134150Total" />
+            <Column title="180%销量" dataIndex="density134150Total" key="density134150Total" />
           </ColumnGroup>
-          <ColumnGroup title="亚马逊">
-            <Column title="销量" dataIndex="amazSizeTotal" key="amazSizeTotal" />
-            <Column title="占比" dataIndex="amazSizeTotalRatio" key="amazSizeTotalRatio" />
+          <ColumnGroup title="13*6">
+            <Column title="130%销量" dataIndex="density136130Total" key="density136130Total" />
+            <Column title="150%销量" dataIndex="density136150Total" key="density136150Total" />
+            <Column title="180%销量" dataIndex="density136180Total" key="density136180Total" />
+            <Column title="250%销量" dataIndex="density136250Total" key="density136250Total" />
           </ColumnGroup>
-          <ColumnGroup title="自营站">
-            <Column title="销量" dataIndex="magentoSizeTotal" key="magentoSizeTotal" />
-            <Column title="占比" dataIndex="magentoSizeTotalRatio" key="magentoSizeTotalRatio" />
+          <ColumnGroup title="360">
+            <Column title="130%销量" dataIndex="density360130Total" key="density360130Total" />
+            <Column title="150%销量" dataIndex="density360150Total" key="density360150Total" />
+            <Column title="180%销量" dataIndex="density360180Total" key="density360180Total" />
+            <Column title="250%销量" dataIndex="density360250Total" key="density360250Total" />
           </ColumnGroup>
-          <ColumnGroup title="SHOPIFY">
-            <Column title="销量" dataIndex="shopifySizeTotal" key="shopifySizeTotal" />
-            <Column title="占比" dataIndex="shopifySizeTotalRatio" key="shopifySizeTotalRatio" />
+          <ColumnGroup title="全手织">
+            <Column title="130%销量" dataIndex="densityHand130Total" key="densityHand130Total" />
+            <Column title="150%销量" dataIndex="densityHand150Total" key="densityHand150Total" />
+            <Column title="180%销量" dataIndex="densityHand180Total" key="densityHand180Total" />
           </ColumnGroup>
-          <ColumnGroup title="ebay平台">
-            <Column title="销量" dataIndex="ebaySizeTotal" key="ebaySizeTotal" />
-            <Column title="占比" dataIndex="ebaySizeTotalRatio" key="ebaySizeTotalRatio" />
+          <ColumnGroup title="4*4">
+            <Column title="130%销量" dataIndex="density44130Total" key="density44130Total" />
+            <Column title="150%销量" dataIndex="density44150Total" key="density44150Total" />
+            <Column title="180%销量" dataIndex="density44180Total" key="density44180Total" />
+          </ColumnGroup>
+          <ColumnGroup title="机制">
+            <Column title="销量" dataIndex="densityMachineTotal" key="densityMachineTotal" />
+            <Column
+              title="130%销量"
+              dataIndex="densityMachine130Total"
+              key="densityMachine130Total"
+            />
           </ColumnGroup>
         </Table>
       </PageHeaderWrapper>
@@ -81,4 +94,4 @@ class weavingBlockAnalysis extends React.Component {
   }
 }
 
-export default weavingBlockAnalysis;
+export default GetDensityAnalysis;

@@ -11,7 +11,7 @@
               <Input clearable class="search-input" v-model="filters.TransactionInfoInvoiceId" />
             </FormItem>
             <FormItem>
-              <Button @click="loadData()" class="search-btn" type="primary">搜索</Button>
+              <Button @click="loadFilter()" class="search-btn" type="primary">搜索</Button>
             </FormItem>
           </Form>
         </Col>
@@ -201,6 +201,11 @@ export default {
           _this.tableLoading = false;
           console.log(err);
         });
+    },
+    loadFilter() {
+      const _this = this;
+      _this.pageCurrent = 1;
+      _this.loadData();
     },
     changePage(val) {
       let _this = this;

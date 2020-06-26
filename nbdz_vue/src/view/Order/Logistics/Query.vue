@@ -8,7 +8,7 @@
               <Input clearable class="search-input" v-model="filters.shippingMethodNo" />
             </FormItem>
             <FormItem>
-              <Button @click="loadData()" class="search-btn" type="primary">搜索</Button>
+              <Button @click="loadFilter()" class="search-btn" type="primary">搜索</Button>
             </FormItem>
           </Form>
         </Col>
@@ -123,6 +123,11 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    loadFilter() {
+      const _this = this;
+      _this.pageCurrent = 1;
+      _this.loadData();
     },
     changePage(val) {
       let _this = this;

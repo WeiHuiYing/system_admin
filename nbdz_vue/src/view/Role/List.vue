@@ -6,7 +6,7 @@
         <FormItem label="角色名">
           <Input class="search-input" clearable v-model="filters.roleName" />
         </FormItem>
-          <Button class="search-btn" type="primary" @click="loadData()">
+          <Button class="search-btn" type="primary" @click="loadFilter()">
             <Icon type="search" />&nbsp;&nbsp;搜索
           </Button>
         </FormItem>
@@ -228,6 +228,12 @@ export default {
     changePageSize(pageSize) {
       let _this = this;
       _this.pageSize = pageSize;
+      _this.loadData();
+    },
+    
+    loadFilter() {
+      const _this = this;
+      _this.pageCurrent = 1;
       _this.loadData();
     },
     handleDelete(params) {

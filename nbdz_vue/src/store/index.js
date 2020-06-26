@@ -9,14 +9,6 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     orderStatus: [{
-        label: "0",
-        value: "已废弃"
-      },
-      {
-        label: "1",
-        value: "付款未完成"
-      },
-      {
         label: "2",
         value: "待发货审核"
       },

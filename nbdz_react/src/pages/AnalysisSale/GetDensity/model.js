@@ -1,11 +1,11 @@
 import {
-  GetWeavingBlock as GetPage
+  GetDensity as GetPage
 } from '@/services/analysis';
 import {
   notification
 } from 'antd';
-const weavingBlockModel = {
-  namespace: 'weavingBlock',
+const GetDensityModel = {
+  namespace: 'GetDensity',
   state: {
     listData: [],
   },
@@ -46,4 +46,4 @@ const weavingBlockModel = {
     },
   },
 };
-export default weavingBlockModel;
+export default GetDensityModel;

@@ -1,11 +1,11 @@
 import {
-  GetWeavingBlock as GetPage
+  GetOddMinusSale as GetPage
 } from '@/services/analysis';
 import {
   notification
 } from 'antd';
-const weavingBlockModel = {
-  namespace: 'weavingBlock',
+const orderRatioModel = {
+  namespace: 'orderRatio',
   state: {
     listData: [],
   },
@@ -46,4 +46,4 @@ const weavingBlockModel = {
     },
   },
 };
-export default weavingBlockModel;
+export default orderRatioModel;

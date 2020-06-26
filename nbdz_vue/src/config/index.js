@@ -16,7 +16,8 @@ export default {
   /**
    * @description api请求基础路径
    */
-  baseUrl: {
+  // 报表请求地址
+  baseApi: {
     dev: 'http://8000.bitcoding.top:8888/',
     pro: 'http://8000.bitcoding.top:8888/'
     /* dev: 'http://howard.ngrok.bitcoding.top/',
@@ -25,6 +26,11 @@ export default {
     // pro: 'http://192.168.1.202:8916/'
     /* dev: 'http://192.168.1.46:8816/',
     pro: 'http://192.168.1.46:8816/' */
+  },
+  // 物流请求地址
+  baseLog: {
+    dev: 'http://192.168.1.27:5555',
+    pro: 'http://192.168.1.27:5555'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

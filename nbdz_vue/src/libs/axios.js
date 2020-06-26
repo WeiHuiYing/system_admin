@@ -5,17 +5,29 @@ import {
 // import { Spin } from 'iview'
 var token = getToken();
 class HttpRequest {
-  constructor(baseUrl = baseURL) {
-    this.baseUrl = baseUrl
+  constructor(baseApi = baseApi, baseLog = baseLog) {
+    this.baseApi = baseApi
+    this.baseLog = baseLog
     this.queue = {}
   }
-  getInsideConfig() {
-    const config = {
-      baseURL: this.baseUrl,
-      headers: {
-        //
+  getInsideConfig(options) {
+    let config = {}
+    if (new RegExp("^api/").test(options.url) === true) {
+      config = {
+        baseURL: this.baseApi,
+        headers: {
+          //
+        }
+      }
+    } else if (new RegExp("^/log/").test(options.url)) {
+      config = {
+        baseURL: this.baseLog,
+        headers: {
+          //
+        }
       }
     }
+
     //全局请求头 cts 添加
     if (token) {
       config.headers.Authorization = "Bearer " + token;
@@ -82,7 +94,8 @@ class HttpRequest {
   }
   request(options) {
     const instance = axios.create()
-    options = Object.assign(this.getInsideConfig(), options)
+    options = Object.assign(this.getInsideConfig(options), options)
+    options.url = options.url.replace("/log/", "/")
     this.interceptors(instance, options.url)
     return instance(options)
   }

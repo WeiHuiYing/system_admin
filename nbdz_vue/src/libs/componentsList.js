@@ -11,6 +11,9 @@ export const componentList = [{
     name: 'Warehouse'
   },
   {
+    name: 'Logistics'
+  },
+  {
     component: 'view/User/List.vue',
     name: 'userManage'
   },
@@ -125,6 +128,14 @@ export const componentList = [{
   {
     component: 'view/Order/FinancialSummary/List.vue',
     name: 'FinancialSummaryList'
+  },
+  {
+    component: 'view/Logistics/order/List.vue',
+    name: 'OrderTracking'
+  },
+  {
+    component: 'view/Logistics/trackingCode/List.vue',
+    name: 'TrackingCode'
   }
 ]
 

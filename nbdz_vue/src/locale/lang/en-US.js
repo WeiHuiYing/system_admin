@@ -34,5 +34,7 @@ export default {
   UsUiceNomalSkuQty_page: 'UsUiceNomalSkuQty',
   ProductImage_page: 'ProductImage',
   FinanceTotal: 'FinanceOrderTotal',
-  SkuSaleQuery: 'SkuSaleQuery'
+  SkuSaleQuery: 'SkuSaleQuery',
+  TrackingCode: 'TrackingCode',
+  OrderTracking: 'OrderTracking',
 }

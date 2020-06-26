@@ -34,5 +34,8 @@ export default {
   UsUiceNomalSkuQty_page: '美国仓剩余库存报表',
   ProductImage_page: '产品图片',
   FinanceTotal: '财务订单合计报表',
-  SkuSaleQuery: 'SKU销售明细'
+  SkuSaleQuery: 'SKU销售明细',
+  Logistics: '物流信息',
+  TrackingCode: '物流方式',
+  OrderTracking: '订单物流查询',
 }

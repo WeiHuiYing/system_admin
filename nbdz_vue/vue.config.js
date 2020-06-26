@@ -43,7 +43,8 @@ module.exports = {
     port: 8091,
     hot: true,
     // proxy: 'http://192.168.1.46:8816/'
-    proxy: 'http://8000.bitcoding.top:8888/'
+    // proxy: 'http://8000.bitcoding.top:8888/'
     // proxy: 'http://192.168.1.202:8916/'
+
   }
 }

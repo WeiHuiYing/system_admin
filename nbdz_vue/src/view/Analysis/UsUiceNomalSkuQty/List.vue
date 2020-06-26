@@ -6,7 +6,7 @@
           <Input class="search-input" clearable v-model="filters.sku" />
         </FormItem>
         <FormItem>
-          <Button @click="loadData()" class="search-btn" type="primary">
+          <Button @click="loadFilter()" class="search-btn" type="primary">
             <Icon type="search" />&nbsp;&nbsp;搜索
           </Button>
         </FormItem>
@@ -150,6 +150,11 @@ export default {
     changePage(val) {
       let _this = this;
       _this.pageCurrent = val;
+      _this.loadData();
+    },
+    loadFilter() {
+      const _this = this;
+      _this.pageCurrent = 1;
       _this.loadData();
     },
     changePageSize(size) {
