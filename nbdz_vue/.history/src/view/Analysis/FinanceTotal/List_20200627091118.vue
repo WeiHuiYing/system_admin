@@ -2,7 +2,7 @@
   <div class="content-main">
     <div style="margin:10px 0" class="search-con search-con-top">
       <Row>
-        <Col :span="24">
+        <Col :span="23">
           <Form ref="formInline" label-position="right" :label-width="100" inline>
             <FormItem prop="plateform" label="平台">
               <Select
@@ -117,9 +117,14 @@
               >
                 <Icon type="search" />&nbsp;&nbsp;搜索
               </Button>
-              <Button @click="exportAll()" class="search-btn" type="primary">导出</Button>
+              <!-- <Button @click="filtersData()" class="search-btn" type="primary">
+                <Icon type="search" />&nbsp;&nbsp;更多筛选
+              </Button>-->
             </FormItem>
           </Form>
+        </Col>
+        <Col :span="1">
+          <Button @click="exportAll()" class="search-btn" type="primary">导出</Button>
         </Col>
       </Row>
     </div>
@@ -129,7 +134,7 @@
           height="650"
           ref="storeTables"
           :loading="tableLoading"
-          :data="storeData"
+          :data="listData"
           v-bind:columns="storeColumns"
           stripe
         ></Table>
@@ -138,7 +143,7 @@
         <Table
           ref="plateformTables"
           :loading="tableLoading"
-          :data="plateData"
+          :data="listData"
           v-bind:columns="plateColumns"
           stripe
         ></Table>
@@ -192,8 +197,7 @@ export default {
           return dayjs(date).isAfter(dayjs());
         }
       },
-      plateData: [],
-      storeData: [],
+      listData: [],
       totalVisible: "false",
       currentTab: "",
       plateColumns: [
@@ -272,6 +276,7 @@ export default {
       pageCurrent: 1,
       pageSize: 100,
       tableLoading: false,
+      modelFilters: false,
       plateList: [],
       wareList: [],
       shopList: []
@@ -305,13 +310,7 @@ export default {
           const resData = res.data;
           _this.tableLoading = false;
           if (resData.code == 200) {
-            if (_this.currentTab == "plateform") {
-              _this.plateData = resData.data;
-              _this.storeData = [];
-            } else {
-              _this.storeData = resData.data;
-              _this.plateData = [];
-            }
+            _this.listData = resData.data;
             _this.pageTotal = resData.totalCount;
           } else {
             this.$Message.error({
@@ -340,7 +339,7 @@ export default {
         _this.filters.PayEndTime
       );
       let filterShip = _this.filtersDate(
-        "DateWarehouseShipping",
+        "PlatformShipTime",
         _this.filters.ShipStartTime,
         _this.filters.ShipEndTime
       );
@@ -460,6 +459,19 @@ export default {
       _this.pageCurrent = val;
       _this.loadData();
     },
+    // 搜索弹框
+    filtersData() {
+      let _this = this;
+      _this.modelFilters = true;
+    },
+    // 搜索弹框
+    filtersLoad() {
+      let _this = this;
+      _this.modelFilters = false;
+      _this.pageCurrent = 1;
+      _this.loadData();
+    },
+
     loadFilter() {
       const _this = this;
       _this.pageCurrent = 1;

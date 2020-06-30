@@ -37,6 +37,4 @@ export default {
   SkuSaleQuery: 'SKU銷售明細',
   TrackingCode: '物流方式',
   OrderTracking: '订单物流查询',
-  Stock: '庫存查询',
-  StockQuery: '庫存查询',
 }

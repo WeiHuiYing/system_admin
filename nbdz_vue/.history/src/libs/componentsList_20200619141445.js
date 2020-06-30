@@ -14,9 +14,6 @@ export const componentList = [{
     name: 'Logistics'
   },
   {
-    name: 'Stock'
-  },
-  {
     component: 'view/User/List.vue',
     name: 'userManage'
   },
@@ -139,10 +136,6 @@ export const componentList = [{
   {
     component: 'view/Logistics/trackingCode/List.vue',
     name: 'TrackingCode'
-  },
-  {
-    component: 'view/Stock/StockQuery/List.vue',
-    name: 'StockQuery'
   }
 ]
 

@@ -2,58 +2,8 @@
   <div class="content-main">
     <div style="margin:10px 0" class="search-con search-con-top">
       <Row>
-        <Col :span="24">
+        <Col :span="23">
           <Form ref="formInline" label-position="right" :label-width="100" inline>
-            <FormItem prop="plateform" label="平台">
-              <Select
-                v-model="filters.plateform"
-                @on-change="changePlate"
-                clearable
-                style="width:150px"
-              >
-                <Option
-                  v-for="(item,index) in plateList"
-                  :key="index"
-                  :label="item"
-                  :value="item"
-                >{{item}}</Option>
-              </Select>
-            </FormItem>
-            <FormItem prop="storeName" label="店铺">
-              <Select
-                :disabled="filters.plateform == ''? true : false"
-                v-model="filters.storeName"
-                clearable
-                style="width:150px"
-              >
-                <Option
-                  v-for="(item,index) in shopList"
-                  :key="index"
-                  :label="item"
-                  :value="item"
-                >{{item}}</Option>
-              </Select>
-            </FormItem>
-            <FormItem prop="status" label="订单状态">
-              <Select v-model="filters.status" clearable style="width:150px">
-                <Option
-                  v-for="(item,index) in statusList"
-                  :key="index"
-                  :label="item.value"
-                  :value="item.label"
-                >{{item.value}}</Option>
-              </Select>
-            </FormItem>
-            <FormItem prop="warehouseCode" label="发货仓库">
-              <Select v-model="filters.warehouseCode" clearable style="width:150px">
-                <Option
-                  v-for="(item,index) in wareList"
-                  :key="index"
-                  :label="item.warehouseCode"
-                  :value="item.warehouseCode"
-                >{{item.warehouseCode}}</Option>
-              </Select>
-            </FormItem>
             <FormItem prop="startTime" label="创建开始时间">
               <DatePicker
                 v-model="filters.startTime"
@@ -72,42 +22,6 @@
                 style="width: 200px"
               ></DatePicker>
             </FormItem>
-            <FormItem prop="PayStartTime" label="付款开始时间">
-              <DatePicker
-                v-model="filters.PayStartTime"
-                type="date"
-                :options="dateOptions"
-                placeholder="请选择开始时间"
-                style="width: 200px"
-              ></DatePicker>
-            </FormItem>
-            <FormItem prop="PayEndTime" label="付款结束时间">
-              <DatePicker
-                v-model="filters.PayEndTime"
-                type="date"
-                :options="dateOptions"
-                placeholder="请选择结束时间"
-                style="width: 200px"
-              ></DatePicker>
-            </FormItem>
-            <FormItem prop="ShipStartTime" label="发货开始时间">
-              <DatePicker
-                v-model="filters.ShipStartTime"
-                type="date"
-                :options="dateOptions"
-                placeholder="请选择开始时间"
-                style="width: 200px"
-              ></DatePicker>
-            </FormItem>
-            <FormItem prop="ShipEndTime" label="发货结束时间">
-              <DatePicker
-                v-model="filters.ShipEndTime"
-                type="date"
-                :options="dateOptions"
-                placeholder="请选择结束时间"
-                style="width: 200px"
-              ></DatePicker>
-            </FormItem>
             <FormItem>
               <Button
                 @click="loadFilter()"
@@ -117,9 +31,14 @@
               >
                 <Icon type="search" />&nbsp;&nbsp;搜索
               </Button>
-              <Button @click="exportAll()" class="search-btn" type="primary">导出</Button>
+              <Button @click="filtersData()" class="search-btn" type="primary">
+                <Icon type="search" />&nbsp;&nbsp;更多筛选
+              </Button>
             </FormItem>
           </Form>
+        </Col>
+        <Col :span="1">
+          <Button @click="exportAll()" class="search-btn" type="primary">导出</Button>
         </Col>
       </Row>
     </div>
@@ -129,7 +48,7 @@
           height="650"
           ref="storeTables"
           :loading="tableLoading"
-          :data="storeData"
+          :data="listData"
           v-bind:columns="storeColumns"
           stripe
         ></Table>
@@ -138,7 +57,7 @@
         <Table
           ref="plateformTables"
           :loading="tableLoading"
-          :data="plateData"
+          :data="listData"
           v-bind:columns="plateColumns"
           stripe
         ></Table>
@@ -160,6 +79,124 @@
         ></Page>
       </div>
     </div>
+    <Modal
+      title="筛选"
+      :mask-closable="false"
+      v-model="modelFilters"
+      width="90%"
+      scrollable
+      footer-hide
+    >
+      <Form ref="formInline" label-position="right" :label-width="100" inline>
+        <FormItem prop="plateform" label="平台">
+          <Select
+            v-model="filters.plateform"
+            @on-change="changePlate"
+            clearable
+            style="width:150px"
+          >
+            <Option
+              v-for="(item,index) in plateList"
+              :key="index"
+              :label="item"
+              :value="item"
+            >{{item}}</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="storeName" label="店铺">
+          <Select
+            :disabled="filters.plateform == ''? true : false"
+            v-model="filters.storeName"
+            clearable
+            style="width:150px"
+          >
+            <Option
+              v-for="(item,index) in shopList"
+              :key="index"
+              :label="item"
+              :value="item"
+            >{{item}}</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="status" label="订单状态">
+          <Select v-model="filters.status" clearable style="width:150px">
+            <Option
+              v-for="(item,index) in statusList"
+              :key="index"
+              :label="item.value"
+              :value="item.label"
+            >{{item.value}}</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="warehouseCode" label="发货仓库">
+          <Select v-model="filters.warehouseCode" clearable style="width:150px">
+            <Option
+              v-for="(item,index) in wareList"
+              :key="index"
+              :label="item.warehouseCode"
+              :value="item.warehouseCode"
+            >{{item.warehouseCode}}</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="startTime" label="创建开始时间">
+          <DatePicker
+            v-model="filters.startTime"
+            type="date"
+            :options="dateOptions"
+            placeholder="请选择开始时间"
+            style="width: 200px"
+          ></DatePicker>
+        </FormItem>
+        <FormItem prop="endTime" label="创建结束时间">
+          <DatePicker
+            v-model="filters.endTime"
+            type="date"
+            :options="dateOptions"
+            placeholder="请选择结束时间"
+            style="width: 200px"
+          ></DatePicker>
+        </FormItem>
+        <FormItem prop="PayStartTime" label="付款开始时间">
+          <DatePicker
+            v-model="filters.PayStartTime"
+            type="date"
+            :options="dateOptions"
+            placeholder="请选择开始时间"
+            style="width: 200px"
+          ></DatePicker>
+        </FormItem>
+        <FormItem prop="PayEndTime" label="付款结束时间">
+          <DatePicker
+            v-model="filters.PayEndTime"
+            type="date"
+            :options="dateOptions"
+            placeholder="请选择结束时间"
+            style="width: 200px"
+          ></DatePicker>
+        </FormItem>
+        <FormItem prop="ShipStartTime" label="发货开始时间">
+          <DatePicker
+            v-model="filters.ShipStartTime"
+            type="date"
+            :options="dateOptions"
+            placeholder="请选择开始时间"
+            style="width: 200px"
+          ></DatePicker>
+        </FormItem>
+        <FormItem prop="ShipEndTime" label="发货结束时间">
+          <DatePicker
+            v-model="filters.ShipEndTime"
+            type="date"
+            :options="dateOptions"
+            placeholder="请选择结束时间"
+            style="width: 200px"
+          ></DatePicker>
+        </FormItem>
+        <div style="text-align:right;">
+          <Button @click="filtersLoad()" class="search-btn" type="primary">搜索</Button>
+        </div>
+      </Form>
+    </Modal>
   </div>
 </template>
 
@@ -192,8 +229,7 @@ export default {
           return dayjs(date).isAfter(dayjs());
         }
       },
-      plateData: [],
-      storeData: [],
+      listData: [],
       totalVisible: "false",
       currentTab: "",
       plateColumns: [
@@ -272,6 +308,7 @@ export default {
       pageCurrent: 1,
       pageSize: 100,
       tableLoading: false,
+      modelFilters: false,
       plateList: [],
       wareList: [],
       shopList: []
@@ -305,13 +342,7 @@ export default {
           const resData = res.data;
           _this.tableLoading = false;
           if (resData.code == 200) {
-            if (_this.currentTab == "plateform") {
-              _this.plateData = resData.data;
-              _this.storeData = [];
-            } else {
-              _this.storeData = resData.data;
-              _this.plateData = [];
-            }
+            _this.listData = resData.data;
             _this.pageTotal = resData.totalCount;
           } else {
             this.$Message.error({
@@ -340,7 +371,7 @@ export default {
         _this.filters.PayEndTime
       );
       let filterShip = _this.filtersDate(
-        "DateWarehouseShipping",
+        "PlatformShipTime",
         _this.filters.ShipStartTime,
         _this.filters.ShipEndTime
       );
@@ -460,6 +491,19 @@ export default {
       _this.pageCurrent = val;
       _this.loadData();
     },
+    // 搜索弹框
+    filtersData() {
+      let _this = this;
+      _this.modelFilters = true;
+    },
+    // 搜索弹框
+    filtersLoad() {
+      let _this = this;
+      _this.modelFilters = false;
+      _this.pageCurrent = 1;
+      _this.loadData();
+    },
+
     loadFilter() {
       const _this = this;
       _this.pageCurrent = 1;

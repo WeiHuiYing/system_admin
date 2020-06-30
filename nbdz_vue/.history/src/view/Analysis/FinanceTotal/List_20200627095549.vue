@@ -340,7 +340,7 @@ export default {
         _this.filters.PayEndTime
       );
       let filterShip = _this.filtersDate(
-        "DateWarehouseShipping",
+        "PlatformShipTime",
         _this.filters.ShipStartTime,
         _this.filters.ShipEndTime
       );

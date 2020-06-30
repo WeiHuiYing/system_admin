@@ -37,6 +37,4 @@ export default {
   SkuSaleQuery: 'SkuSaleQuery',
   TrackingCode: 'TrackingCode',
   OrderTracking: 'OrderTracking',
-  Stock: 'Stock',
-  StockQuery: 'StockQuery',
 }

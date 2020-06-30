@@ -38,7 +38,4 @@ export default {
   Logistics: '物流信息',
   TrackingCode: '物流方式',
   OrderTracking: '订单物流查询',
-  Stock: '库存查询',
-  StockQuery: '库存查询',
-
 }

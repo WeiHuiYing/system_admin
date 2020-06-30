@@ -116,9 +116,7 @@ export default {
         filtersquery.push(filtersWare);
       }
       let data = {
-        query: filtersquery,
-        pageNum: _this.pageCurrent,
-        pageSize: _this.pageSize
+        query: filtersquery
       };
       getList(data)
         .then(res => {

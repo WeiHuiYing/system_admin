@@ -205,22 +205,3 @@ export const ExportSkuSaleQuery = data => {
     responseType: "blob"
   });
 };
-
-
-// 库存查询
-export const GetInventorySku = data => {
-  return axios.request({
-    url: "api/InventoryQuery/GetInventorySku",
-    method: "POST",
-    data,
-  });
-};
-
-export const ExportInventorySku = data => {
-  return axios.request({
-    url: "api/InventoryQuery/ExportInventorySku",
-    method: "POST",
-    data,
-    responseType: "blob"
-  });
-};

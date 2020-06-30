@@ -29,8 +29,8 @@ export default {
   },
   // 物流请求地址
   baseLog: {
-    dev: 'http://192.168.1.234:8005',
-    pro: 'http://192.168.1.234:8005'
+    dev: 'http://192.168.1.27:5555',
+    pro: 'http://192.168.1.27:5555'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

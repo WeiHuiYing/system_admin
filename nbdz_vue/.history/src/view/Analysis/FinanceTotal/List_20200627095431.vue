@@ -117,10 +117,15 @@
               >
                 <Icon type="search" />&nbsp;&nbsp;搜索
               </Button>
-              <Button @click="exportAll()" class="search-btn" type="primary">导出</Button>
+              <!-- <Button @click="filtersData()" class="search-btn" type="primary">
+                <Icon type="search" />&nbsp;&nbsp;更多筛选
+              </Button>-->
             </FormItem>
           </Form>
         </Col>
+        <!-- <Col :span="1">
+          <Button @click="exportAll()" class="search-btn" type="primary">导出</Button>
+        </Col>-->
       </Row>
     </div>
     <Tabs v-model="currentTab" @on-click="changeTabs()">
@@ -272,6 +277,7 @@ export default {
       pageCurrent: 1,
       pageSize: 100,
       tableLoading: false,
+      modelFilters: false,
       plateList: [],
       wareList: [],
       shopList: []
@@ -340,7 +346,7 @@ export default {
         _this.filters.PayEndTime
       );
       let filterShip = _this.filtersDate(
-        "DateWarehouseShipping",
+        "PlatformShipTime",
         _this.filters.ShipStartTime,
         _this.filters.ShipEndTime
       );
@@ -460,6 +466,19 @@ export default {
       _this.pageCurrent = val;
       _this.loadData();
     },
+    // 搜索弹框
+    filtersData() {
+      let _this = this;
+      _this.modelFilters = true;
+    },
+    // 搜索弹框
+    filtersLoad() {
+      let _this = this;
+      _this.modelFilters = false;
+      _this.pageCurrent = 1;
+      _this.loadData();
+    },
+
     loadFilter() {
       const _this = this;
       _this.pageCurrent = 1;
