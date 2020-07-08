@@ -57,7 +57,7 @@ export const componentList = [{
     name: 'taskManage'
   },
   {
-    component: 'view/BaseSet/menuManage/List.vue',
+    component: 'view/menuManage/List.vue',
     name: 'menuManage'
   },
   {

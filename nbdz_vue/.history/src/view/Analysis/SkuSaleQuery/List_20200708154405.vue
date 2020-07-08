@@ -81,7 +81,7 @@
       scrollable
       footer-hide
     >
-      <Form ref="formInline" label-position="right" :label-width="150" inline>
+      <Form ref="formInline" label-position="right" :label-width="100" inline>
         <FormItem prop="sku" label="SKU">
           <Input clearable style="width:200px" v-model="filters.sku" placeholder="请输入搜索的sku"></Input>
         </FormItem>
@@ -119,7 +119,7 @@
             clearable
           ></DatePicker>
         </FormItem>
-        <FormItem prop="PaidStartTime" label="付款开始时间">
+        <FormItem prop="PaidStartTime" label="订单支付时间(起)">
           <DatePicker
             v-model="filters.PaidStartTime"
             type="date"
@@ -129,7 +129,7 @@
             clearable
           ></DatePicker>
         </FormItem>
-        <FormItem prop="PaidEndTime" label="付款结束时间">
+        <FormItem prop="PaidEndTime" label="订单支付时间(止)">
           <DatePicker
             v-model="filters.PaidEndTime"
             type="date"

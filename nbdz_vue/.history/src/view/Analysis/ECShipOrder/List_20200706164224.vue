@@ -259,7 +259,7 @@ export default {
         } else {
           filtersquery.push({
             key: "addtime",
-            binaryop: "gte",
+            binaryop: "gt",
             value: dayjs(_this.filters.startTime).format("YYYY-MM-DD"),
             andorop: "and"
           });
@@ -400,16 +400,14 @@ export default {
         } else {
           filterQuery.push({
             key: "addtime",
-            binaryop: "gte",
+            binaryop: "gt",
             value: dayjs(_this.filters.startTime).format("YYYY-MM-DD"),
             andorop: "and"
           });
           filterQuery.push({
             key: "addtime",
             binaryop: "lt",
-            value: dayjs(_this.filters.endTime)
-              .add(1, "day")
-              .format("YYYY-MM-DD"),
+            value: dayjs(_this.filters.endTime).format("YYYY-MM-DD"),
             andorop: "and"
           });
         }

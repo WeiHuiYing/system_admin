@@ -81,7 +81,7 @@
       scrollable
       footer-hide
     >
-      <Form ref="formInline" label-position="right" :label-width="150" inline>
+      <Form ref="formInline" label-position="right" :label-width="85" inline>
         <FormItem prop="sku" label="SKU">
           <Input clearable style="width:200px" v-model="filters.sku" placeholder="请输入搜索的sku"></Input>
         </FormItem>
@@ -112,26 +112,6 @@
         <FormItem prop="endTime" label="创建结束时间">
           <DatePicker
             v-model="filters.endTime"
-            type="date"
-            :options="dateOptions"
-            placeholder="请选择结束时间"
-            style="width: 200px"
-            clearable
-          ></DatePicker>
-        </FormItem>
-        <FormItem prop="PaidStartTime" label="付款开始时间">
-          <DatePicker
-            v-model="filters.PaidStartTime"
-            type="date"
-            :options="dateOptions"
-            placeholder="请选择开始时间"
-            style="width: 200px"
-            clearable
-          ></DatePicker>
-        </FormItem>
-        <FormItem prop="PaidEndTime" label="付款结束时间">
-          <DatePicker
-            v-model="filters.PaidEndTime"
             type="date"
             :options="dateOptions"
             placeholder="请选择结束时间"
@@ -196,8 +176,6 @@ export default {
         warehouseCode: "",
         startTime: "",
         endTime: "",
-        PaidStartTime: "",
-        PaidEndTime: "",
         sku: "",
         plateform: "",
         ProductCategory: "",
@@ -254,17 +232,9 @@ export default {
         _this.filters.startTime,
         _this.filters.endTime
       );
-      let filterPaid = _this.filtersDate(
-        "DatePaidPlatform",
-        _this.filters.PaidStartTime,
-        _this.filters.PaidEndTime
-      );
-      if (filterCreate && filterPaid) {
+      if (filterCreate) {
         if (filterCreate.length > 0) {
           filterQuery = filterQuery.concat(filterCreate);
-        }
-        if (filterPaid.length > 0) {
-          filterQuery = filterQuery.concat(filterPaid);
         }
       } else {
         return false;
@@ -436,24 +406,7 @@ export default {
       let data = {};
       let _this = this;
       let filterQuery = _this.filtersObj();
-      let filterCreate = _this.filtersDate(
-        "createdDate",
-        _this.filters.startTime,
-        _this.filters.endTime
-      );
-      let filterPaid = _this.filtersDate(
-        "DatePaidPlatform",
-        _this.filters.PaidStartTime,
-        _this.filters.PaidEndTime
-      );
-      if (filterCreate && filterPaid) {
-        if (filterCreate.length > 0) {
-          filterQuery = filterQuery.concat(filterCreate);
-        }
-        if (filterPaid.length > 0) {
-          filterQuery = filterQuery.concat(filterPaid);
-        }
-      } else {
+      if (filterQuery == false) {
         return false;
       }
       data = {

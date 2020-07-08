@@ -1,7 +1,7 @@
 <template>
   <div class="content-main">
     <Row class="search-con search-con-top">
-      <Col :span="18">
+      <Col :span="20">
         <Form ref="formInline" label-position="right" :label-width="100" inline>
           <FormItem prop="startTime" label="下单开始时间">
             <DatePicker
@@ -22,13 +22,21 @@
             ></DatePicker>
           </FormItem>
           <FormItem label="商品类型">
+            <Select @on-change="filtersTypeList" v-model="filters.type" style="width:150px">
+              <Option value="发块">发块</Option>
+              <Option value="发帘">发帘</Option>
+              <Option value="头套">头套</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="商品分类">
             <Select
-              @on-change="filtersTypeList"
-              v-model="filters.type"
+              @on-change="filtersCate"
+              v-model="filters.cate"
               multiple
-              style="width:200px"
+              clearable
+              style="width:150px"
             >
-              <Option v-for="(item,index) in TypeList" :key="index" :value="item">{{item}}</Option>
+              <Option v-for="(item,index) in cateList" :key="index" :value="item.cate">{{item.cate}}</Option>
             </Select>
           </FormItem>
           <FormItem>
@@ -38,7 +46,7 @@
           </FormItem>
         </Form>
       </Col>
-      <Col :span="6">
+      <Col :span="4">
         <Dropdown v-if="selectionList.length > 0" placement="bottom-start" @on-click="handleMenu">
           <Button type="primary">
             操作
@@ -52,7 +60,6 @@
     </Row>
     <Table
       ref="tables"
-      height="700"
       :loading="tableLoading"
       :data="listData"
       v-bind:columns="listColums"
@@ -66,10 +73,8 @@
 </template>
 
 <script>
-import {
-  TotalSale as getList,
-  GetProductCategoryList as getType
-} from "@/api/Analysis";
+// :summary-method="handleSummary"
+import { ChannelLevelSalesCount as getList } from "@/api/Analysis";
 import dayjs from "dayjs";
 import excel from "@/libs/excel";
 export default {
@@ -78,12 +83,8 @@ export default {
       filters: {
         startTime: "",
         endTime: "",
-        type: []
-      },
-      dateOptions: {
-        disabledDate(date) {
-          return dayjs(date).isAfter(dayjs());
-        }
+        type: "发块",
+        cate: []
       },
       tableLoading: false,
       totalData: [],
@@ -95,22 +96,138 @@ export default {
           align: "center"
         },
         {
-          title: "商品类型",
-          key: "productCategory"
+          title: "商品分类",
+          key: "saleType",
+          width: 150
         },
         {
-          title: "销量",
-          key: "saleQty"
+          title: "速卖通销量",
+          key: "aliexpressQty",
+          width: 150
+        },
+        {
+          title: "ebay销量",
+          key: "ebayQty",
+          width: 150
+        },
+        {
+          title: "亚马逊销量",
+          key: "amazonQty",
+          width: 150
+        },
+        {
+          title: "自营站销量",
+          key: "zyQty",
+          width: 150
+        },
+        {
+          title: "shopify销量",
+          key: "shopifyQty",
+          width: 150
+        },
+        {
+          title: "其他平台销量",
+          key: "otherQty",
+          width: 150
+        },
+        {
+          title: "平台销量合计",
+          key: "zQty",
+          width: 150
+        },
+        {
+          title: "自营站",
+          align: "center",
+          children: [
+            {
+              title: "africanmall销量",
+              key: "africanmallQty",
+              width: 150
+            },
+            {
+              title: "juliamall销量",
+              key: "juliahairQty",
+              width: 150
+            },
+            {
+              title: "nadulamall销量",
+              key: "nadulamallQty",
+              width: 150
+            },
+            {
+              title: "unicemall销量",
+              key: "unicemallQty",
+              width: 150
+            },
+            {
+              title: "bfmall销量",
+              key: "bfmallQty",
+              width: 150
+            },
+            {
+              title: "其他销量",
+              key: "zyItemQty",
+              width: 150
+            }
+          ]
         }
       ],
       selectionList: [],
-      TypeList: []
+      typeList: [
+        {
+          type: "发块",
+          children: [
+            {
+              cate: "生发发块"
+            },
+            {
+              cate: "压色发块"
+            },
+            {
+              cate: "辫发发块"
+            }
+          ]
+        },
+        {
+          type: "发帘",
+          children: [
+            {
+              cate: "生发发帘(不含新幅度）"
+            },
+            {
+              cate: "生发新幅度发帘"
+            },
+            {
+              cate: "压色发帘"
+            },
+            {
+              cate: "辫发发帘"
+            }
+          ]
+        },
+        {
+          type: "头套",
+          children: [
+            {
+              cate: "头套"
+            }
+          ]
+        }
+      ],
+      cateList: [],
+      dateOptions: {
+        disabledDate(date) {
+          return dayjs(date).isAfter(dayjs());
+        }
+      }
     };
   },
   methods: {
     loadData() {
       let _this = this;
-      let data = {};
+      let data = {
+        type: _this.filters.type
+      };
       if (_this.filters.startTime !== "") {
         data.startTime = dayjs(_this.filters.startTime).format("YYYY-MM-DD");
       } else {
@@ -138,18 +255,16 @@ export default {
         });
         return false;
       }
-      data.endTime = dayjs(data.endTime)
-        .add(1, "day")
-        .format("YYYY-MM-DD");
       _this.tableLoading = true;
+      data.endTime = dayjs(data.endTime).add(1, "day");
       getList(data)
         .then(res => {
           _this.tableLoading = false;
           const resData = res.data;
           if (resData.code == 200) {
             _this.totalData = resData.data;
-            if (_this.filters.type.length > 0) {
-              _this.filtersTypeList();
+            if (_this.filters.cate.length > 0) {
+              _this.filtersCate();
             } else {
               _this.listData = _this.totalData;
             }
@@ -165,32 +280,21 @@ export default {
           console.log(err);
         });
     },
-    typeLoad() {
-      let _this = this;
-      getType()
-        .then(res => {
-          const resData = res.data;
-          if (resData.code == 200) {
-            _this.TypeList = resData.data;
-          } else {
-            this.$Message.error({
-              content: resData.msg,
-              duration: 10,
-              closable: true
-            });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
     filtersTypeList() {
       let _this = this;
+      _this.typeList.forEach(item => {
+        if (item.type == _this.filters.type) {
+          _this.cateList = item.children;
+        }
+      });
+    },
+    filtersCate() {
+      let _this = this;
       if (_this.totalData.length > 0) {
-        if (_this.filters.type.length > 0) {
+        if (_this.filters.cate.length > 0) {
           _this.listData = _this.totalData.filter(item => {
-            for (let i = 0; i < _this.filters.type.length; i++) {
-              if (item.productCategory == _this.filters.type[i]) {
+            for (let i = 0; i < _this.filters.cate.length; i++) {
+              if (item.saleType == _this.filters.cate[i]) {
                 return item;
               }
             }
@@ -202,7 +306,6 @@ export default {
     },
     // 合并单元格
     handleSpan({ row, column, rowIndex, columnIndex }) {
-      //   console.log({ row, column, rowIndex, columnIndex });
       if (columnIndex === 2) {
         return {
           rowspan: 1,
@@ -301,14 +404,14 @@ export default {
         key: keyArr,
         data: this.selectionList,
         autoWidth: true,
-        filename: "销售汇总报表"
+        filename: "各店铺各等级产品销量汇总"
       };
       excel.export_array_to_excel(params);
     }
   },
   mounted() {
     this.loadData();
-    this.typeLoad();
+    this.filtersTypeList();
   }
 };
 </script>

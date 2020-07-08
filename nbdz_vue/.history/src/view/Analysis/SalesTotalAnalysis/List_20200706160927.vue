@@ -138,9 +138,6 @@ export default {
         });
         return false;
       }
-      data.endTime = dayjs(data.endTime)
-        .add(1, "day")
-        .format("YYYY-MM-DD");
       _this.tableLoading = true;
       getList(data)
         .then(res => {

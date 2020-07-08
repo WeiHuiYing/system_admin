@@ -21,14 +21,15 @@
               style="width: 200px"
             ></DatePicker>
           </FormItem>
-          <FormItem label="商品类型">
+          <FormItem label="商品款式">
             <Select
-              @on-change="filtersTypeList"
+              @on-change="filtersStyle"
               v-model="filters.type"
               multiple
+              clearable
               style="width:200px"
             >
-              <Option v-for="(item,index) in TypeList" :key="index" :value="item">{{item}}</Option>
+              <Option v-for="(item,index) in styleList" :key="index" :value="item">{{item}}</Option>
             </Select>
           </FormItem>
           <FormItem>
@@ -57,6 +58,7 @@
       :data="listData"
       v-bind:columns="listColums"
       stripe
+      :span-method="handleSpan"
       :border="true"
       show-summary
       :summary-method="handleSummary"
@@ -67,8 +69,8 @@
 
 <script>
 import {
-  TotalSale as getList,
-  GetProductCategoryList as getType
+  GetDensity as getList,
+  GetDensityStyle as getStyle
 } from "@/api/Analysis";
 import dayjs from "dayjs";
 import excel from "@/libs/excel";
@@ -95,16 +97,169 @@ export default {
           align: "center"
         },
         {
-          title: "商品类型",
-          key: "productCategory"
+          title: "商品款式",
+          key: "style",
+          width: 100
         },
         {
-          title: "销量",
-          key: "saleQty"
+          title: "总销量",
+          key: "total",
+          width: 100,
+          sortable: true
+        },
+        {
+          title: "13*4",
+          align: "center",
+          children: [
+            {
+              title: "130%销量",
+              key: "density134130Total",
+              align: "center",
+              width: 150
+            },
+            {
+              title: "150%销量",
+              key: "density134150Total",
+              align: "center",
+              width: 150
+            },
+            {
+              title: "180%销量",
+              key: "density134180Total",
+              align: "center",
+              width: 150
+            }
+          ]
+        },
+        {
+          title: "13*6",
+          align: "center",
+          children: [
+            {
+              title: "130%销量",
+              key: "density136130Total",
+              align: "center",
+              width: 150
+            },
+            {
+              title: "150%销量",
+              key: "density136150Total",
+              align: "center",
+              width: 150
+            },
+            {
+              title: "180%销量",
+              key: "density136180Total",
+              align: "center",
+              width: 150
+            },
+            {
+              title: "250%销量",
+              key: "density136250Total",
+              align: "center",
+              width: 150
+            }
+          ]
+        },
+        {
+          title: "360",
+          align: "center",
+          children: [
+            {
+              title: "130%销量",
+              key: "density360130Total",
+              align: "center",
+              width: 150
+            },
+            {
+              title: "150%销量",
+              key: "density360150Total",
+              align: "center",
+              width: 150
+            },
+            {
+              title: "180%销量",
+              key: "density360180Total",
+              align: "center",
+              width: 150
+            },
+            {
+              title: "250%销量",
+              key: "density360250Total",
+              align: "center",
+              width: 150
+            }
+          ]
+        },
+        {
+          title: "全手织",
+          align: "center",
+          children: [
+            {
+              title: "130%销量",
+              key: "densityHand130Total",
+              align: "center",
+              width: 150
+            },
+            {
+              title: "150%销量",
+              key: "densityHand150Total",
+              align: "center",
+              width: 150
+            },
+            {
+              title: "180%销量",
+              key: "densityHand180Total",
+              align: "center",
+              width: 150
+            }
+          ]
+        },
+        {
+          title: "4*4",
+          align: "center",
+          children: [
+            {
+              title: "130%销量",
+              key: "density44130Total",
+              align: "center",
+              width: 150
+            },
+            {
+              title: "150%销量",
+              key: "density44150Total",
+              align: "center",
+              width: 150
+            },
+            {
+              title: "180%销量",
+              key: "density44180Total",
+              align: "center",
+              width: 150
+            }
+          ]
+        },
+        {
+          title: "机制",
+          align: "center",
+          children: [
+            {
+              title: "销量",
+              key: "densityMachineTotal",
+              align: "center",
+              width: 150
+            },
+            {
+              title: "130%销量",
+              key: "densityMachine130Total",
+              align: "center",
+              width: 150
+            }
+          ]
         }
       ],
       selectionList: [],
-      TypeList: []
+      styleList: []
     };
   },
   methods: {
@@ -122,9 +277,13 @@ export default {
           .format("YYYY-MM-DD");
       }
       if (_this.filters.endTime !== "") {
-        data.endTime = dayjs(_this.filters.endTime).format("YYYY-MM-DD");
+        data.endTime = dayjs(_this.filters.endTime)
+          .add(1, "day")
+          .format("YYYY-MM-DD");
       } else {
-        data.endTime = dayjs().format("YYYY-MM-DD");
+        data.endTime = dayjs()
+          .add(1, "day")
+          .format("YYYY-MM-DD");
         _this.filters.endTime = dayjs().format("YYYY-MM-DD");
       }
       if (
@@ -138,9 +297,6 @@ export default {
         });
         return false;
       }
-      data.endTime = dayjs(data.endTime)
-        .add(1, "day")
-        .format("YYYY-MM-DD");
       _this.tableLoading = true;
       getList(data)
         .then(res => {
@@ -148,11 +304,7 @@ export default {
           const resData = res.data;
           if (resData.code == 200) {
             _this.totalData = resData.data;
-            if (_this.filters.type.length > 0) {
-              _this.filtersTypeList();
-            } else {
-              _this.listData = _this.totalData;
-            }
+            _this.listData = _this.totalData;
           } else {
             this.$Message.error({
               content: resData.msg,
@@ -165,16 +317,15 @@ export default {
           console.log(err);
         });
     },
-    typeLoad() {
+    styleLoad() {
       let _this = this;
-      getType()
+      getStyle()
         .then(res => {
-          const resData = res.data;
-          if (resData.code == 200) {
-            _this.TypeList = resData.data;
+          if (res.status == 200) {
+            _this.styleList = res.data;
           } else {
             this.$Message.error({
-              content: resData.msg,
+              content: res.msg,
               duration: 10,
               closable: true
             });
@@ -184,13 +335,13 @@ export default {
           console.log(err);
         });
     },
-    filtersTypeList() {
+    filtersStyle() {
       let _this = this;
       if (_this.totalData.length > 0) {
         if (_this.filters.type.length > 0) {
           _this.listData = _this.totalData.filter(item => {
             for (let i = 0; i < _this.filters.type.length; i++) {
-              if (item.productCategory == _this.filters.type[i]) {
+              if (item.style == _this.filters.type[i]) {
                 return item;
               }
             }
@@ -228,14 +379,10 @@ export default {
           };
           return;
         }
-        let stringType = false;
         const values = data.map(item => {
-          let value = JSON.stringify(item[key]);
-          stringType = value.indexOf("%") != -1;
-          value = value.replace("%", "");
-          value = JSON.parse(value);
-          return Number(value);
+          return Number(item[key]);
         });
+        let totalVal;
         if (!values.every(value => isNaN(value))) {
           let val = values.reduce((prev, curr) => {
             const value = Number(curr);
@@ -245,13 +392,22 @@ export default {
               return prev;
             }
           }, 0);
-          if (stringType) {
-            val = parseFloat(val).toFixed(2) + "%";
+          if (key === "total") {
+            sums[key] = {
+              key,
+              value: val
+            };
+          } else {
+            totalVal = sums["total"].value;
+            sums[key] = {
+              key,
+              value:
+                val +
+                "（" +
+                parseFloat((val / totalVal) * 100).toFixed(2) +
+                "%）"
+            };
           }
-          sums[key] = {
-            key,
-            value: val
-          };
         } else {
           sums[key] = {
             key,
@@ -301,14 +457,14 @@ export default {
         key: keyArr,
         data: this.selectionList,
         autoWidth: true,
-        filename: "销售汇总报表"
+        filename: "头套产品销售明细"
       };
       excel.export_array_to_excel(params);
     }
   },
   mounted() {
     this.loadData();
-    this.typeLoad();
+    this.styleLoad();
   }
 };
 </script>

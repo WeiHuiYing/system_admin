@@ -21,16 +21,6 @@
               style="width: 200px"
             ></DatePicker>
           </FormItem>
-          <FormItem label="商品类型">
-            <Select
-              @on-change="filtersTypeList"
-              v-model="filters.type"
-              multiple
-              style="width:200px"
-            >
-              <Option v-for="(item,index) in TypeList" :key="index" :value="item">{{item}}</Option>
-            </Select>
-          </FormItem>
           <FormItem>
             <Button @click="loadData()" class="search-btn" type="primary">
               <Icon type="search" />&nbsp;&nbsp;搜索
@@ -67,8 +57,8 @@
 
 <script>
 import {
-  TotalSale as getList,
-  GetProductCategoryList as getType
+  HairWeftStyleSale as getList,
+  GetDensityStyle as getStyle
 } from "@/api/Analysis";
 import dayjs from "dayjs";
 import excel from "@/libs/excel";
@@ -86,7 +76,6 @@ export default {
         }
       },
       tableLoading: false,
-      totalData: [],
       listData: [],
       listColums: [
         {
@@ -95,16 +84,25 @@ export default {
           align: "center"
         },
         {
-          title: "商品类型",
-          key: "productCategory"
+          title: "商品款式",
+          key: "style"
         },
         {
           title: "销量",
-          key: "saleQty"
+          key: "saleQty",
+          sortable: true
+        },
+        {
+          title: "占比%",
+          key: "salesRatio"
+        },
+        {
+          title: "与上月占比对比%",
+          key: "lastSalesRatio"
         }
       ],
       selectionList: [],
-      TypeList: []
+      styleList: []
     };
   },
   methods: {
@@ -138,21 +136,13 @@ export default {
         });
         return false;
       }
-      data.endTime = dayjs(data.endTime)
-        .add(1, "day")
-        .format("YYYY-MM-DD");
       _this.tableLoading = true;
       getList(data)
         .then(res => {
           _this.tableLoading = false;
           const resData = res.data;
           if (resData.code == 200) {
-            _this.totalData = resData.data;
-            if (_this.filters.type.length > 0) {
-              _this.filtersTypeList();
-            } else {
-              _this.listData = _this.totalData;
-            }
+            _this.listData = resData.data;
           } else {
             this.$Message.error({
               content: resData.msg,
@@ -164,41 +154,6 @@ export default {
         .catch(err => {
           console.log(err);
         });
-    },
-    typeLoad() {
-      let _this = this;
-      getType()
-        .then(res => {
-          const resData = res.data;
-          if (resData.code == 200) {
-            _this.TypeList = resData.data;
-          } else {
-            this.$Message.error({
-              content: resData.msg,
-              duration: 10,
-              closable: true
-            });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    filtersTypeList() {
-      let _this = this;
-      if (_this.totalData.length > 0) {
-        if (_this.filters.type.length > 0) {
-          _this.listData = _this.totalData.filter(item => {
-            for (let i = 0; i < _this.filters.type.length; i++) {
-              if (item.productCategory == _this.filters.type[i]) {
-                return item;
-              }
-            }
-          });
-        } else {
-          _this.listData = _this.totalData;
-        }
-      }
     },
     // 合并单元格
     handleSpan({ row, column, rowIndex, columnIndex }) {
@@ -301,14 +256,13 @@ export default {
         key: keyArr,
         data: this.selectionList,
         autoWidth: true,
-        filename: "销售汇总报表"
+        filename: "发帘发块分款式销售占比报表"
       };
       excel.export_array_to_excel(params);
     }
   },
   mounted() {
     this.loadData();
-    this.typeLoad();
   }
 };
 </script>

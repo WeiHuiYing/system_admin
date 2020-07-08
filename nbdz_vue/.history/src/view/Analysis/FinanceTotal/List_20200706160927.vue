@@ -435,10 +435,8 @@ export default {
           };
           let End = {
             key: keyString,
-            binaryop: "lt",
-            value: dayjs(endTime)
-              .add(1, "day")
-              .format("YYYY-MM-DD"),
+            binaryop: "lte",
+            value: dayjs(endTime).format("YYYY-MM-DD"),
             andorop: "and"
           };
           filterQuery.push(Start);

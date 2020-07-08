@@ -17,51 +17,27 @@ export const componentList = [{
     name: 'Stock'
   },
   {
-    component: 'view/BaseSet/User/List.vue',
+    component: 'view/baseSet/User/List.vue',
     name: 'userManage'
   },
   {
-    component: 'view/User/List.vue',
-    name: 'userManage'
-  },
-  {
-    component: 'view/BaseSet/Role/List.vue',
+    component: 'view/baseSet/Role/List.vue',
     name: 'roleManage'
   },
   {
-    component: 'view/Role/List.vue',
-    name: 'roleManage'
-  },
-  {
-    component: 'view/BaseSet/Resource/List.vue',
+    component: 'view/baseSet/Resource/List.vue',
     name: 'resourceManage'
   },
   {
-    component: 'view/Resource/List.vue',
-    name: 'resourceManage'
-  },
-  {
-    component: 'view/BaseSet/Dept/List.vue',
+    component: 'view/baseSet/Dept/List.vue',
     name: 'companyManage'
   },
   {
-    component: 'view/Dept/List.vue',
-    name: 'companyManage'
-  },
-  {
-    component: 'view/BaseSet/taskManage/List.vue',
+    component: 'view/baseSet/taskManage/List.vue',
     name: 'taskManage'
   },
   {
-    component: 'view/taskManage/List.vue',
-    name: 'taskManage'
-  },
-  {
-    component: 'view/BaseSet/menuManage/List.vue',
-    name: 'menuManage'
-  },
-  {
-    component: 'view/menuManage/List.vue',
+    component: 'view/baseSet/menuManage/List.vue',
     name: 'menuManage'
   },
   {

@@ -21,14 +21,20 @@
               style="width: 200px"
             ></DatePicker>
           </FormItem>
-          <FormItem label="商品类型">
+          <FormItem label="平台">
             <Select
-              @on-change="filtersTypeList"
-              v-model="filters.type"
+              @on-change="filtersPlateForm"
               multiple
+              v-model="filters.plateForm"
+              clearable
               style="width:200px"
             >
-              <Option v-for="(item,index) in TypeList" :key="index" :value="item">{{item}}</Option>
+              <Option value="aliexpress">aliexpress</Option>
+              <Option value="amazon">amazon</Option>
+              <Option value="ebay">ebay</Option>
+              <Option value="magento">magento</Option>
+              <Option value="magento2">magento2</Option>
+              <Option value="shopify">shopify</Option>
             </Select>
           </FormItem>
           <FormItem>
@@ -52,7 +58,6 @@
     </Row>
     <Table
       ref="tables"
-      height="700"
       :loading="tableLoading"
       :data="listData"
       v-bind:columns="listColums"
@@ -66,10 +71,7 @@
 </template>
 
 <script>
-import {
-  TotalSale as getList,
-  GetProductCategoryList as getType
-} from "@/api/Analysis";
+import { GetOddMinusSale as getList } from "@/api/Analysis";
 import dayjs from "dayjs";
 import excel from "@/libs/excel";
 export default {
@@ -78,7 +80,7 @@ export default {
       filters: {
         startTime: "",
         endTime: "",
-        type: []
+        plateForm: []
       },
       dateOptions: {
         disabledDate(date) {
@@ -95,16 +97,32 @@ export default {
           align: "center"
         },
         {
-          title: "商品类型",
-          key: "productCategory"
+          title: "平台",
+          key: "plateForm"
         },
         {
-          title: "销量",
-          key: "saleQty"
+          title: "单条订单数",
+          key: "oddQty"
+        },
+        {
+          title: "多条订单数",
+          key: "minusQty"
+        },
+        {
+          title: "总订单数",
+          key: "zqty"
+        },
+        {
+          title: "单条占比",
+          key: "oddQtyRate"
+        },
+        {
+          title: "多条占比",
+          key: "minusQtyRate"
         }
       ],
       selectionList: [],
-      TypeList: []
+      styleList: []
     };
   },
   methods: {
@@ -138,9 +156,6 @@ export default {
         });
         return false;
       }
-      data.endTime = dayjs(data.endTime)
-        .add(1, "day")
-        .format("YYYY-MM-DD");
       _this.tableLoading = true;
       getList(data)
         .then(res => {
@@ -148,8 +163,8 @@ export default {
           const resData = res.data;
           if (resData.code == 200) {
             _this.totalData = resData.data;
-            if (_this.filters.type.length > 0) {
-              _this.filtersTypeList();
+            if (_this.filters.plateForm.length > 0) {
+              _this.filtersPlateForm();
             } else {
               _this.listData = _this.totalData;
             }
@@ -165,32 +180,13 @@ export default {
           console.log(err);
         });
     },
-    typeLoad() {
-      let _this = this;
-      getType()
-        .then(res => {
-          const resData = res.data;
-          if (resData.code == 200) {
-            _this.TypeList = resData.data;
-          } else {
-            this.$Message.error({
-              content: resData.msg,
-              duration: 10,
-              closable: true
-            });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    filtersTypeList() {
+    filtersPlateForm() {
       let _this = this;
       if (_this.totalData.length > 0) {
-        if (_this.filters.type.length > 0) {
+        if (_this.filters.plateForm.length > 0) {
           _this.listData = _this.totalData.filter(item => {
-            for (let i = 0; i < _this.filters.type.length; i++) {
-              if (item.productCategory == _this.filters.type[i]) {
+            for (let i = 0; i < _this.filters.plateForm.length; i++) {
+              if (item.plateForm == _this.filters.plateForm[i]) {
                 return item;
               }
             }
@@ -301,14 +297,13 @@ export default {
         key: keyArr,
         data: this.selectionList,
         autoWidth: true,
-        filename: "销售汇总报表"
+        filename: "单条订单与多条订单对比"
       };
       excel.export_array_to_excel(params);
     }
   },
   mounted() {
     this.loadData();
-    this.typeLoad();
   }
 };
 </script>

@@ -138,10 +138,10 @@ export default {
         });
         return false;
       }
+      _this.tableLoading = true;
       data.endTime = dayjs(data.endTime)
         .add(1, "day")
         .format("YYYY-MM-DD");
-      _this.tableLoading = true;
       getList(data)
         .then(res => {
           _this.tableLoading = false;

@@ -32,7 +32,7 @@
             <DatePicker
               type="datetime"
               v-model="Row.beginTime"
-              format="yyyy-MM-dd  HH:mm:ss"
+              format="YYYY-MM-DD HH:mm:ss"
               placeholder="请选择开始运行时间"
               style="width: 300px"
             ></DatePicker>
@@ -43,7 +43,7 @@
             <DatePicker
               type="datetime"
               v-model="Row.endTime"
-              format="yyyy-MM-dd  HH:mm:ss"
+              format="YYYY-MM-DD HH:mm:ss"
               placeholder="请选择开始运行时间"
               style="width: 300px"
             ></DatePicker>

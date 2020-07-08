@@ -142,14 +142,14 @@
         <FormItem prop="productSku" label="产品信息(sku)">
           <Input clearable class="search-input" v-model="filters.productSku" />
         </FormItem>
-        <FormItem prop="procutCategoryName1" label="一级品类">
-          <Select v-model="filters.procutCategoryName1" clearable style="width:150px">
+        <FormItem prop="procutCategoryName" label="一级品类">
+          <Select v-model="filters.procutCategoryName" clearable style="width:150px">
             <Option value="假发">假发</Option>
             <Option value="服装">服装</Option>
           </Select>
         </FormItem>
-        <FormItem prop="procutCategoryName2" label="二级品类">
-          <Input clearable class="search-input" v-model="filters.procutCategoryName2" />
+        <FormItem prop="procutCategoryName1" label="二级品类">
+          <Input clearable class="search-input" v-model="filters.procutCategoryName1" />
         </FormItem>
         <FormItem prop="orderType" label="订单类型">
           <Select v-model="filters.orderType" clearable style="width:150px">
@@ -578,16 +578,6 @@ export default {
           width: "200"
         },
         {
-          title: "真实运费",
-          key: "uploadShippingFee",
-          width: "200"
-        },
-        {
-          title: "真实运费币种",
-          key: "uploadShippingCurrency",
-          width: "200"
-        },
-        {
           title: "快递单号",
           key: "shippingMethodNo",
           width: "200"
@@ -856,25 +846,94 @@ export default {
     filtersObj() {
       let _this = this;
       let filterQuery = [];
-      Object.keys(_this.filters).forEach(keyItem => {
-        if (_this.filters[keyItem] && _this.filters[keyItem] != "") {
-          if (keyItem == "productSku" || keyItem == "procutCategoryName2") {
-            filterQuery.push({
-              key: keyItem,
-              binaryop: "like",
-              value: _this.filters[keyItem],
-              andorop: "and"
-            });
-          } else {
-            filterQuery.push({
-              key: keyItem,
-              binaryop: "eq",
-              value: _this.filters[keyItem],
-              andorop: "and"
-            });
-          }
-        }
-      });
+      if (_this.filters.productSku && _this.filters.productSku != "") {
+        let SkuObj = {
+          key: "productSku",
+          binaryop: "like",
+          value: _this.filters.productSku,
+          andorop: "and"
+        };
+        filterQuery.push(SkuObj);
+      }
+      if (
+        _this.filters.procutCategoryName1 &&
+        _this.filters.procutCategoryName1 != ""
+      ) {
+        let CategoryObj = {
+          key: "procutCategoryName1",
+          binaryop: "eq",
+          value: _this.filters.procutCategoryName,
+          andorop: "and"
+        };
+        filterQuery.push(CategoryObj);
+      }
+      if (
+        _this.filters.procutCategoryName2 &&
+        _this.filters.procutCategoryName2 != ""
+      ) {
+        let Category1Obj = {
+          key: "procutCategoryName1",
+          binaryop: "like",
+          value: _this.filters.procutCategoryName1,
+          andorop: "and"
+        };
+        filterQuery.push(Category1Obj);
+      }
+
+      if (_this.filters.orderType && _this.filters.orderType != "") {
+        let orderTypeObj = {
+          key: "orderType",
+          binaryop: "eq",
+          value: _this.filters.orderType,
+          andorop: "and"
+        };
+        filterQuery.push(orderTypeObj);
+      }
+      if (_this.filters.status && _this.filters.status != "") {
+        let statusObj = {
+          key: "status",
+          binaryop: "eq",
+          value: _this.filters.status,
+          andorop: "and"
+        };
+        filterQuery.push(statusObj);
+      }
+      if (_this.filters.plateform && _this.filters.plateform != "") {
+        let plateObj = {
+          key: "plateform",
+          binaryop: "eq",
+          value: _this.filters.plateform,
+          andorop: "and"
+        };
+        filterQuery.push(plateObj);
+      }
+      if (_this.filters.wareHouseDesc && _this.filters.wareHouseDesc != "") {
+        let wareObj = {
+          key: "wareHouseDesc",
+          binaryop: "eq",
+          value: _this.filters.wareHouseDesc,
+          andorop: "and"
+        };
+        filterQuery.push(wareObj);
+      }
+      if (_this.filters.storeName && _this.filters.storeName != "") {
+        let storeObj = {
+          key: "storeName",
+          binaryop: "eq",
+          value: _this.filters.storeName,
+          andorop: "and"
+        };
+        filterQuery.push(storeObj);
+      }
+      if (_this.filters.RefNo != "") {
+        let RefNoObj = {
+          key: "RefNo",
+          binaryop: "eq",
+          value: _this.filters.RefNo,
+          andorop: "and"
+        };
+        filterQuery.push(RefNoObj);
+      }
       return filterQuery;
     },
     selectLoad() {

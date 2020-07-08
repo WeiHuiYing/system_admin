@@ -21,14 +21,10 @@
               style="width: 200px"
             ></DatePicker>
           </FormItem>
-          <FormItem label="商品类型">
-            <Select
-              @on-change="filtersTypeList"
-              v-model="filters.type"
-              multiple
-              style="width:200px"
-            >
-              <Option v-for="(item,index) in TypeList" :key="index" :value="item">{{item}}</Option>
+          <FormItem label="商品款式">
+            <Select v-model="filters.type" style="width:200px">
+              <Option value="发帘">发帘</Option>
+              <Option value="发块">发块</Option>
             </Select>
           </FormItem>
           <FormItem>
@@ -52,11 +48,11 @@
     </Row>
     <Table
       ref="tables"
-      height="700"
       :loading="tableLoading"
       :data="listData"
       v-bind:columns="listColums"
       stripe
+      :span-method="handleSpan"
       :border="true"
       show-summary
       :summary-method="handleSummary"
@@ -66,10 +62,7 @@
 </template>
 
 <script>
-import {
-  TotalSale as getList,
-  GetProductCategoryList as getType
-} from "@/api/Analysis";
+import { GetWeavingBlock as getList } from "@/api/Analysis";
 import dayjs from "dayjs";
 import excel from "@/libs/excel";
 export default {
@@ -78,7 +71,7 @@ export default {
       filters: {
         startTime: "",
         endTime: "",
-        type: []
+        type: "发帘"
       },
       dateOptions: {
         disabledDate(date) {
@@ -86,7 +79,6 @@ export default {
         }
       },
       tableLoading: false,
-      totalData: [],
       listData: [],
       listColums: [
         {
@@ -95,22 +87,134 @@ export default {
           align: "center"
         },
         {
-          title: "商品类型",
-          key: "productCategory"
+          title: "尺寸",
+          width: 100,
+          key: "size",
+          align: "center"
         },
         {
-          title: "销量",
-          key: "saleQty"
+          title: "总销量",
+          width: 100,
+          align: "center",
+          key: "total"
+        },
+        {
+          title: "单尺寸销量",
+          width: 100,
+          align: "center",
+          key: "sizeTotal"
+        },
+        {
+          title: "尺寸总占比",
+          width: 100,
+          align: "center",
+          key: "sizeTotalRatio"
+        },
+        {
+          title: "速卖通",
+          width: 200,
+          align: "center",
+          children: [
+            {
+              title: "销量",
+              width: 100,
+              align: "center",
+              key: "aliSizeTotal"
+            },
+            {
+              title: "占比",
+              width: 100,
+              align: "center",
+              key: "aliSizeTotalRatio"
+            }
+          ]
+        },
+        {
+          title: "亚马逊",
+          width: 200,
+          align: "center",
+          children: [
+            {
+              title: "销量",
+              width: 100,
+              align: "center",
+              key: "amazSizeTotal"
+            },
+            {
+              title: "占比",
+              width: 100,
+              align: "center",
+              key: "amazSizeTotalRatio"
+            }
+          ]
+        },
+        {
+          title: "自营站",
+          width: 200,
+          align: "center",
+          children: [
+            {
+              title: "销量",
+              width: 100,
+              align: "center",
+              key: "magentoSizeTotal"
+            },
+            {
+              title: "占比",
+              width: 100,
+              align: "center",
+              key: "magentoSizeTotalRatio"
+            }
+          ]
+        },
+        {
+          title: "SHOPIFY",
+          width: 200,
+          align: "center",
+          children: [
+            {
+              title: "销量",
+              width: 100,
+              align: "center",
+              key: "shopifySizeTotal"
+            },
+            {
+              title: "占比",
+              width: 100,
+              align: "center",
+              key: "shopifySizeTotalRatio"
+            }
+          ]
+        },
+        {
+          title: "ebay平台",
+          width: 200,
+          align: "center",
+          children: [
+            {
+              title: "销量",
+              width: 100,
+              align: "center",
+              key: "ebaySizeTotal"
+            },
+            {
+              title: "占比",
+              width: 100,
+              align: "center",
+              key: "ebaySizeTotalRatio"
+            }
+          ]
         }
       ],
-      selectionList: [],
-      TypeList: []
+      selectionList: []
     };
   },
   methods: {
     loadData() {
       let _this = this;
-      let data = {};
+      let data = {
+        type: _this.filters.type
+      };
       if (_this.filters.startTime !== "") {
         data.startTime = dayjs(_this.filters.startTime).format("YYYY-MM-DD");
       } else {
@@ -138,21 +242,13 @@ export default {
         });
         return false;
       }
-      data.endTime = dayjs(data.endTime)
-        .add(1, "day")
-        .format("YYYY-MM-DD");
       _this.tableLoading = true;
       getList(data)
         .then(res => {
           _this.tableLoading = false;
           const resData = res.data;
           if (resData.code == 200) {
-            _this.totalData = resData.data;
-            if (_this.filters.type.length > 0) {
-              _this.filtersTypeList();
-            } else {
-              _this.listData = _this.totalData;
-            }
+            _this.listData = resData.data;
           } else {
             this.$Message.error({
               content: resData.msg,
@@ -164,41 +260,6 @@ export default {
         .catch(err => {
           console.log(err);
         });
-    },
-    typeLoad() {
-      let _this = this;
-      getType()
-        .then(res => {
-          const resData = res.data;
-          if (resData.code == 200) {
-            _this.TypeList = resData.data;
-          } else {
-            this.$Message.error({
-              content: resData.msg,
-              duration: 10,
-              closable: true
-            });
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    filtersTypeList() {
-      let _this = this;
-      if (_this.totalData.length > 0) {
-        if (_this.filters.type.length > 0) {
-          _this.listData = _this.totalData.filter(item => {
-            for (let i = 0; i < _this.filters.type.length; i++) {
-              if (item.productCategory == _this.filters.type[i]) {
-                return item;
-              }
-            }
-          });
-        } else {
-          _this.listData = _this.totalData;
-        }
-      }
     },
     // 合并单元格
     handleSpan({ row, column, rowIndex, columnIndex }) {
@@ -222,6 +283,12 @@ export default {
           };
           return;
         } else if (index === 1) {
+          sums[key] = {
+            key,
+            value: "/"
+          };
+          return;
+        } else if (index === 2) {
           sums[key] = {
             key,
             value: "/"
@@ -269,6 +336,7 @@ export default {
         this.exportList();
       }
     },
+    // 导出功能
     exportList() {
       let _this = this;
       let titleArr = [];
@@ -301,14 +369,14 @@ export default {
         key: keyArr,
         data: this.selectionList,
         autoWidth: true,
-        filename: "销售汇总报表"
+        filename: "发帘发块分产品尺寸销售占比报表"
       };
       excel.export_array_to_excel(params);
     }
   },
   mounted() {
+    let _this = this;
     this.loadData();
-    this.typeLoad();
   }
 };
 </script>

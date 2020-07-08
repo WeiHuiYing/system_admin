@@ -119,7 +119,7 @@
             clearable
           ></DatePicker>
         </FormItem>
-        <FormItem prop="PaidStartTime" label="付款开始时间">
+        <FormItem prop="PaidStartTime" label="订单支付开始时间">
           <DatePicker
             v-model="filters.PaidStartTime"
             type="date"
@@ -129,7 +129,7 @@
             clearable
           ></DatePicker>
         </FormItem>
-        <FormItem prop="PaidEndTime" label="付款结束时间">
+        <FormItem prop="PaidEndTime" label="订单支付结束时间">
           <DatePicker
             v-model="filters.PaidEndTime"
             type="date"

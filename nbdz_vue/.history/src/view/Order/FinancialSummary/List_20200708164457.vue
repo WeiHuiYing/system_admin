@@ -578,16 +578,6 @@ export default {
           width: "200"
         },
         {
-          title: "真实运费",
-          key: "uploadShippingFee",
-          width: "200"
-        },
-        {
-          title: "真实运费币种",
-          key: "uploadShippingCurrency",
-          width: "200"
-        },
-        {
           title: "快递单号",
           key: "shippingMethodNo",
           width: "200"
