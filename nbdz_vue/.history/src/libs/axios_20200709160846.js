@@ -42,6 +42,7 @@ class HttpRequest {
   }
   interceptors(instance, url) {
     // 请求拦截
+    console.log(url)
     instance.interceptors.request.use(config => {
       // 添加全局的loading...
       if (!Object.keys(this.queue).length) {
@@ -95,8 +96,7 @@ class HttpRequest {
   request(options) {
     const instance = axios.create()
     options = Object.assign(this.getInsideConfig(options), options)
-    options.url = options.url.replace("/log/", "/qt_image/")
-    console.log(options)
+    options.url = options.url.replace("/log/", "/")
     this.interceptors(instance, options.url)
     return instance(options)
   }

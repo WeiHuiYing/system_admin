@@ -160,7 +160,6 @@ export const iconList = [
   'md-trending-up',
   'ios-infinite',
   'ios-people',
-  "logo-usd",
   'ios-albums',
   'ios-albums-outline',
   'ios-analytics',

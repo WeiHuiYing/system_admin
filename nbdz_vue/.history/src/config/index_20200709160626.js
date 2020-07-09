@@ -29,8 +29,8 @@ export default {
   },
   // 物流请求地址
   baseLog: {
-    dev: 'http://218.28.44.115:9090',
-    pro: 'http://218.28.44.115:9090'
+    dev: 'http://218.28.44.115:9090/qt_image/',
+    pro: 'http://218.28.44.115:9090/qt_image/'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

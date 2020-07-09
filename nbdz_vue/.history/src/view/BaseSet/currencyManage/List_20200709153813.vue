@@ -6,22 +6,6 @@
       </Button>
     </div>
     <Table :loading="tableLoading" :data="listData" :columns="listColumns"></Table>
-
-    <div style="margin: 10px;overflow: hidden">
-      <div style="float: right;">
-        <Page
-          :total="pageTotal"
-          :current="pageCurrent"
-          :page-size="pageSize"
-          @on-change="changePage"
-          @on-page-size-change="changePageSize"
-          :page-size-opts="[100,200,300,400,500]"
-          show-total
-          show-elevator
-          show-sizer
-        ></Page>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -56,10 +40,7 @@ export default {
           key: "endTime"
         }
       ],
-      tableLoading: false,
-      pageTotal: 1,
-      pageCurrent: 1,
-      pageSize: 100
+      tableLoading: false
     };
   },
   methods: {
@@ -68,14 +49,6 @@ export default {
     },
     loadData() {
       const _this = this;
-    },
-    changePage(val) {
-      const _this = this;
-      _this.pageCurrent = val;
-    },
-    changePageSize(val) {
-      const _this = this;
-      _this.pageSize = val;
     }
   },
   mounted() {

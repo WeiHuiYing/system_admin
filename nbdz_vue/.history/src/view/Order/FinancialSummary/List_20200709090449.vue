@@ -857,16 +857,13 @@ export default {
       let _this = this;
       let filterQuery = [];
       Object.keys(_this.filters).forEach(keyItem => {
-        if (
-          _this.filters[keyItem] &&
-          _this.filters[keyItem] != "" &&
-          keyItem != "shippingStart" &&
-          keyItem != "shippingEnd" &&
-          keyItem != "paidStart" &&
-          keyItem != "paidEnd" &&
-          keyItem != "loandateStart" &&
-          keyItem != "loandateEnd"
-        ) {
+        shippingStart: "",
+        shippingEnd: "",
+        paidStart: "",
+        paidEnd: "",
+        loandateStart: "",
+        loandateEnd: "",
+        if (_this.filters[keyItem] && _this.filters[keyItem] != "" && keyItem !="shippingStart" && keyItem !="shippingEnd" && keyItem !="paidStart"&& keyItem !="paidEnd") {
           if (keyItem == "productSku" || keyItem == "procutCategoryName2") {
             filterQuery.push({
               key: keyItem,

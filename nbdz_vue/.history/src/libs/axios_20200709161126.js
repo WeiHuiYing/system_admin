@@ -96,7 +96,6 @@ class HttpRequest {
     const instance = axios.create()
     options = Object.assign(this.getInsideConfig(options), options)
     options.url = options.url.replace("/log/", "/qt_image/")
-    console.log(options)
     this.interceptors(instance, options.url)
     return instance(options)
   }

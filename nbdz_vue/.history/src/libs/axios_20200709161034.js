@@ -48,6 +48,7 @@ class HttpRequest {
         // Spin.show() // 不建议开启，因为界面不友好
       }
       this.queue[url] = true
+      console.log(config)
       return config
     }, error => {
       return Promise.reject(error)
@@ -95,8 +96,7 @@ class HttpRequest {
   request(options) {
     const instance = axios.create()
     options = Object.assign(this.getInsideConfig(options), options)
-    options.url = options.url.replace("/log/", "/qt_image/")
-    console.log(options)
+    options.url = options.url.replace("/log/", "/")
     this.interceptors(instance, options.url)
     return instance(options)
   }

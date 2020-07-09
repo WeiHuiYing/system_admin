@@ -44,6 +44,7 @@ class HttpRequest {
     // 请求拦截
     instance.interceptors.request.use(config => {
       // 添加全局的loading...
+      console.log(config)
       if (!Object.keys(this.queue).length) {
         // Spin.show() // 不建议开启，因为界面不友好
       }
@@ -95,8 +96,7 @@ class HttpRequest {
   request(options) {
     const instance = axios.create()
     options = Object.assign(this.getInsideConfig(options), options)
-    options.url = options.url.replace("/log/", "/qt_image/")
-    console.log(options)
+    options.url = options.url.replace("/log/", "/")
     this.interceptors(instance, options.url)
     return instance(options)
   }
