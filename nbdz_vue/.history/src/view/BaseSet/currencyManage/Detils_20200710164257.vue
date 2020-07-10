@@ -119,18 +119,6 @@ export default {
       const _this = this;
       _this.saveValidate(name).then(valid => {
         if (valid) {
-          if (
-            dayjs(_this.Row.startTime).isAfter(
-              dayjs(_this.Row.endTime) &&
-                dayjs(_this.Row.endTime).diff(
-                  dayjs(_this.Row.startTime),
-                  "day"
-                ) != "0"
-            )
-          ) {
-            this.$Message.warning("开始时间在结束时间之前！");
-            return false;
-          }
           let data = {
             currencyCode: _this.Row.currencyCode,
             currencyName: _this.Row.currencyName,
@@ -160,18 +148,6 @@ export default {
       const _this = this;
       _this.saveValidate(name).then(valid => {
         if (valid) {
-          if (
-            dayjs(_this.Row.startTime).isAfter(
-              dayjs(_this.Row.endTime) &&
-                dayjs(_this.Row.endTime).diff(
-                  dayjs(_this.Row.startTime),
-                  "day"
-                ) != "0"
-            )
-          ) {
-            this.$Message.warning("开始时间在结束时间之前！");
-            return false;
-          }
           let data = {
             id: _this.Row.id,
             currencyCode: _this.Row.currencyCode,
@@ -199,7 +175,6 @@ export default {
       });
     },
     saveValidate(name) {
-      const _this = this;
       return this.$refs[name].validate(valid => {
         if (!valid) {
           this.$Message.warning("请检查表单数据！");

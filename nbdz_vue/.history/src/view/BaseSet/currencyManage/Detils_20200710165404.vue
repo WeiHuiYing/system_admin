@@ -159,6 +159,7 @@ export default {
     saveEdit(name) {
       const _this = this;
       _this.saveValidate(name).then(valid => {
+        console.log(valid);
         if (valid) {
           if (
             dayjs(_this.Row.startTime).isAfter(

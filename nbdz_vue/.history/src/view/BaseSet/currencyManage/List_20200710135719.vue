@@ -29,7 +29,7 @@
       scrollable
       footer-hide
     >
-      <Detils ref="detils" :parent="this" :detilsRow="detilsRow"></Detils>
+      <Detils ref="detils" :parent="this" :detils-row="detilsRow"></Detils>
     </Modal>
   </div>
 </template>

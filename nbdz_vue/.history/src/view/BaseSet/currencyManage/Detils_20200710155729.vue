@@ -57,7 +57,6 @@
 
 <script>
 import { editCurrency, addCurrency } from "@/api/ResCurrency";
-import dayjs from "dayjs";
 export default {
   props: { detilsRow: Object, parent: Object },
   data() {
@@ -98,13 +97,6 @@ export default {
   watch: {
     detilsRow(newVal, oldVal) {
       this.Row = Object.assign({}, newVal);
-      if (this.Row.currencyRate2RMB) {
-        this.Row.currencyRate2RMB = JSON.stringify(this.Row.currencyRate2RMB);
-      }
-
-      if (this.Row.currencyRate2USD) {
-        this.Row.currencyRate2USD = JSON.stringify(this.Row.currencyRate2USD);
-      }
     }
   },
   methods: {
@@ -119,27 +111,14 @@ export default {
       const _this = this;
       _this.saveValidate(name).then(valid => {
         if (valid) {
-          if (
-            dayjs(_this.Row.startTime).isAfter(
-              dayjs(_this.Row.endTime) &&
-                dayjs(_this.Row.endTime).diff(
-                  dayjs(_this.Row.startTime),
-                  "day"
-                ) != "0"
-            )
-          ) {
-            this.$Message.warning("开始时间在结束时间之前！");
-            return false;
-          }
           let data = {
             currencyCode: _this.Row.currencyCode,
             currencyName: _this.Row.currencyName,
             currencyRate2RMB: _this.Row.currencyRate2RMB,
-            currencyRate2USD: _this.Row.currencyRate2USD,
-            startTime: dayjs(_this.Row.startTime).format("YYYY-MM-DD HH:mm:ss"),
-            endTime: dayjs(_this.Row.endTime).format("YYYY-MM-DD HH:mm:ss")
+            currencyRate2USD: _this.Row.currencyRate2USD
           };
           addCurrency(data).then(res => {
+            console.log(res);
             const resData = res.data;
             if (resData.code == 200) {
               this.$Message.info(resData.msg);
@@ -160,31 +139,17 @@ export default {
       const _this = this;
       _this.saveValidate(name).then(valid => {
         if (valid) {
-          if (
-            dayjs(_this.Row.startTime).isAfter(
-              dayjs(_this.Row.endTime) &&
-                dayjs(_this.Row.endTime).diff(
-                  dayjs(_this.Row.startTime),
-                  "day"
-                ) != "0"
-            )
-          ) {
-            this.$Message.warning("开始时间在结束时间之前！");
-            return false;
-          }
           let data = {
             id: _this.Row.id,
             currencyCode: _this.Row.currencyCode,
             currencyName: _this.Row.currencyName,
             currencyRate2RMB: _this.Row.currencyRate2RMB,
-            currencyRate2USD: _this.Row.currencyRate2USD,
-            startTime: dayjs(_this.Row.startTime).format("YYYY-MM-DD HH:mm:ss"),
-            endTime: dayjs(_this.Row.endTime).format("YYYY-MM-DD HH:mm:ss")
+            currencyRate2USD: _this.Row.currencyRate2USD
           };
           editCurrency(data).then(res => {
             const resData = res.data;
             if (resData.code == 200) {
-              this.$Message.info(resData.msg);
+              this.$Message.info("添加成功");
               this.parent.modelDetils = false;
               this.parent.loadData();
             } else {
@@ -199,7 +164,6 @@ export default {
       });
     },
     saveValidate(name) {
-      const _this = this;
       return this.$refs[name].validate(valid => {
         if (!valid) {
           this.$Message.warning("请检查表单数据！");

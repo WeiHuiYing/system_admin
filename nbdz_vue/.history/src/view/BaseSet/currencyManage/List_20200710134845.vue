@@ -29,7 +29,7 @@
       scrollable
       footer-hide
     >
-      <Detils ref="detils" :parent="this" :detilsRow="detilsRow"></Detils>
+      <Detils ref="detils" :parent="this" :detils-row="detilsRow"></Detils>
     </Modal>
   </div>
 </template>
@@ -122,9 +122,6 @@ export default {
       isAdd: false
     };
   },
-  components: {
-    Detils
-  },
   methods: {
     loadData() {
       const _this = this;
@@ -162,17 +159,14 @@ export default {
       const _this = this;
       _this.isAdd = true;
       _this.modelDetils = true;
-      _this.detilsRow = {};
     },
     handleEdit(params) {
       const _this = this;
       _this.isAdd = false;
       _this.modelDetils = true;
-      _this.detilsRow = params.row;
     },
     handleDelete(params) {
       const _this = this;
-      const row = params.row.id;
     }
   },
   mounted() {

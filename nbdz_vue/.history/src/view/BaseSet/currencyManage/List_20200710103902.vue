@@ -21,16 +21,6 @@
         ></Page>
       </div>
     </div>
-    <Modal
-      title="详情"
-      :mask-closable="false"
-      v-model="modelDetils"
-      width="90%"
-      scrollable
-      footer-hide
-    >
-      <Detils ref="detils" :parent="this" :detilsRow="detilsRow"></Detils>
-    </Modal>
   </div>
 </template>
 
@@ -65,67 +55,18 @@ export default {
         {
           title: "结束时间",
           key: "endTime"
-        },
-        {
-          title: "操作",
-          key: "action",
-          width: 300,
-          align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "primary",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
-                  on: {
-                    click: () => {
-                      this.handleEdit(params);
-                    }
-                  }
-                },
-                "编辑"
-              ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "error",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
-                  on: {
-                    click: () => {
-                      this.handleDelete(params);
-                    }
-                  }
-                },
-                "删除"
-              )
-            ]);
-          }
         }
       ],
       tableLoading: false,
       pageTotal: 1,
       pageCurrent: 1,
-      pageSize: 100,
-      modelDetils: false,
-      detilsRow: {},
-      isAdd: false
+      pageSize: 100
     };
   },
-  components: {
-    Detils
-  },
   methods: {
+    handleAdd() {
+      const _this = this;
+    },
     loadData() {
       const _this = this;
       let data = {
@@ -157,22 +98,6 @@ export default {
     changePageSize(val) {
       const _this = this;
       _this.pageSize = val;
-    },
-    handleAdd() {
-      const _this = this;
-      _this.isAdd = true;
-      _this.modelDetils = true;
-      _this.detilsRow = {};
-    },
-    handleEdit(params) {
-      const _this = this;
-      _this.isAdd = false;
-      _this.modelDetils = true;
-      _this.detilsRow = params.row;
-    },
-    handleDelete(params) {
-      const _this = this;
-      const row = params.row.id;
     }
   },
   mounted() {

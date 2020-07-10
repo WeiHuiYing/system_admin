@@ -159,19 +159,8 @@ export default {
     saveEdit(name) {
       const _this = this;
       _this.saveValidate(name).then(valid => {
+        console.log(valid);
         if (valid) {
-          if (
-            dayjs(_this.Row.startTime).isAfter(
-              dayjs(_this.Row.endTime) &&
-                dayjs(_this.Row.endTime).diff(
-                  dayjs(_this.Row.startTime),
-                  "day"
-                ) != "0"
-            )
-          ) {
-            this.$Message.warning("开始时间在结束时间之前！");
-            return false;
-          }
           let data = {
             id: _this.Row.id,
             currencyCode: _this.Row.currencyCode,
