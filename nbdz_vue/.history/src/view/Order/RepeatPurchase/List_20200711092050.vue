@@ -209,7 +209,7 @@ export default {
         filtersQuery.push({
           key: "dealMonth",
           binaryop: "eq",
-          value: dayjs(_this.filters.dealMonth).format("YYYY-MM"),
+          value: days(_this.filters.dealMonth).format("YYYY-MM"),
           andorop: "and"
         });
       }

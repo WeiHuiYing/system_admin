@@ -31,7 +31,6 @@
             </FormItem>
             <FormItem prop="dealMonth" label="处理月份">
               <DatePicker
-                :options="dateOptions"
                 type="month"
                 v-model="filters.dealMonth"
                 placeholder="请选择处理月份"
@@ -94,7 +93,6 @@ import {
   ExportRepeatCust
 } from "@/api/Order";
 import store from "@/store";
-import dayjs from "dayjs";
 export default {
   data() {
     return {
@@ -148,12 +146,7 @@ export default {
       pageTotal: 1,
       pageCurrent: 1,
       pageSize: 100,
-      tableLoading: false,
-      dateOptions: {
-        disabledDate(date) {
-          return dayjs(date).isAfter(dayjs());
-        }
-      }
+      tableLoading: false
     };
   },
   methods: {
@@ -202,14 +195,6 @@ export default {
           key: "storeName",
           binaryop: "eq",
           value: _this.filters.storeName,
-          andorop: "and"
-        });
-      }
-      if (_this.filters.dealMonth && _this.filters.dealMonth != "") {
-        filtersQuery.push({
-          key: "dealMonth",
-          binaryop: "eq",
-          value: dayjs(_this.filters.dealMonth).format("YYYY-MM"),
           andorop: "and"
         });
       }

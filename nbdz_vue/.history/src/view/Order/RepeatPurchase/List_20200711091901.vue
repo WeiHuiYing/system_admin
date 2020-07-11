@@ -205,14 +205,6 @@ export default {
           andorop: "and"
         });
       }
-      if (_this.filters.dealMonth && _this.filters.dealMonth != "") {
-        filtersQuery.push({
-          key: "dealMonth",
-          binaryop: "eq",
-          value: dayjs(_this.filters.dealMonth).format("YYYY-MM"),
-          andorop: "and"
-        });
-      }
       return filtersQuery;
     },
     plateLoad() {

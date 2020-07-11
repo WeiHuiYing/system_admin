@@ -94,7 +94,6 @@ import {
   ExportRepeatCust
 } from "@/api/Order";
 import store from "@/store";
-import dayjs from "dayjs";
 export default {
   data() {
     return {
@@ -202,14 +201,6 @@ export default {
           key: "storeName",
           binaryop: "eq",
           value: _this.filters.storeName,
-          andorop: "and"
-        });
-      }
-      if (_this.filters.dealMonth && _this.filters.dealMonth != "") {
-        filtersQuery.push({
-          key: "dealMonth",
-          binaryop: "eq",
-          value: dayjs(_this.filters.dealMonth).format("YYYY-MM"),
           andorop: "and"
         });
       }

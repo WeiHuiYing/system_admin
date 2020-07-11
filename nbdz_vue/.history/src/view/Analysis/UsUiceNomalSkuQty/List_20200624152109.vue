@@ -2,17 +2,8 @@
   <div class="content-main">
     <div class="search-con search-con-top">
       <Form ref="formInline" label-position="right" :label-width="60" inline>
-        <FormItem label="sku">
-          <Input clearable v-model="filters.sku" />
-        </FormItem>
-        <FormItem label="上级分类">
-          <Select clearable style="width:200px" v-model="filters.categoryParent">
-            <Option label="假发" value="假发"></Option>
-            <Option label="服装" value="服装"></Option>
-          </Select>
-        </FormItem>
-        <FormItem label="商品分类">
-          <Input clearable v-model="filters.category" />
+        <FormItem label="商品">
+          <Input class="search-input" clearable v-model="filters.sku" />
         </FormItem>
         <FormItem>
           <Button @click="loadFilter()" class="search-btn" type="primary">
@@ -54,7 +45,7 @@ export default {
     return {
       listColums: [
         {
-          title: "sku",
+          title: "商品",
           key: "sku"
         },
         {
@@ -108,9 +99,7 @@ export default {
       ],
       listData: [],
       filters: {
-        sku: "",
-        categoryParent: "",
-        category: ""
+        sku: ""
       },
       pageTotal: 1,
       pageCurrent: 1,
@@ -123,25 +112,16 @@ export default {
       let _this = this;
       if (!_this.pageCurrent) _this.pageCurrent = 1;
       let filtersquery = [];
-      Object.keys(_this.filters).forEach(keyItem => {
-        if (_this.filters[keyItem] && _this.filters[keyItem] != "") {
-          if (keyItem == "sku") {
-            filtersquery.push({
-              key: keyItem,
-              binaryop: "like",
-              value: _this.filters[keyItem],
-              andorop: "and"
-            });
-          } else {
-            filtersquery.push({
-              key: keyItem,
-              binaryop: "eq",
-              value: _this.filters[keyItem],
-              andorop: "and"
-            });
-          }
-        }
-      });
+      let filtersSku = {};
+      if (!_this.filters.sku == "") {
+        filtersSku = {
+          key: "sku",
+          binaryop: "like",
+          value: _this.filters.sku,
+          andorop: "and"
+        };
+        filtersquery.push(filtersSku);
+      }
       let data = {
         pageNum: _this.pageCurrent,
         pageSize: _this.pageSize,

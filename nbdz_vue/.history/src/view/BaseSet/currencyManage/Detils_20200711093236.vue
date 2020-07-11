@@ -120,8 +120,8 @@ export default {
       _this.saveValidate(name).then(valid => {
         if (valid) {
           if (
-            !dayjs(_this.Row.endTime).isAfter(
-              dayjs(_this.Row.startTime) &&
+            dayjs(_this.Row.startTime).isAfter(
+              dayjs(_this.Row.endTime) &&
                 dayjs(_this.Row.endTime).diff(
                   dayjs(_this.Row.startTime),
                   "day"
@@ -159,10 +159,13 @@ export default {
     saveEdit(name) {
       const _this = this;
       _this.saveValidate(name).then(valid => {
+        console.log(
+          dayjs(_this.Row.startTime).isAfter(dayjs(_this.Row.endTime))
+        );
         if (valid) {
           if (
-            !dayjs(_this.Row.endTime).isAfter(
-              dayjs(_this.Row.startTime) &&
+            dayjs(_this.Row.startTime).isAfter(
+              dayjs(_this.Row.endTime) &&
                 dayjs(_this.Row.endTime).diff(
                   dayjs(_this.Row.startTime),
                   "day"
