@@ -3,30 +3,29 @@
     <div class="search-con search-con-top">
       <Row>
         <Col :span="22">
-          <Form ref="formInline" label-position="right" :label-width="60" inline>
-            <FormItem label="sku">
-              <Input clearable v-model="filters.sku" />
-            </FormItem>
-            <FormItem label="上级分类">
-              <Select clearable style="width:200px" v-model="filters.categoryParent">
-                <Option label="假发" value="假发"></Option>
-                <Option label="服装" value="服装"></Option>
-              </Select>
-            </FormItem>
-            <FormItem label="商品分类">
-              <Input clearable v-model="filters.category" />
-            </FormItem>
-            <FormItem>
-              <Button @click="loadFilter()" class="search-btn" type="primary">
-                <Icon type="search" />&nbsp;&nbsp;搜索
-              </Button>
-            </FormItem>
-          </Form>
+        <Form ref="formInline" label-position="right" :label-width="60" inline>
+          <FormItem label="sku">
+            <Input clearable v-model="filters.sku" />
+          </FormItem>
+          <FormItem label="上级分类">
+            <Select clearable style="width:200px" v-model="filters.categoryParent">
+              <Option label="假发" value="假发"></Option>
+              <Option label="服装" value="服装"></Option>
+            </Select>
+          </FormItem>
+          <FormItem label="商品分类">
+            <Input clearable v-model="filters.category" />
+          </FormItem>
+          <FormItem>
+            <Button @click="loadFilter()" class="search-btn" type="primary">
+              <Icon type="search" />&nbsp;&nbsp;搜索
+            </Button>
+          </FormItem>
+        </Form>
         </Col>
         <Col :span="2">
-          <Button @click="exportData()" type="primary">导出</Button>
         </Col>
-      </Row>
+      <Row>
     </div>
     <Table
       ref="tables"
@@ -55,10 +54,7 @@
 </template>
 
 <script>
-import {
-  UsUiceNomalSkuQty as getList,
-  ExportUsUiceNomalSkuQty as exportList
-} from "@/api/Analysis";
+import { UsUiceNomalSkuQty as getList } from "@/api/Analysis";
 export default {
   data() {
     return {
@@ -176,55 +172,6 @@ export default {
           _this.tableLoading = false;
           console.log(err);
         });
-    },
-    exportData() {
-      let _this = this;
-      let filtersquery = [];
-      Object.keys(_this.filters).forEach(keyItem => {
-        if (_this.filters[keyItem] && _this.filters[keyItem] != "") {
-          if (keyItem == "sku") {
-            filtersquery.push({
-              key: keyItem,
-              binaryop: "like",
-              value: _this.filters[keyItem],
-              andorop: "and"
-            });
-          } else {
-            filtersquery.push({
-              key: keyItem,
-              binaryop: "eq",
-              value: _this.filters[keyItem],
-              andorop: "and"
-            });
-          }
-        }
-      });
-      let data = {
-        query: filtersquery
-      };
-      this.$Spin.show();
-      exportList(data).then(res => {
-        const content = res;
-        const blob = new Blob([content.data], {
-          type: "application/vnd.ms-excel"
-        });
-        const fileName = "美国仓剩余库存报表.xlsx";
-        if ("download" in document.createElement("a")) {
-          // 非IE下载
-          const elink = document.createElement("a");
-          elink.download = fileName;
-          elink.style.display = "none";
-          elink.href = URL.createObjectURL(blob);
-          document.body.appendChild(elink);
-          elink.click();
-          URL.revokeObjectURL(elink.href); // 释放 URL对象
-          document.body.removeChild(elink);
-        } else {
-          // IE10+下载
-          navigator.msSaveBlob(blob, fileName);
-        }
-        this.$Spin.hide();
-      });
     },
     changePage(val) {
       let _this = this;

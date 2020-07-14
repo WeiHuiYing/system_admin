@@ -157,7 +157,7 @@ export const ChannelLevelSalesCount = data => {
 };
 
 
-// 美国仓unice货物和通用货物剩余库存报表
+// 各店铺各等级产品销量汇总
 export const UsUiceNomalSkuQty = data => {
   return axios.request({
     url: "api/UsUiceNomalSkuQty/GetList",
@@ -227,24 +227,6 @@ export const GetInventorySku = data => {
 export const ExportInventorySku = data => {
   return axios.request({
     url: "api/InventoryQuery/ExportInventorySku",
-    method: "POST",
-    data,
-    responseType: "blob"
-  });
-};
-
-// 出库列表
-export const getOutStockList = data => {
-  return axios.request({
-    url: "api/OrderReport/getOutStockList",
-    method: "POST",
-    data,
-  });
-};
-
-export const exportOutStockList = data => {
-  return axios.request({
-    url: "api/OrderReport/exportOutStockList",
     method: "POST",
     data,
     responseType: "blob"

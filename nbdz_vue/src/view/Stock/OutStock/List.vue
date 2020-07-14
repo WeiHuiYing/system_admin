@@ -7,14 +7,25 @@
             <FormItem label="sku">
               <Input clearable v-model="filters.sku" />
             </FormItem>
-            <FormItem label="上级分类">
-              <Select clearable style="width:200px" v-model="filters.categoryParent">
-                <Option label="假发" value="假发"></Option>
-                <Option label="服装" value="服装"></Option>
-              </Select>
+            <FormItem prop="startTime" label="开始时间">
+              <DatePicker
+                v-model="filters.startTime"
+                type="date"
+                :options="dateOptions"
+                placeholder="请选择开始时间"
+                style="width: 200px"
+                clearable
+              ></DatePicker>
             </FormItem>
-            <FormItem label="商品分类">
-              <Input clearable v-model="filters.category" />
+            <FormItem prop="endTime" label="结束时间">
+              <DatePicker
+                v-model="filters.endTime"
+                type="date"
+                :options="dateOptions"
+                placeholder="请选择结束时间"
+                style="width: 200px"
+                clearable
+              ></DatePicker>
             </FormItem>
             <FormItem>
               <Button @click="loadFilter()" class="search-btn" type="primary">
@@ -56,9 +67,10 @@
 
 <script>
 import {
-  UsUiceNomalSkuQty as getList,
-  ExportUsUiceNomalSkuQty as exportList
+  getOutStockList as getList,
+  exportOutStockList as exportList
 } from "@/api/Analysis";
+import dayjs from "dayjs";
 export default {
   data() {
     return {
@@ -68,59 +80,32 @@ export default {
           key: "sku"
         },
         {
-          title: "商品上级分类",
-          key: "categoryParent"
+          title: "数量",
+          key: "qty"
         },
         {
-          title: "商品分类",
-          key: "category"
+          title: "出库数量",
+          key: "outQty"
         },
         {
-          title: "商品上架品名",
-          key: "name"
+          title: "散单销量",
+          key: "saleQty"
         },
         {
-          title: "unice期初库存",
-          key: "unicePeriodQty"
-        },
-        {
-          title: "unice发货到海外仓的货物量",
-          key: "uncieToUsQty"
-        },
-        {
-          title: "东恒发货到海外仓的货物量",
-          key: "dhToUsQty"
-        },
-        {
-          title: "unice散单销量",
-          key: "uniceSaleQty"
-        },
-        {
-          title: "海外仓调拨到amazon uniceFBA仓量",
-          key: "usTransAmazingQty"
-        },
-        {
-          title: "发往各个线下店货物",
-          key: "offLineQty"
-        },
-        {
-          title: "Unice期末剩余库存",
-          key: "uniceEndingQty"
-        },
-        {
-          title: "海外仓总剩余库存",
-          key: "usEndingQty"
-        },
-        {
-          title: "通用剩余库存",
-          key: "nomalEnndingQty"
+          title: "头程出库数量",
+          key: "shipBatchQty"
         }
       ],
       listData: [],
       filters: {
         sku: "",
-        categoryParent: "",
-        category: ""
+        startTime: "",
+        endTime: ""
+      },
+      dateOptions: {
+        disabledDate(date) {
+          return dayjs(date).isAfter(dayjs());
+        }
       },
       pageTotal: 1,
       pageCurrent: 1,
@@ -133,25 +118,44 @@ export default {
       let _this = this;
       if (!_this.pageCurrent) _this.pageCurrent = 1;
       let filtersquery = [];
-      Object.keys(_this.filters).forEach(keyItem => {
-        if (_this.filters[keyItem] && _this.filters[keyItem] != "") {
-          if (keyItem == "sku") {
-            filtersquery.push({
-              key: keyItem,
-              binaryop: "like",
-              value: _this.filters[keyItem],
-              andorop: "and"
-            });
-          } else {
-            filtersquery.push({
-              key: keyItem,
-              binaryop: "eq",
-              value: _this.filters[keyItem],
-              andorop: "and"
-            });
-          }
+      if (_this.filters["sku"] && _this.filters["sku"] != "") {
+        filtersquery.push({
+          key: "Sku",
+          binaryop: "like",
+          value: _this.filters["sku"],
+          andorop: "and"
+        });
+      }
+      if (
+        _this.filters.startTime &&
+        _this.filters.endTime &&
+        _this.filters.startTime != "" &&
+        _this.filters.endTime != ""
+      ) {
+        let startTime = _this.filters.startTime;
+        let endTime = dayjs(_this.filters.endTime).add(1, "day");
+        if (!dayjs(endTime).isAfter(dayjs(startTime))) {
+          this.$Message.error({
+            content: "结束时间在开始时间之后",
+            duration: 10,
+            closable: true
+          });
+          return false;
+        } else {
+          filtersquery.push({
+            key: "time",
+            binaryop: "gte",
+            value: dayjs(startTime).format("YYYY-MM-DD"),
+            andorop: "and"
+          });
+          filtersquery.push({
+            key: "time",
+            binaryop: "lt",
+            value: dayjs(endTime).format("YYYY-MM-DD"),
+            andorop: "and"
+          });
         }
-      });
+      }
       let data = {
         pageNum: _this.pageCurrent,
         pageSize: _this.pageSize,
@@ -180,25 +184,44 @@ export default {
     exportData() {
       let _this = this;
       let filtersquery = [];
-      Object.keys(_this.filters).forEach(keyItem => {
-        if (_this.filters[keyItem] && _this.filters[keyItem] != "") {
-          if (keyItem == "sku") {
-            filtersquery.push({
-              key: keyItem,
-              binaryop: "like",
-              value: _this.filters[keyItem],
-              andorop: "and"
-            });
-          } else {
-            filtersquery.push({
-              key: keyItem,
-              binaryop: "eq",
-              value: _this.filters[keyItem],
-              andorop: "and"
-            });
-          }
+      if (_this.filters["sku"] && _this.filters["sku"] != "") {
+        filtersquery.push({
+          key: "Sku",
+          binaryop: "like",
+          value: _this.filters["sku"],
+          andorop: "and"
+        });
+      }
+      if (
+        _this.filters.startTime &&
+        _this.filters.endTime &&
+        _this.filters.startTime != "" &&
+        _this.filters.endTime != ""
+      ) {
+        let startTime = _this.filters.startTime;
+        let endTime = dayjs(_this.filters.endTime).add(1, "day");
+        if (!dayjs(endTime).isAfter(dayjs(startTime))) {
+          this.$Message.error({
+            content: "结束时间在开始时间之后",
+            duration: 10,
+            closable: true
+          });
+          return false;
+        } else {
+          filtersquery.push({
+            key: "time",
+            binaryop: "gte",
+            value: dayjs(startTime).format("YYYY-MM-DD"),
+            andorop: "and"
+          });
+          filtersquery.push({
+            key: "time",
+            binaryop: "lt",
+            value: dayjs(endTime).format("YYYY-MM-DD"),
+            andorop: "and"
+          });
         }
-      });
+      }
       let data = {
         query: filtersquery
       };
@@ -208,7 +231,7 @@ export default {
         const blob = new Blob([content.data], {
           type: "application/vnd.ms-excel"
         });
-        const fileName = "美国仓剩余库存报表.xlsx";
+        const fileName = "出库报表.xlsx";
         if ("download" in document.createElement("a")) {
           // 非IE下载
           const elink = document.createElement("a");

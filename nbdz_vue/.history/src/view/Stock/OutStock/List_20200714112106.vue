@@ -7,15 +7,6 @@
             <FormItem label="sku">
               <Input clearable v-model="filters.sku" />
             </FormItem>
-            <FormItem label="上级分类">
-              <Select clearable style="width:200px" v-model="filters.categoryParent">
-                <Option label="假发" value="假发"></Option>
-                <Option label="服装" value="服装"></Option>
-              </Select>
-            </FormItem>
-            <FormItem label="商品分类">
-              <Input clearable v-model="filters.category" />
-            </FormItem>
             <FormItem>
               <Button @click="loadFilter()" class="search-btn" type="primary">
                 <Icon type="search" />&nbsp;&nbsp;搜索
@@ -56,8 +47,8 @@
 
 <script>
 import {
-  UsUiceNomalSkuQty as getList,
-  ExportUsUiceNomalSkuQty as exportList
+  getOutStockList as getList,
+  exportOutStockList as exportList
 } from "@/api/Analysis";
 export default {
   data() {
@@ -68,52 +59,20 @@ export default {
           key: "sku"
         },
         {
-          title: "商品上级分类",
-          key: "categoryParent"
+          title: "outQty",
+          key: "outQty"
         },
         {
-          title: "商品分类",
-          key: "category"
+          title: "qty",
+          key: "qty"
         },
         {
-          title: "商品上架品名",
-          key: "name"
+          title: "saleQty",
+          key: "saleQty"
         },
         {
-          title: "unice期初库存",
-          key: "unicePeriodQty"
-        },
-        {
-          title: "unice发货到海外仓的货物量",
-          key: "uncieToUsQty"
-        },
-        {
-          title: "东恒发货到海外仓的货物量",
-          key: "dhToUsQty"
-        },
-        {
-          title: "unice散单销量",
-          key: "uniceSaleQty"
-        },
-        {
-          title: "海外仓调拨到amazon uniceFBA仓量",
-          key: "usTransAmazingQty"
-        },
-        {
-          title: "发往各个线下店货物",
-          key: "offLineQty"
-        },
-        {
-          title: "Unice期末剩余库存",
-          key: "uniceEndingQty"
-        },
-        {
-          title: "海外仓总剩余库存",
-          key: "usEndingQty"
-        },
-        {
-          title: "通用剩余库存",
-          key: "nomalEnndingQty"
+          title: "shipBatchQty",
+          key: "shipBatchQty"
         }
       ],
       listData: [],

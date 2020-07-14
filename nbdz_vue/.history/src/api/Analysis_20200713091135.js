@@ -232,21 +232,3 @@ export const ExportInventorySku = data => {
     responseType: "blob"
   });
 };
-
-// 出库列表
-export const getOutStockList = data => {
-  return axios.request({
-    url: "api/OrderReport/getOutStockList",
-    method: "POST",
-    data,
-  });
-};
-
-export const exportOutStockList = data => {
-  return axios.request({
-    url: "api/OrderReport/exportOutStockList",
-    method: "POST",
-    data,
-    responseType: "blob"
-  });
-};

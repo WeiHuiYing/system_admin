@@ -7,15 +7,6 @@
             <FormItem label="sku">
               <Input clearable v-model="filters.sku" />
             </FormItem>
-            <FormItem label="上级分类">
-              <Select clearable style="width:200px" v-model="filters.categoryParent">
-                <Option label="假发" value="假发"></Option>
-                <Option label="服装" value="服装"></Option>
-              </Select>
-            </FormItem>
-            <FormItem label="商品分类">
-              <Input clearable v-model="filters.category" />
-            </FormItem>
             <FormItem>
               <Button @click="loadFilter()" class="search-btn" type="primary">
                 <Icon type="search" />&nbsp;&nbsp;搜索
@@ -56,8 +47,8 @@
 
 <script>
 import {
-  UsUiceNomalSkuQty as getList,
-  ExportUsUiceNomalSkuQty as exportList
+  getOutStockList as getList,
+  exportOutStockList as exportList
 } from "@/api/Analysis";
 export default {
   data() {

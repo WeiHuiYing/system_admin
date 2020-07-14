@@ -7,14 +7,25 @@
             <FormItem label="sku">
               <Input clearable v-model="filters.sku" />
             </FormItem>
-            <FormItem label="上级分类">
-              <Select clearable style="width:200px" v-model="filters.categoryParent">
-                <Option label="假发" value="假发"></Option>
-                <Option label="服装" value="服装"></Option>
-              </Select>
+            <FormItem prop="startTime" label="开始时间">
+              <DatePicker
+                v-model="filters.startTime"
+                type="date"
+                :options="dateOptions"
+                placeholder="请选择开始时间"
+                style="width: 200px"
+                clearable
+              ></DatePicker>
             </FormItem>
-            <FormItem label="商品分类">
-              <Input clearable v-model="filters.category" />
+            <FormItem prop="endTime" label="结束时间">
+              <DatePicker
+                v-model="filters.endTime"
+                type="date"
+                :options="dateOptions"
+                placeholder="请选择结束时间"
+                style="width: 200px"
+                clearable
+              ></DatePicker>
             </FormItem>
             <FormItem>
               <Button @click="loadFilter()" class="search-btn" type="primary">
@@ -56,8 +67,8 @@
 
 <script>
 import {
-  UsUiceNomalSkuQty as getList,
-  ExportUsUiceNomalSkuQty as exportList
+  getOutStockList as getList,
+  exportOutStockList as exportList
 } from "@/api/Analysis";
 export default {
   data() {
@@ -68,59 +79,30 @@ export default {
           key: "sku"
         },
         {
-          title: "商品上级分类",
-          key: "categoryParent"
+          title: "数量",
+          key: "qty"
         },
         {
-          title: "商品分类",
-          key: "category"
+          title: "出库数量",
+          key: "outQty"
         },
         {
-          title: "商品上架品名",
-          key: "name"
+          title: "散单销量",
+          key: "saleQty"
         },
         {
-          title: "unice期初库存",
-          key: "unicePeriodQty"
-        },
-        {
-          title: "unice发货到海外仓的货物量",
-          key: "uncieToUsQty"
-        },
-        {
-          title: "东恒发货到海外仓的货物量",
-          key: "dhToUsQty"
-        },
-        {
-          title: "unice散单销量",
-          key: "uniceSaleQty"
-        },
-        {
-          title: "海外仓调拨到amazon uniceFBA仓量",
-          key: "usTransAmazingQty"
-        },
-        {
-          title: "发往各个线下店货物",
-          key: "offLineQty"
-        },
-        {
-          title: "Unice期末剩余库存",
-          key: "uniceEndingQty"
-        },
-        {
-          title: "海外仓总剩余库存",
-          key: "usEndingQty"
-        },
-        {
-          title: "通用剩余库存",
-          key: "nomalEnndingQty"
+          title: "头程出库数量",
+          key: "shipBatchQty"
         }
       ],
       listData: [],
       filters: {
-        sku: "",
-        categoryParent: "",
-        category: ""
+        sku: ""
+      },
+      dateOptions: {
+        disabledDate(date) {
+          return dayjs(date).isAfter(dayjs());
+        }
       },
       pageTotal: 1,
       pageCurrent: 1,

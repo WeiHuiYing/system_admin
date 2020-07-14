@@ -12,7 +12,7 @@
                 v-for="item in warehouseList"
                 :value="item.warehouseCode"
                 :key="item.warehouseCode"
-              >{{ item.warehouseCode }}</Option>
+              >{{ item.warehouseDesc }}</Option>
             </Select>
           </FormItem>
           <FormItem>

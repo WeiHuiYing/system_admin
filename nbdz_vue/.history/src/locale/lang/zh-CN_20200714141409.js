@@ -33,6 +33,7 @@ export default {
   DongHengList: '东恒成本价',
   RepeatPurchaseList: '复购列表',
   FinancialSummaryList: '财务汇总报表',
+  UsUiceNomalSkuQty: 'unice和通用剩余库存报表',
   UsUiceNomalSkuQty_page: 'unice和通用剩余库存报表',
   ProductImage_page: '产品图片',
   FinanceTotal: '财务订单合计报表',

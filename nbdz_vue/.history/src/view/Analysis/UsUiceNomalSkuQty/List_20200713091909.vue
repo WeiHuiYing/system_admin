@@ -208,7 +208,7 @@ export default {
         const blob = new Blob([content.data], {
           type: "application/vnd.ms-excel"
         });
-        const fileName = "美国仓剩余库存报表.xlsx";
+        const fileName = "unice仓剩余库存报表.xlsx";
         if ("download" in document.createElement("a")) {
           // 非IE下载
           const elink = document.createElement("a");

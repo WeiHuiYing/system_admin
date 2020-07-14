@@ -32,6 +32,7 @@ export default {
   DongHengList: 'DongHengCost',
   RepeatPurchaseList: 'RepeatPurchaseList',
   FinancialSummaryList: 'FinancialSummary',
+  UsUiceNomalSkuQty: 'UsUiceNomalSkuQty',
   UsUiceNomalSkuQty_page: 'UsUiceNomalSkuQty',
   ProductImage_page: 'ProductImage',
   FinanceTotal: 'FinanceOrderTotal',
