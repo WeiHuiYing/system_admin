@@ -1,0 +1,1 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d22674a"],{e977:function(n,o,i){n.exports=i.p+"img/icon-social-twitter.5db80e81.svg"}}]);
