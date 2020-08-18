@@ -46,6 +46,7 @@ export default {
   CancelOrderList: "CancelOrder",
   DeliveryTimeList: "DeliveryTime",
   OrderToCodeList: "OrderToCode",
+  MarketingOrder: "MarketingOrder",
   Stock: 'Stock',
   StockQuery: 'StockQuery',
   SkuSaleReport: 'SkuSaleReport',

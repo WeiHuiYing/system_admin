@@ -181,6 +181,10 @@ export const componentList = [{
     name: 'OrderToCodeList'
   },
   {
+    component: 'view/Order/MarketingOrder/List.vue',
+    name: 'MarketingOrder'
+  },
+  {
     component: 'view/Logistics/order/List.vue',
     name: 'OrderTracking'
   },

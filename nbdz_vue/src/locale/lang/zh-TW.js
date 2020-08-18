@@ -47,6 +47,7 @@ export default {
   CancelOrderList: "作廢訂單報表",
   DeliveryTimeList: "發貨時效報表",
   OrderToCodeList: "訂單轉條碼",
+  MarketingOrder: "营銷訂單统计報表",
   Stock: '庫存查询',
   StockQuery: '庫存查询',
   SkuSaleReport: '產品銷售分析',

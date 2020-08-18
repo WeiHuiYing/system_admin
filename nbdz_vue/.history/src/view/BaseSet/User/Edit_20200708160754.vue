@@ -102,23 +102,23 @@ export default {
           {
             required: true,
             message: "用户名必填",
-            trigger: "blur",
-          },
+            trigger: "blur"
+          }
         ],
-        salt: [
+        userPwd: [
           {
             required: true,
             message: "密码必填",
-            trigger: "blur",
+            trigger: "blur"
           },
           {
             type: "string",
             min: 6,
             message: "密码长度≥6",
-            trigger: "blur",
-          },
-        ],
-      },
+            trigger: "blur"
+          }
+        ]
+      }
     };
   },
   watch: {
@@ -126,22 +126,22 @@ export default {
       this.handleReset();
       this.Row = Object.assign({}, newVal);
       if (this.Row.resUserRoles && this.Row.resUserRoles.length > 0) {
-        this.Row.UserRoles = this.Row.resUserRoles.map((item) => {
+        this.Row.UserRoles = this.Row.resUserRoles.map(item => {
           return item.id;
         });
       }
-    },
+    }
   },
   methods: {
     getRoles() {
       let data = {};
       getRoles(data)
-        .then((res) => {
+        .then(res => {
           const resData = res.data;
           const data = resData.data;
           this.Roles = data;
         })
-        .catch((err) => {});
+        .catch(err => {});
     },
     // 部门选择
     deptSelect() {
@@ -153,17 +153,17 @@ export default {
     getDepts() {
       let data = {};
       getDepts(data)
-        .then((res) => {
+        .then(res => {
           const resData = res.data;
           const data = resData.data;
           this.Depts = data;
           this.loadDeptTree();
         })
-        .catch((err) => {});
+        .catch(err => {});
     },
     loadDeptTree() {
       var treeRoot = this.Depts.filter(
-        (p) => !p.parentCode || p.parentCode == ""
+        p => !p.parentCode || p.parentCode == ""
       );
       this.loadDeptTreeChild(treeRoot);
     },
@@ -171,9 +171,7 @@ export default {
       for (let index = 0; index < treeData.length; index++) {
         const element = treeData[index];
         this.loadDeptTreeItem(element);
-        const child = this.Depts.filter(
-          (p) => p.parentCode == element.deptCode
-        );
+        const child = this.Depts.filter(p => p.parentCode == element.deptCode);
         if (child && child.length > 0) {
           this.loadDeptTreeChild(child);
         }
@@ -184,12 +182,12 @@ export default {
         title: treeItemData.deptName,
         expand: true,
         value: treeItemData.deptCode,
-        id: treeItemData.id,
+        id: treeItemData.id
       };
       this.DeptTreeItems.push(treeItem);
       if (treeItemData.parentCode) {
         //foreach 无法终止循环
-        this.DeptTreeItems.every((element) => {
+        this.DeptTreeItems.every(element => {
           if (element.value == treeItemData.parentCode) {
             if (!element.children) {
               element.children = [];
@@ -211,9 +209,9 @@ export default {
       this.modelDept = false;
     },
     rolesSelect() {
-      this.Row.resUserRoles = this.Row.UserRoles.map((item) => {
+      this.Row.resUserRoles = this.Row.UserRoles.map(item => {
         let obj = {
-          roleId: item,
+          roleId: item
         };
         return obj;
       });
@@ -226,7 +224,7 @@ export default {
       }
     },
     saveValidate(name = "formInline") {
-      return this.$refs[name].validate((valid) => {
+      return this.$refs[name].validate(valid => {
         if (!valid) {
           this.$Message.warning("请检查表单数据！");
           return false;
@@ -240,12 +238,11 @@ export default {
     },
     saveEdit() {
       let _this = this;
-      _this.saveValidate().then((r) => {
+      _this.saveValidate().then(r => {
         if (r) {
           delete _this.Row.UserRoles;
-          _this.Row.userPwd = _this.Row.salt;
           editUser(_this.Row)
-            .then((res) => {
+            .then(res => {
               if (res.data.code === 200) {
                 this.$Message.info("编辑成功");
                 this.parent.modelEdit = false;
@@ -254,21 +251,21 @@ export default {
                 this.$Message.error({
                   content: res.data.msg,
                   duration: 10,
-                  closable: true,
+                  closable: true
                 });
               }
             })
-            .catch((err) => {});
+            .catch(err => {});
         }
       });
     },
     saveAdd() {
       let _this = this;
-      _this.saveValidate().then((r) => {
+      _this.saveValidate().then(r => {
         if (r) {
           delete _this.Row.UserRoles;
           addUser(_this.Row)
-            .then((res) => {
+            .then(res => {
               if (res.data.code === 200) {
                 this.$Message.info("编辑成功");
                 this.parent.modelEdit = false;
@@ -277,21 +274,21 @@ export default {
                 this.$Message.error({
                   content: res.data.msg,
                   duration: 10,
-                  closable: true,
+                  closable: true
                 });
               }
             })
-            .catch((err) => {});
+            .catch(err => {});
         }
       });
     },
     handleReset(name = "formInline") {
       this.$refs[name].resetFields();
-    },
+    }
   },
   mounted() {
     this.getRoles();
-  },
+  }
 };
 </script>
 

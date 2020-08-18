@@ -45,6 +45,10 @@ export const componentList = [{
     name: 'currencyManage'
   },
   {
+    component: 'view/BaseSet/EAccountManage/List.vue',
+    name: 'EAccountManage'
+  },
+  {
     component: 'view/Analysis/SalesAnalysis/List.vue',
     name: 'salesAnalysis'
   },
@@ -59,6 +63,10 @@ export const componentList = [{
   {
     component: 'view/Analysis/HairWeftStyleSale/List.vue',
     name: 'HairWeftStyleSale'
+  },
+  {
+    component: 'view/Analysis/HairWeftBlockSale/List.vue',
+    name: 'HairWeftBlockSale'
   },
   {
     component: 'view/Analysis/GetDensity/List.vue',
@@ -109,6 +117,26 @@ export const componentList = [{
     name: 'SkuSaleQuery'
   },
   {
+    component: 'view/Analysis/SkuSaleReport/List.vue',
+    name: 'SkuSaleReport'
+  },
+  {
+    component: 'view/Analysis/FreightReport/List.vue',
+    name: 'FreightReport'
+  },
+  {
+    component: 'view/Analysis/OrderTotalReprot/List.vue',
+    name: 'OrderTotalReprot'
+  },
+  {
+    component: 'view/Analysis/ReturnRefundReport/List.vue',
+    name: 'ReturnRefundReport'
+  },
+  {
+    component: 'view/Analysis/ESaleOrder/List.vue',
+    name: 'ESaleOrder'
+  },
+  {
     component: 'view/Order/Logistics/Query.vue',
     name: 'LogisticsQuery'
   },
@@ -141,12 +169,36 @@ export const componentList = [{
     name: 'TransportationList'
   },
   {
+    component: 'view/Order/CancelOrder/List.vue',
+    name: 'CancelOrderList'
+  },
+  {
+    component: 'view/Order/DeliveryTime/List.vue',
+    name: 'DeliveryTimeList'
+  },
+  {
+    component: 'view/Order/OrderToCode/List.vue',
+    name: 'OrderToCodeList'
+  },
+  {
+    component: 'view/Order/MarketingOrder/List.vue',
+    name: 'MarketingOrder'
+  },
+  {
     component: 'view/Logistics/order/List.vue',
     name: 'OrderTracking'
   },
   {
     component: 'view/Logistics/trackingCode/List.vue',
     name: 'TrackingCode'
+  },
+  {
+    component: 'view/Logistics/agingReport/List.vue',
+    name: 'AgingReport'
+  },
+  {
+    component: 'view/Logistics/logisticsConfig/configList.vue',
+    name: 'logisticsConfig'
   },
   {
     component: 'view/Stock/StockQuery/List.vue',

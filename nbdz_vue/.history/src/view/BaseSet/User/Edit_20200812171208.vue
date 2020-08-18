@@ -267,6 +267,7 @@ export default {
       _this.saveValidate().then((r) => {
         if (r) {
           delete _this.Row.UserRoles;
+          _this.Row.userPwd = _this.Row.salt;
           addUser(_this.Row)
             .then((res) => {
               if (res.data.code === 200) {
