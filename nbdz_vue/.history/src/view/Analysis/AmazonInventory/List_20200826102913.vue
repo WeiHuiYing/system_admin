@@ -1,0 +1,142 @@
+/* 2020 / 08 / 26
+weihuiying
+亚马逊库存报表  */
+<template>
+  <div class="content-main">
+    <div class="search-con search-con-top">
+      <Row>
+        <Col :span="24">
+          <Form ref="formInline" label-position="right" :label-width="60" inline>
+            <FormItem prop="search" label="搜索内容">
+              <Input v-model="filters.search" placeholder="请输入搜索内容"></Input>
+            </FormItem>
+            <FormItem>
+              <Button @click="loadFilters()" class="search-btn" type="primary">搜索</Button>
+            </FormItem>
+          </Form>
+        </Col>
+      </Row>
+    </div>
+    <Table
+      ref="tables"
+      height="750"
+      :loading="tableLoading"
+      :data="listData"
+      v-bind:columns="listColums"
+      stripe
+      border
+    ></Table>
+    <div style="margin: 10px;overflow: hidden">
+      <div style="float: right;">
+        <Page
+          :total="totalCount"
+          :current="currentPage"
+          @on-change="changePage"
+          @on-page-size-change="changePageSize"
+          :page-size="pageSize"
+          :page-size-opts="[100,200,300,400,500]"
+          show-total
+          show-elevator
+          show-sizer
+        ></Page>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { amazonInventory as getList } from "@/api/Analysis";
+import dayjs from "dayjs";
+import excel from "@/libs/excel";
+export default {
+  data() {
+    return {
+      listColums: [
+        {
+          title: "内部sku",
+          width: "200",
+          key: "in_sku",
+        },
+        {
+          title: "外部sku",
+          width: "200",
+          key: "out_sku",
+        },
+        {
+          title: "店铺",
+          width: "200",
+          key: "store_name",
+        },
+        {
+          title: "亚马逊库存",
+          key: "amazon_qty",
+        },
+        {
+          title: "子商品",
+          key: "child_sn",
+        },
+      ],
+      listData: [],
+      filters: {
+        search: "",
+      },
+      dateOptions: {
+        disabledDate(date) {
+          return dayjs(date).isAfter(dayjs());
+        },
+      },
+      pageTotal: 1,
+      pageCurrent: 1,
+      pageSize: 100,
+      tableLoading: false,
+    };
+  },
+  methods: {
+    loadData() {
+      let _this = this;
+      let data = {
+        page: _this.pageCurrent,
+        page_size: _this.pageSize,
+      };
+      _this.tableLoading = true;
+      getList(data)
+        .then((res) => {
+          const resData = res.data;
+          _this.tableLoading = false;
+          _this.listData = resData.results;
+          _this.totalCount = resData.count;
+        })
+        .catch((err) => {
+          _this.tableLoading = false;
+          if (err.response && err.response.request) {
+            const response = err.response.request;
+            this.$Message.error({
+              content: response.responseText,
+              duration: 10,
+              closable: true,
+            });
+          }
+        });
+    },
+    loadFilters() {
+      this.currentPage = 1;
+      this.loadData();
+    },
+    changePageSize(val) {
+      const _this = this;
+      _this.pageSize = val;
+      _this.loadData();
+    },
+    changePage(val) {
+      const _this = this;
+      _this.currentPage = val;
+      _this.loadData();
+    },
+  },
+  mounted() {
+    this.loadData();
+  },
+};
+</script>
+
+<style lang="less"></style>
