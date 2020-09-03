@@ -100,6 +100,11 @@
             <Option label="假发" value="假发">假发</Option>
           </Select>
         </FormItem>
+        <FormItem prop="Status" label="状态">
+          <Select v-model="filters.Status" clearable style="width:150px">
+            <Option value="已发货">已发货</Option>
+          </Select>
+        </FormItem>
         <FormItem prop="CountryCode" label="国家">
           <Input clearable style="width:200px" v-model="filters.CountryCode" placeholder="请输入搜索的国家"></Input>
         </FormItem>
@@ -135,6 +140,17 @@
               :label="item"
               :value="item"
             >{{item}}</Option>
+          </Select>
+        </FormItem>
+
+        <FormItem label="发货仓库">
+          <Select v-model="filters.wareHouseCode" style="width:150px" clearable>
+            <Option
+              v-for="(item,index) in warehouseList"
+              :label="item.warehouseCode"
+              :value="item.warehouseCode"
+              :key="index"
+            >{{ item.warehouseCode }}</Option>
           </Select>
         </FormItem>
         <FormItem prop="startTime" label="创建开始时间">
@@ -229,6 +245,7 @@ export default {
         fhend: "",
         sku: "",
         plateform: "",
+        wareHouseCode: "",
         ProductCategory: "",
         ProcutCategoryName1: "",
         CountryCode: "",
@@ -253,6 +270,10 @@ export default {
           key: "productCategory",
         },
         {
+          title: "状态",
+          key: "status",
+        },
+        {
           title: "子sku",
           key: "sku",
         },
@@ -272,6 +293,7 @@ export default {
       modelFilters: false,
       plateList: [],
       shopList: [],
+      warehouseList: [],
     };
   },
   methods: {
@@ -421,6 +443,15 @@ export default {
         };
         filterQuery.push(refNoObj);
       }
+      if (_this.filters.wareHouseCode && _this.filters.wareHouseCode != "") {
+        let wareHouseCodeObj = {
+          key: "wareHouseCode",
+          binaryop: "like",
+          value: _this.filters.wareHouseCode,
+          andorop: "and",
+        };
+        filterQuery.push(wareHouseCodeObj);
+      }
       return filterQuery;
     },
     filtersDate(keyString, startTime, endTime, keyStringEnd) {
@@ -477,6 +508,14 @@ export default {
       let data = {};
       GetPlateform().then((res) => {
         _this.plateList = res.data;
+      });
+      getWare(data).then((res) => {
+        const resData = res.data;
+        if (resData.code == 200) {
+          _this.warehouseList = resData.data;
+        } else {
+          this.$Message.error(resData.msg);
+        }
       });
     },
     changePlate() {

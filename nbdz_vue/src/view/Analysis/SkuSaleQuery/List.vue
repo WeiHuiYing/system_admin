@@ -100,6 +100,16 @@
             <Option label="假发" value="假发">假发</Option>
           </Select>
         </FormItem>
+        <FormItem prop="Status" label="状态">
+          <Select v-model="filters.Status" clearable style="width:150px">
+            <Option
+              v-for="(item,index) in statusList"
+              :key="index"
+              :label="item.value"
+              :value="item.label"
+            >{{item.value}}</Option>
+          </Select>
+        </FormItem>
         <FormItem prop="CountryCode" label="国家">
           <Input clearable style="width:200px" v-model="filters.CountryCode" placeholder="请输入搜索的国家"></Input>
         </FormItem>
@@ -265,6 +275,10 @@ export default {
           key: "productCategory",
         },
         {
+          title: "状态",
+          key: "status",
+        },
+        {
           title: "子sku",
           key: "sku",
         },
@@ -286,6 +300,11 @@ export default {
       shopList: [],
       warehouseList: [],
     };
+  },
+  computed: {
+    statusList() {
+      return this.$store.state.orderStatus;
+    },
   },
   methods: {
     loadData() {
@@ -380,6 +399,14 @@ export default {
           andorop: "and",
         };
         filterQuery.push(storeObj);
+      }
+      if (_this.filters.Status && _this.filters.Status != "") {
+        filterQuery.push({
+          key: "Status",
+          binaryop: "eq",
+          value: _this.filters.Status,
+          andorop: "and",
+        });
       }
       if (_this.filters.sku && _this.filters.sku != "") {
         let skuObj = {

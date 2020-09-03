@@ -139,13 +139,13 @@
         </FormItem>
 
         <FormItem label="发货仓库">
-          <Select v-model="filters.wareHouseDesc" style="width:150px" clearable>
+          <Select v-model="filters.wareHouseCode" style="width:150px" clearable>
             <Option
               v-for="(item,index) in warehouseList"
-              :label="item.warehouseDesc"
-              :value="item.warehouseDesc"
+              :label="item.warehouseCode"
+              :value="item.warehouseCode"
               :key="index"
-            >{{ item.warehouseDesc }}</Option>
+            >{{ item.warehouseCode }}</Option>
           </Select>
         </FormItem>
         <FormItem prop="startTime" label="创建开始时间">
@@ -218,7 +218,6 @@
 
 <script>
 import { GetPlateform, GetShop } from "@/api/Order";
-import { getList as getWare } from "@/api/ECWarehouse";
 import {
   SkuSaleQuery as getList,
   ExportSkuSaleQuery as exportOrder,
@@ -241,7 +240,7 @@ export default {
         fhend: "",
         sku: "",
         plateform: "",
-        wareHouseDesc: "",
+        wareHouseCode: "",
         ProductCategory: "",
         ProcutCategoryName1: "",
         CountryCode: "",
@@ -276,6 +275,10 @@ export default {
         {
           title: "数量",
           key: "qty",
+        },
+        {
+          title: "状态",
+          key: "status",
         },
       ],
       pageTotal: 1,
@@ -434,6 +437,15 @@ export default {
           andorop: "and",
         };
         filterQuery.push(refNoObj);
+      }
+      if (_this.filters.wareHouseCode && _this.filters.wareHouseCode != "") {
+        let wareHouseCodeObj = {
+          key: "wareHouseCode",
+          binaryop: "like",
+          value: _this.filters.wareHouseCode,
+          andorop: "and",
+        };
+        filterQuery.push(wareHouseCodeObj);
       }
       return filterQuery;
     },

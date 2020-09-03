@@ -106,6 +106,48 @@
         <FormItem prop="refNo" label="参考单号">
           <Input clearable style="width:200px" v-model="filters.refNo" placeholder="请输入搜索的参考单号"></Input>
         </FormItem>
+        <FormItem prop="plateform" label="平台">
+          <Select
+            v-model="filters.plateform"
+            @on-change="changePlate"
+            clearable
+            style="width:200px"
+          >
+            <Option
+              v-for="(item,index) in plateList"
+              :key="index"
+              :label="item"
+              :value="item"
+            >{{item}}</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="storeName" label="店铺">
+          <Select
+            :disabled="filters.plateform == ''? true : false"
+            v-model="filters.storeName"
+            clearable
+            style="width:200px"
+            multiple
+          >
+            <Option
+              v-for="(item,index) in shopList"
+              :key="index"
+              :label="item"
+              :value="item"
+            >{{item}}</Option>
+          </Select>
+        </FormItem>
+
+        <FormItem label="发货仓库">
+          <Select v-model="filters.wareHouseCode" style="width:150px" clearable>
+            <Option
+              v-for="(item,index) in warehouseList"
+              :label="item.warehouseCode"
+              :value="item.warehouseCode"
+              :key="index"
+            >{{ item.warehouseCode }}</Option>
+          </Select>
+        </FormItem>
         <FormItem prop="startTime" label="创建开始时间">
           <DatePicker
             v-model="filters.startTime"
@@ -146,36 +188,25 @@
             clearable
           ></DatePicker>
         </FormItem>
-        <FormItem prop="plateform" label="平台">
-          <Select
-            v-model="filters.plateform"
-            @on-change="changePlate"
+        <FormItem prop="fhstart" label="发货开始时间">
+          <DatePicker
+            v-model="filters.fhstart"
+            type="date"
+            :options="dateOptions"
+            placeholder="请选择开始时间"
+            style="width: 200px"
             clearable
-            style="width:200px"
-          >
-            <Option
-              v-for="(item,index) in plateList"
-              :key="index"
-              :label="item"
-              :value="item"
-            >{{item}}</Option>
-          </Select>
+          ></DatePicker>
         </FormItem>
-        <FormItem prop="storeName" label="店铺">
-          <Select
-            :disabled="filters.plateform == ''? true : false"
-            v-model="filters.storeName"
+        <FormItem prop="fhend" label="发货结束时间">
+          <DatePicker
+            v-model="filters.fhend"
+            type="date"
+            :options="dateOptions"
+            placeholder="请选择结束时间"
+            style="width: 200px"
             clearable
-            style="width:200px"
-            multiple
-          >
-            <Option
-              v-for="(item,index) in shopList"
-              :key="index"
-              :label="item"
-              :value="item"
-            >{{item}}</Option>
-          </Select>
+          ></DatePicker>
         </FormItem>
         <div style="text-align:right;">
           <Button @click="filtersLoad()" class="search-btn" type="primary">搜索</Button>
@@ -205,8 +236,11 @@ export default {
         endTime: "",
         PaidStartTime: "",
         PaidEndTime: "",
+        fhstart: "",
+        fhend: "",
         sku: "",
         plateform: "",
+        wareHouseCode: "",
         ProductCategory: "",
         ProcutCategoryName1: "",
         CountryCode: "",
@@ -231,6 +265,10 @@ export default {
           key: "productCategory",
         },
         {
+          title: "状态",
+          key: "status",
+        },
+        {
           title: "子sku",
           key: "sku",
         },
@@ -250,6 +288,7 @@ export default {
       modelFilters: false,
       plateList: [],
       shopList: [],
+      warehouseList: [],
     };
   },
   methods: {
@@ -267,12 +306,21 @@ export default {
         _this.filters.PaidStartTime,
         _this.filters.PaidEndTime
       );
+      let filterFh = _this.filtersDate(
+        "fhstart",
+        _this.filters.fhstart,
+        _this.filters.fhend,
+        "fhend"
+      );
       if (filterCreate && filterPaid) {
         if (filterCreate.length > 0) {
           filterQuery = filterQuery.concat(filterCreate);
         }
         if (filterPaid.length > 0) {
           filterQuery = filterQuery.concat(filterPaid);
+        }
+        if (filterFh.length > 0) {
+          filterQuery = filterQuery.concat(filterFh);
         }
       } else {
         return false;
@@ -390,9 +438,18 @@ export default {
         };
         filterQuery.push(refNoObj);
       }
+      if (_this.filters.wareHouseCode && _this.filters.wareHouseCode != "") {
+        let wareHouseCodeObj = {
+          key: "wareHouseCode",
+          binaryop: "like",
+          value: _this.filters.wareHouseCode,
+          andorop: "and",
+        };
+        filterQuery.push(wareHouseCodeObj);
+      }
       return filterQuery;
     },
-    filtersDate(keyString, startTime, endTime) {
+    filtersDate(keyString, startTime, endTime, keyStringEnd) {
       let filterQuery = [];
       if (startTime != "" && endTime != "") {
         if (
@@ -406,20 +463,37 @@ export default {
           });
           return false;
         } else {
-          let Start = {
-            key: keyString,
-            binaryop: "gte",
-            value: dayjs(startTime).format("YYYY-MM-DD"),
-            andorop: "and",
-          };
-          let End = {
-            key: keyString,
-            binaryop: "lt",
-            value: dayjs(endTime).add(1, "day").format("YYYY-MM-DD"),
-            andorop: "and",
-          };
-          filterQuery.push(Start);
-          filterQuery.push(End);
+          if (keyStringEnd) {
+            let Start = {
+              key: keyString,
+              binaryop: "gte",
+              value: dayjs(startTime).format("YYYY-MM-DD"),
+              andorop: "and",
+            };
+            let End = {
+              key: keyStringEnd,
+              binaryop: "lt",
+              value: dayjs(endTime).add(1, "day").format("YYYY-MM-DD"),
+              andorop: "and",
+            };
+            filterQuery.push(Start);
+            filterQuery.push(End);
+          } else {
+            let Start = {
+              key: keyString,
+              binaryop: "gte",
+              value: dayjs(startTime).format("YYYY-MM-DD"),
+              andorop: "and",
+            };
+            let End = {
+              key: keyString,
+              binaryop: "lt",
+              value: dayjs(endTime).add(1, "day").format("YYYY-MM-DD"),
+              andorop: "and",
+            };
+            filterQuery.push(Start);
+            filterQuery.push(End);
+          }
         }
       }
       return filterQuery;
@@ -429,6 +503,14 @@ export default {
       let data = {};
       GetPlateform().then((res) => {
         _this.plateList = res.data;
+      });
+      getWare(data).then((res) => {
+        const resData = res.data;
+        if (resData.code == 200) {
+          _this.warehouseList = resData.data;
+        } else {
+          this.$Message.error(resData.msg);
+        }
       });
     },
     changePlate() {
