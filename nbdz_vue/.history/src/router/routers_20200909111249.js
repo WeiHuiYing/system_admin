@@ -356,7 +356,7 @@ export default [{
       name: 'AmaOrder',
       meta: {
         title: '三方订单明细报表',
-        access: ["report_order:amountimport", "report_order:amountimport"]
+        access: ["report_order:amountimport"]
       },
       component: () => import('@/view/Order/AmaOrder/List.vue')
     }]
