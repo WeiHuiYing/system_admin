@@ -64,6 +64,5 @@ export default {
   CodeManage: "CustomsCodeManage",
   ProductCodeManage: "ProductCustomsCodeManage",
   DeclarationManage: "CustomsDeclarationManage",
-  ThreeWareSkuQuery: "ThreeWareSkuQuery",
-  AmaOrder: "AmaOrder"
+  ThreeWareSkuQuery: "ThreeWareSkuQuery"
 }

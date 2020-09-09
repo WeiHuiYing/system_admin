@@ -246,7 +246,7 @@ export default [{
         title: '财务合计报表',
         access: ["report_order:ordercosttotal", "report_order:ordercosttotal:export"]
       },
-      component: () => import('@/view/Order/FinanceTotal/List.vue')
+      component: () => import('@/view/Analysis/FinanceTotal/List.vue')
     }, {
       path: 'SkuSaleQuery',
       name: 'SkuSaleQuery',
@@ -254,7 +254,7 @@ export default [{
         title: 'sku销售明细',
         access: ["report_order:skusalequery", "report_order:skusalequery:export"]
       },
-      component: () => import('@/view/Order/SkuSaleQuery/List.vue')
+      component: () => import('@/view/Analysis/SkuSaleQuery/List.vue')
     }, {
       path: 'TransportationList',
       name: 'TransportationList',
@@ -270,7 +270,7 @@ export default [{
         title: '运费报表',
         access: ["report_order:shipfeeorder", "report_order:shipfeeorder:export"]
       },
-      component: () => import('@/view/Order/FreightReport/List.vue')
+      component: () => import('@/view/Analysis/FreightReport/List.vue')
     }, {
       path: 'OrderTotalReprot',
       name: 'OrderTotalReprot',
@@ -278,7 +278,7 @@ export default [{
         title: '订单数量报表',
         access: ["report_order:salenumber", "report_order:salenumber:export"]
       },
-      component: () => import('@/view/Order/OrderTotalReprot/List.vue')
+      component: () => import('@/view/Analysis/OrderTotalReprot/List.vue')
     }, {
       path: 'ReturnRefundReport',
       name: 'ReturnRefundReport',
@@ -286,7 +286,7 @@ export default [{
         title: '退货退款报表',
         access: ["report_order:returnorder", "report_order:returnorder:export"]
       },
-      component: () => import('@/view/Order/ReturnRefundReport/List.vue')
+      component: () => import('@/view/Analysis/ReturnRefundReport/List.vue')
     }, {
       path: 'CancelOrderList',
       name: 'CancelOrderList',
@@ -351,14 +351,6 @@ export default [{
         access: ["report_order:amountimport"]
       },
       component: () => import('@/view/Order/ImportOrderAmount/List.vue')
-    }, {
-      path: 'AmaOrder',
-      name: 'AmaOrder',
-      meta: {
-        title: '三方订单明细报表',
-        access: ["report_order:amountimport"]
-      },
-      component: () => import('@/view/Order/AmaOrder/List.vue')
     }]
   },
   {
@@ -423,7 +415,7 @@ export default [{
       name: 'ESaleOrder',
       meta: {
         title: 'E贸易订单',
-        access: ["report_warehourse:etradeorder"]
+        access: ["report_warehourse:Etradeorder"]
       },
       component: () => import('@/view/Analysis/ESaleOrder/List.vue')
     }, {

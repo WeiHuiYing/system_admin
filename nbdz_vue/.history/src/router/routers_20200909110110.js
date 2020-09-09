@@ -423,7 +423,7 @@ export default [{
       name: 'ESaleOrder',
       meta: {
         title: 'E贸易订单',
-        access: ["report_warehourse:etradeorder"]
+        access: ["report_warehourse:Etradeorder"]
       },
       component: () => import('@/view/Analysis/ESaleOrder/List.vue')
     }, {

@@ -66,6 +66,5 @@ export default {
   CodeManage: "海关编码维护",
   ProductCodeManage: "商品海关编码维护",
   DeclarationManage: "9810报关单管理",
-  ThreeWareSkuQuery: "三方仓库外部SKU成本",
-  AmaOrder: "三方订单明细报表"
+  ThreeWareSkuQuery: "三方仓库外部SKU成本"
 }

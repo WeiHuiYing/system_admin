@@ -500,7 +500,7 @@ export const ThreeWareSkuQuery = data => {
   });
 };
 // 导出
-export const exportThreeWareSkuQuery = data => {
+export const exportThreeWareSkuQueryExport = data => {
   return axios.request({
     url: "api/FinancialStatement/ThreeWareSkuQueryExport",
     method: "POST",
