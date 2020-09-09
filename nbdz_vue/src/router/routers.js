@@ -211,7 +211,7 @@ export default [{
       path: 'AmazonList',
       name: 'AmazonList',
       meta: {
-        title: '亚马逊',
+        title: '亚马逊交易记录',
         access: ["report_order:amazon"]
       },
       component: () => import('@/view/Order/Amazon/List.vue')
@@ -219,7 +219,7 @@ export default [{
       path: 'DongHengList',
       name: 'DongHengList',
       meta: {
-        title: '东恒成本价',
+        title: '导入东恒成本价',
         access: ["report_order:dhcoustimport", "report_order:dhcoust"]
       },
       component: () => import('@/view/Order/DongHeng/List.vue')
@@ -228,7 +228,7 @@ export default [{
       name: 'RepeatPurchaseList',
       meta: {
         title: '复购客户',
-        access: ["report_order:repeatcustimport", "report_order:repeatcust"]
+        access: ["report_order:repeatcust", "report_order:repeatcust"]
       },
       component: () => import('@/view/Order/RepeatPurchase/List.vue')
     }, {
@@ -236,7 +236,7 @@ export default [{
       name: 'FinancialSummaryList',
       meta: {
         title: '财务汇总报表',
-        access: ["report_order:financialstatement", "report_order:financialstatement:export", "report_order:financialstatementexport"]
+        access: ["report_order:financialstatement", "report_order:financialstatement:export"]
       },
       component: () => import('@/view/Order/FinancialSummary/List.vue')
     }, {
@@ -382,16 +382,15 @@ export default [{
       path: 'UsTageTypeInventory',
       name: 'UsTagTypeInventory_page',
       meta: {
-        title: '美国仓类型报表'
-
+        title: '美国仓类型报表',
+access: ["report_warehourse:ustagtype"]
       },
       component: () => import('@/view/Analysis/UsTagTypeInventory/List.vue')
     }, {
       path: 'BnsUsBaseInventory',
       name: 'BnsUsBaseInventory_page',
       meta: {
-        title: 'unice期初库存维护',
-        access: ["report_warehourse:unicebim"]
+        title: 'unice期初库存维护'
       },
       component: () => import('@/view/Analysis/BnsUsBaseInventory/List.vue')
     }, {
@@ -399,7 +398,7 @@ export default [{
       name: 'UsUiceNomalSkuQty_page',
       meta: {
         title: 'unice和通用剩余库存报表',
-        access: ["report_warehourse:rir"]
+        access: ["report_warehourse:usuicesku"]
       },
       component: () => import('@/view/Analysis/UsUiceNomalSkuQty/List.vue')
     }, {
