@@ -168,6 +168,8 @@ export default [{
         name: 'ThreeWareSkuQuery',
         meta: {
           title: '三方仓库外部SKU成本计算',
+		  access: ["report_order:threewaresku"]
+		  
         },
         component: () => import('@/view/Analysis/ThreeWareSkuQuery/List.vue')
       }
@@ -356,7 +358,7 @@ export default [{
       name: 'AmaOrder',
       meta: {
         title: '三方订单明细报表',
-        access: ["report_order:amountimport"]
+        access: ["report_order:amaorder"]
       },
       component: () => import('@/view/Order/AmaOrder/List.vue')
     }]
