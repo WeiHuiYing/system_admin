@@ -350,6 +350,7 @@ class Detils extends React.Component {
             name="picName"
             action="http://8000.bitcoding.top:8888/api/DingTalkNews/picUpload"
             beforeUpload={this.beforeUpload}
+            headers={{ Authorization: localStorage.getItem('token') }}
             onChange={info => {
               if (info.file.status === 'done') {
                 this.setState({

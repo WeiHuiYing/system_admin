@@ -20,23 +20,35 @@ const Model = {
     status: undefined,
   },
   effects: {
+
     * login({
       payload
     }, {
       call,
       put
     }) {
-      const response = yield call(AccountLogin, payload);
-      // Login successfully
-      if (response.code === 1) {
-        if (response.data.token) {
-          localStorage.setItem('token', 'Bearer ' + response.data.token);
-          const userInfo = yield call(GetAccess);
-          yield put({
-            type: 'changeLoginStatus',
-            payload: userInfo,
-          });
+
+      const data = {
+        username: payload.name,
+        password: payload.password,
+        client_id: 'report_client',
+        client_secret: 'longqi.123',
+        grant_type: 'password',
+        redirect_uri: 'http://218.28.44.115:9000/signin-oidc',
+        scope: "roles email openid report_api adminClient_api"
+      };
+      const response = yield call(AccountLogin, data);
+      if (response.access_token) {
+        localStorage.setItem('token', "Bearer " + response.access_token);
+        let data = {
+          token: "Bearer " + response.access_token
         }
+        let userInfo = yield call(GetAccess, data);
+        localStorage.setItem('userId', userInfo.sub);
+        yield put({
+          type: 'changeLoginStatus',
+          payload: userInfo,
+        });
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let {
@@ -53,12 +65,13 @@ const Model = {
               redirect = redirect.substr(redirect.indexOf('#') + 1);
             }
           } else {
-            window.location.href = '/';
+            window.location.href = '/welcome';
             return;
           }
         }
 
-        router.replace(redirect || '/');
+        router.replace(redirect || '/welcome');
+
       }
     },
 
@@ -66,8 +79,8 @@ const Model = {
       const {
         redirect
       } = getPageQuery(); // Note: There may be security issues, please note
-
       if (window.location.pathname !== '/user/login' && !redirect) {
+        localStorage.removeItem('token');
         router.replace({
           pathname: '/user/login',
           search: stringify({

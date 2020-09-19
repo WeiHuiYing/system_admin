@@ -1,5 +1,5 @@
 import {
-  GetAccess
+  GetAccess,
 } from '@/services/login';
 const UserModel = {
   namespace: 'user',
