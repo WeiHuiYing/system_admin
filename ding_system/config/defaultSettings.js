@@ -25,8 +25,8 @@ export default {
   },
   // 营销系统
   baseApi: {
-    dev: 'http://8000.bitcoding.top:8888/',
-    pro: 'http://8000.bitcoding.top:8888/'
+    dev: 'http://antreport.bitcoding.top:8888',
+    pro: 'http://antreport.bitcoding.top:8888'
   },
   pwa: false,
   iconfontUrl: '',

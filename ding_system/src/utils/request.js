@@ -103,7 +103,7 @@ request.interceptors.request.use((url, options) => {
     url = loginApi + url.replace('/login/', '');
   }
   if (new RegExp('^/api/').test(url)) {
-    url = baseApi + url.replace('/api/', 'api/');
+    url = baseApi + url;
   }
   if (new RegExp('^/auth/').test(url)) {
     url = AuthApi + url.replace('/auth/', '');

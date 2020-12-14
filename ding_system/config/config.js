@@ -130,7 +130,7 @@ export default {
   publicPath: '../',
   proxy: {
     '/api/': {
-      target: 'http://8000.bitcoding.top:8888/',
+      target: 'http://antreport.bitcoding.top:8888',
       changeOrigin: true,
     },
   },

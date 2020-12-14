@@ -210,7 +210,7 @@ class Detils extends React.Component {
       formData.append('picName', fileData, 'image.png');
       try {
         const success = await picUpload(formData);
-        return 'http://8000.bitcoding.top:8888' + success.data.url;
+        return 'http://antreport.bitcoding.top:8888' + success.data.url;
       } catch (error) {}
     } else {
       message.error('请上传img/png图片文件');
@@ -348,13 +348,13 @@ class Detils extends React.Component {
             className="pic-uploader"
             showUploadList={false}
             name="picName"
-            action="http://8000.bitcoding.top:8888/api/DingTalkNews/picUpload"
+            action="http://antreport.bitcoding.top:8888/api/DingTalkNews/picUpload"
             beforeUpload={this.beforeUpload}
             headers={{ Authorization: localStorage.getItem('token') }}
             onChange={info => {
               if (info.file.status === 'done') {
                 this.setState({
-                  image: 'http://8000.bitcoding.top:8888' + info.file.response.data.url,
+                  image: 'http://antreport.bitcoding.top:8888' + info.file.response.data.url,
                 });
               }
             }}
