@@ -118,7 +118,7 @@ import {
   ExportCancelOrderReport as exportReport,
   GetPlateform,
   GetShop,
-} from "@/api/Order";
+} from "@/api/order";
 import { filtersNewDate as filtersDate } from "@/libs/validator";
 import dayjs from "dayjs";
 import store from "@/store";

@@ -1,57 +1,70 @@
 <template>
   <div class="content-main">
-    <div style="margin:10px 0" class="search-con search-con-top">
+    <div style="margin: 10px 0" class="search-con search-con-top">
       <Row>
         <Col :span="23">
-          <Form ref="formInline" label-position="right" :label-width="100" inline>
+          <Form
+            ref="formInline"
+            label-position="right"
+            :label-width="100"
+            inline
+          >
             <FormItem prop="plateform" label="平台">
               <Select
                 v-model="filters.plateform"
                 @on-change="changePlate"
                 clearable
-                style="width:150px"
+                style="width: 150px"
               >
                 <Option
-                  v-for="(item,index) in plateList"
+                  v-for="(item, index) in plateList"
                   :key="index"
                   :label="item"
                   :value="item"
-                >{{item}}</Option>
+                  >{{ item }}</Option
+                >
               </Select>
             </FormItem>
             <FormItem prop="storeName" label="店铺">
               <Select
-                :disabled="filters.plateform == ''? true : false"
+                :disabled="filters.plateform == '' ? true : false"
                 v-model="filters.storeName"
                 clearable
-                style="width:150px"
+                style="width: 150px"
               >
                 <Option
-                  v-for="(item,index) in shopList"
+                  v-for="(item, index) in shopList"
                   :key="index"
                   :label="item"
                   :value="item"
-                >{{item}}</Option>
+                  >{{ item }}</Option
+                >
               </Select>
             </FormItem>
             <FormItem prop="status" label="订单状态">
-              <Select v-model="filters.status" clearable style="width:150px">
+              <Select v-model="filters.status" clearable style="width: 150px">
                 <Option
-                  v-for="(item,index) in statusList"
+                  v-for="(item, index) in statusList"
                   :key="index"
                   :label="item.value"
                   :value="item.label"
-                >{{item.value}}</Option>
+                  >{{ item.value }}</Option
+                >
               </Select>
             </FormItem>
             <FormItem prop="warehouseCode" label="发货仓库">
-              <Select v-model="filters.warehouseCode" clearable style="width:150px">
+              <Select
+                v-model="filters.warehouseCode"
+                clearable
+                style="width: 150px"
+              >
                 <Option
-                  v-for="(item,index) in wareList"
+                  v-for="(item, index) in wareList"
                   :key="index"
                   :label="item.warehouseCode"
                   :value="item.warehouseCode"
-                >{{item.warehouseCode}}</Option>
+                  >{{ item.warehouseCode }}</Option
+                >
               </Select>
             </FormItem>
             <FormItem prop="startTime" label="创建开始时间">
@@ -116,7 +129,9 @@
           </Form>
         </Col>
         <Col :span="1">
-          <Button @click="exportAll()" class="search-btn" type="primary">导出</Button>
+          <Button @click="exportAll()" class="search-btn" type="primary"
+            >导出</Button
+          >
         </Col>
       </Row>
     </div>
@@ -142,15 +157,15 @@
       </TabPane>
     </Tabs>
 
-    <div style="margin: 10px;overflow: hidden">
-      <div style="float: right;">
+    <div style="margin: 10px; overflow: hidden">
+      <div style="float: right">
         <Page
           :total="pageTotal"
           :current="pageCurrent"
           :page-size="pageSize"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
-          :page-size-opts="[100,200,300,400,500]"
+          :page-size-opts="[100, 200, 300, 400, 500]"
           show-total
           show-elevator
           show-sizer
@@ -166,8 +181,10 @@
       footer-hide
     >
       <Form ref="formInline" label-position="right" :label-width="100" inline>
-        <div style="text-align:right;">
-          <Button @click="filtersLoad()" class="search-btn" type="primary">搜索</Button>
+        <div style="text-align: right">
+          <Button @click="filtersLoad()" class="search-btn" type="primary"
+            >搜索</Button
+          >
         </div>
       </Form>
     </Modal>
@@ -175,10 +192,10 @@
 </template>
 
 <script>
-import { GetPlateform, GetShop } from "@/api/Order";
+import { GetPlateform, GetShop } from "@/api/order";
 import {
   OrderCostTotal as getList,
-  ExportOrderCostTotal as exportOrder
+  ExportOrderCostTotal as exportOrder,
 } from "@/api/Analysis";
 import { getList as getWare } from "@/api/ECWarehouse";
 import dayjs from "dayjs";
@@ -196,12 +213,12 @@ export default {
         PayStartTime: "",
         PayEndTime: "",
         ShipStartTime: "",
-        ShipEndTime: ""
+        ShipEndTime: "",
       },
       dateOptions: {
         disabledDate(date) {
           return dayjs(date).isAfter(dayjs());
-        }
+        },
       },
       listData: [],
       totalVisible: "false",
@@ -209,74 +226,74 @@ export default {
       plateColumns: [
         {
           title: "平台",
-          key: "plateform"
+          key: "plateform",
         },
         {
           title: "货币类型",
-          key: "currency"
+          key: "currency",
         },
         {
           title: "订单数量",
-          key: "orderQty"
+          key: "orderQty",
         },
         {
           title: "商品数量",
-          key: "productQty"
+          key: "productQty",
         },
         {
           title: "订单总运费",
-          key: "shipFee"
+          key: "shipFee",
         },
         {
           title: "订单总金额",
-          key: "total"
+          key: "total",
         },
         {
           title: "订单总成本",
-          key: "cost"
+          key: "cost",
         },
         {
           title: "订单毛利率",
-          key: "grossmargin"
-        }
+          key: "grossmargin",
+        },
       ],
       storeColumns: [
         {
           title: "平台",
-          key: "plateform"
+          key: "plateform",
         },
         {
           title: "店铺",
-          key: "storeName"
+          key: "storeName",
         },
         {
           title: "货币类型",
-          key: "currency"
+          key: "currency",
         },
         {
           title: "订单数量",
-          key: "orderQty"
+          key: "orderQty",
         },
         {
           title: "商品数量",
-          key: "productQty"
+          key: "productQty",
         },
         {
           title: "订单总运费",
-          key: "shipFee"
+          key: "shipFee",
         },
         {
           title: "订单总金额",
-          key: "total"
+          key: "total",
         },
         {
           title: "订单总成本",
-          key: "cost"
+          key: "cost",
         },
         {
           title: "订单毛利率",
-          key: "grossmargin"
-        }
+          key: "grossmargin",
+        },
       ],
       pageTotal: 1,
       pageCurrent: 1,
@@ -285,13 +302,13 @@ export default {
       modelFilters: false,
       plateList: [],
       wareList: [],
-      shopList: []
+      shopList: [],
     };
   },
   computed: {
     statusList() {
       return this.$store.state.orderStatus;
-    }
+    },
   },
   methods: {
     loadData() {
@@ -303,16 +320,16 @@ export default {
         data: {
           pageNum: _this.pageCurrent,
           pageSize: _this.pageSize,
-          query: filterQuery
+          query: filterQuery,
         },
-        total: _this.totalVisible
+        total: _this.totalVisible,
       };
       if (this.currentTab == "") {
         this.currentTab = this.totalVisible == true ? "plateform" : "store";
       }
       _this.tableLoading = true;
       getList(data)
-        .then(res => {
+        .then((res) => {
           const resData = res.data;
           _this.tableLoading = false;
           if (resData.code == 200) {
@@ -322,11 +339,11 @@ export default {
             this.$Message.error({
               content: resData.msg,
               duration: 10,
-              closable: true
+              closable: true,
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -363,7 +380,7 @@ export default {
           key: "plateform",
           binaryop: "eq",
           value: _this.filters.plateform,
-          andorop: "and"
+          andorop: "and",
         };
         filterQuery.push(plateObj);
       }
@@ -372,7 +389,7 @@ export default {
           key: "warehouseCode",
           binaryop: "eq",
           value: _this.filters.warehouseCode,
-          andorop: "and"
+          andorop: "and",
         };
         filterQuery.push(wareObj);
       }
@@ -381,7 +398,7 @@ export default {
           key: "storeName",
           binaryop: "eq",
           value: _this.filters.storeName,
-          andorop: "and"
+          andorop: "and",
         };
         filterQuery.push(storeObj);
       }
@@ -390,7 +407,7 @@ export default {
           key: "status",
           binaryop: "eq",
           value: _this.filters.status,
-          andorop: "and"
+          andorop: "and",
         };
         filterQuery.push(statusObj);
       }
@@ -401,10 +418,10 @@ export default {
     selectLoad() {
       let _this = this;
       let data = {};
-      GetPlateform().then(res => {
+      GetPlateform().then((res) => {
         _this.plateList = res.data;
       });
-      getWare(data).then(res => {
+      getWare(data).then((res) => {
         const resData = res.data;
         if (resData.code == 200) {
           _this.wareList = resData.data;
@@ -421,7 +438,7 @@ export default {
           this.$Message.error({
             content: "结束时间在开始时间之后",
             duration: 10,
-            closable: true
+            closable: true,
           });
           return false;
         } else {
@@ -429,13 +446,13 @@ export default {
             key: keyString,
             binaryop: "gte",
             value: dayjs(startTime).format("YYYY-MM-DD HH:mm:ss"),
-            andorop: "and"
+            andorop: "and",
           };
           let End = {
             key: keyString,
             binaryop: "lte",
             value: dayjs(endTime).format("YYYY-MM-DD HH:mm:ss"),
-            andorop: "and"
+            andorop: "and",
           };
           filterQuery.push(Start);
           filterQuery.push(End);
@@ -446,10 +463,10 @@ export default {
     changePlate() {
       let _this = this;
       GetShop(_this.filters.plateform)
-        .then(res => {
+        .then((res) => {
           _this.shopList = res.data;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -503,12 +520,12 @@ export default {
       this.$Spin.show();
       let filterQuery = _this.filtersObj();
       data = {
-        query: filterQuery
+        query: filterQuery,
       };
-      exportOrder(data).then(res => {
+      exportOrder(data).then((res) => {
         const content = res;
         const blob = new Blob([content.data], {
-          type: "application/vnd.ms-excel"
+          type: "application/vnd.ms-excel",
         });
         const fileName = "财务订单合计报表.xlsx";
         if ("download" in document.createElement("a")) {
@@ -527,12 +544,12 @@ export default {
         }
         this.$Spin.hide();
       });
-    }
+    },
   },
   mounted() {
     this.loadData();
     this.selectLoad();
-  }
+  },
 };
 </script>
 

@@ -1,0 +1,248 @@
+<template>
+  <div class="content-main">
+    <Row class="search-con search-con-top">
+      <Col :span="18">
+        <Form ref="formInline" label-position="right" :label-width="100" inline>
+          <FormItem prop="startTime" label="付款开始时间">
+            <DatePicker
+              v-model="filters.startTime"
+              type="date"
+              :options="dateOptions"
+              placeholder="请选择开始时间"
+              style="width: 200px"
+            ></DatePicker>
+          </FormItem>
+          <FormItem prop="endTime" label="付款结束时间">
+            <DatePicker
+              v-model="filters.endTime"
+              type="date"
+              :options="dateOptions"
+              placeholder="请选择结束时间"
+              style="width: 200px"
+            ></DatePicker>
+          </FormItem>
+          <FormItem label="平台">
+            <Select
+              @on-change="filtersPlateForm"
+              multiple
+              v-model="filters.plateForm"
+              clearable
+              style="width: 200px"
+            >
+              <Option value="aliexpress">aliexpress</Option>
+              <Option value="amazon">amazon</Option>
+              <Option value="ebay">ebay</Option>
+              <Option value="magento">magento</Option>
+              <Option value="magento2">magento2</Option>
+              <Option value="shopify">shopify</Option>
+            </Select>
+          </FormItem>
+          <FormItem>
+            <Button @click="loadData()" class="search-btn" type="primary">
+              <Icon type="search" />&nbsp;&nbsp;搜索
+            </Button>
+          </FormItem>
+        </Form>
+      </Col>
+      <Col :span="6">
+        <Dropdown
+          v-if="selectionList.length > 0"
+          placement="bottom-start"
+          @on-click="handleMenu"
+        >
+          <Button type="primary">
+            操作
+            <Icon type="ios-arrow-down"></Icon>
+          </Button>
+          <DropdownMenu slot="list">
+            <DropdownItem name="export">导出</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </Col>
+    </Row>
+    <Table
+      ref="tables"
+      :loading="tableLoading"
+      :data="listData"
+      v-bind:columns="listColums"
+      stripe
+      :border="true"
+      @on-selection-change="tableSelect"
+    ></Table>
+  </div>
+</template>
+
+<script>
+import { GetOddMinusSale as getList } from "@/api/order";
+import dayjs from "dayjs";
+import excel from "@/libs/excel";
+export default {
+  data() {
+    return {
+      filters: {
+        startTime: "",
+        endTime: "",
+        plateForm: [],
+      },
+      dateOptions: {
+        disabledDate(date) {
+          return dayjs(date).isAfter(dayjs());
+        },
+      },
+      tableLoading: false,
+      totalData: [],
+      listData: [],
+      listColums: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center",
+        },
+        {
+          title: "平台",
+          key: "plateForm",
+        },
+        {
+          title: "单条订单数",
+          key: "oddQty",
+        },
+        {
+          title: "多条订单数",
+          key: "minusQty",
+        },
+        {
+          title: "总订单数",
+          key: "zqty",
+        },
+        {
+          title: "单条占比",
+          key: "oddQtyRate",
+        },
+        {
+          title: "多条占比",
+          key: "minusQtyRate",
+        },
+      ],
+      selectionList: [],
+      styleList: [],
+    };
+  },
+  methods: {
+    loadData() {
+      let _this = this;
+      let data = {};
+      if (_this.filters.startTime !== "") {
+        data.startTime = dayjs(_this.filters.startTime).format("YYYY-MM-DD");
+      } else {
+        data.startTime = dayjs().subtract(7, "day").format("YYYY-MM-DD");
+        _this.filters.startTime = dayjs()
+          .subtract(7, "day")
+          .format("YYYY-MM-DD");
+      }
+      if (_this.filters.endTime !== "") {
+        data.endTime = dayjs(_this.filters.endTime).format("YYYY-MM-DD");
+      } else {
+        data.endTime = dayjs().format("YYYY-MM-DD");
+        _this.filters.endTime = dayjs().format("YYYY-MM-DD");
+      }
+      if (
+        !dayjs(data.endTime).isAfter(dayjs(data.startTime)) &&
+        dayjs(data.endTime).diff(dayjs(data.startTime), "day") != "0"
+      ) {
+        this.$Message.error({
+          content: "结束时间在开始时间之后",
+          duration: 10,
+          closable: true,
+        });
+        return false;
+      }
+      _this.tableLoading = true;
+      getList(data)
+        .then((res) => {
+          _this.tableLoading = false;
+          const resData = res.data;
+          if (resData.code == 200) {
+            _this.totalData = resData.data;
+            if (_this.filters.plateForm.length > 0) {
+              _this.filtersPlateForm();
+            } else {
+              _this.listData = _this.totalData;
+            }
+          } else {
+            this.$Message.error({
+              content: resData.msg,
+              duration: 10,
+              closable: true,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    filtersPlateForm() {
+      let _this = this;
+      if (_this.totalData.length > 0) {
+        if (_this.filters.plateForm.length > 0) {
+          _this.listData = _this.totalData.filter((item) => {
+            for (let i = 0; i < _this.filters.plateForm.length; i++) {
+              if (item.plateForm == _this.filters.plateForm[i]) {
+                return item;
+              }
+            }
+          });
+        } else {
+          _this.listData = _this.totalData;
+        }
+      }
+    },
+    tableSelect(selection) {
+      this.selectionList = selection;
+    },
+    handleMenu(name) {
+      if (name == "export") {
+        this.exportList();
+      }
+    },
+    exportList() {
+      let _this = this;
+      let titleArr = [];
+      let keyArr = [];
+      let columnsArr = [];
+      _this.listColums
+        .filter((item, index) => {
+          return index != 0;
+        })
+        .forEach((item) => {
+          if (item.children) {
+            item.children.forEach((child) => {
+              let children = {};
+              children.title = item.title + "|" + child.title;
+              children.key = child.key;
+              columnsArr.push(children);
+            });
+          } else {
+            columnsArr.push(item);
+          }
+        });
+      titleArr = columnsArr.map((item) => {
+        return item.title;
+      });
+      keyArr = columnsArr.map((item) => {
+        return item.key;
+      });
+      const params = {
+        title: titleArr,
+        key: keyArr,
+        data: this.selectionList,
+        autoWidth: true,
+        filename: "单条订单与多条订单对比",
+      };
+      excel.export_array_to_excel(params);
+    },
+  },
+  mounted() {
+    this.loadData();
+  },
+};
+</script>

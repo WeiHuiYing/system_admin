@@ -70,12 +70,17 @@ class NewsList extends React.Component {
         andorop: 'and',
       });
     }
+    
 
     let formData = {
       data: {
         pageNum: pageCurrent,
         pageSize: pageSize,
         query: filtersQuery,
+        order: {
+          columnName: "createTime",
+          reverse: true
+        },
       },
       classfiyid: cateCurrent,
       id: classfiyId,
@@ -94,6 +99,7 @@ class NewsList extends React.Component {
     this.setState(
       {
         filters: filterData,
+        pageCurrent: 1,
       },
       () => {
         this.loadData();
@@ -183,6 +189,9 @@ class NewsList extends React.Component {
         () => {
           this.setState({
             createVisible: true,
+            pageCurrent: 1,
+          }, () => {
+              this.loadData()
           });
         },
       );
@@ -235,6 +244,8 @@ class NewsList extends React.Component {
                   this.setState(
                     {
                       statusCurrent: '1',
+                      pageCurrent: 1,
+
                     },
                     () => {
                       this.loadData();
@@ -252,6 +263,7 @@ class NewsList extends React.Component {
                   this.setState(
                     {
                       statusCurrent: '0',
+                      pageCurrent: 1,
                     },
                     () => {
                       this.loadData();
@@ -275,6 +287,7 @@ class NewsList extends React.Component {
                   this.setState(
                     {
                       cateCurrent: '',
+                      pageCurrent: 1,
                     },
                     () => {
                       this.loadData();
@@ -293,6 +306,7 @@ class NewsList extends React.Component {
                     this.setState(
                       {
                         cateCurrent: tag.id,
+                        pageCurrent: 1,
                       },
                       () => {
                         this.loadData();

@@ -11,15 +11,15 @@ weihuiying
       v-bind:columns="listColumns"
       stripe
     ></Table>
-    <div style="margin: 10px;overflow: hidden">
-      <div style="float: right;">
+    <div style="margin: 10px; overflow: hidden">
+      <div style="float: right">
         <Page
           :total="pageTotal"
           :current="pageCurrent"
           :page-size="pageSize"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
-          :page-size-opts="[100,200,300,400,500]"
+          :page-size-opts="[100, 200, 300, 400, 500]"
           show-total
           show-elevator
           show-sizer
@@ -35,7 +35,7 @@ import {
   exportThreeWareSkuQuery as exportReport,
 } from "@/api/Analysis";
 import { getList as getWare } from "@/api/ECWarehouse";
-import { GetPlateform, GetShop } from "@/api/Order";
+import { GetPlateform, GetShop } from "@/api/order";
 import dayjs from "dayjs";
 export default {
   data() {

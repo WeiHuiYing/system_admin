@@ -3,27 +3,44 @@
     <div class="search-con search-con-top">
       <Row>
         <Col :span="24">
-          <Form ref="formInline" label-position="right" :label-width="60" inline>
+          <Form
+            ref="formInline"
+            label-position="right"
+            :label-width="60"
+            inline
+          >
             <FormItem label="运单号">
-              <Input clearable class="search-input" v-model="filters.shippingMethodNo" />
+              <Input
+                clearable
+                class="search-input"
+                v-model="filters.shippingMethodNo"
+              />
             </FormItem>
             <FormItem>
-              <Button @click="loadFilter()" class="search-btn" type="primary">搜索</Button>
+              <Button @click="loadFilter()" class="search-btn" type="primary"
+                >搜索</Button
+              >
             </FormItem>
           </Form>
         </Col>
       </Row>
     </div>
-    <Table height="700" ref="tables" :data="listData" v-bind:columns="listColumns" stripe></Table>
-    <div style="margin: 10px;overflow: hidden">
-      <div style="float: right;">
+    <Table
+      height="700"
+      ref="tables"
+      :data="listData"
+      v-bind:columns="listColumns"
+      stripe
+    ></Table>
+    <div style="margin: 10px; overflow: hidden">
+      <div style="float: right">
         <Page
           :total="pageTotal"
           :current="pageCurrent"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
           :page-size="pageSize"
-          :page-size-opts="[100,200,300,400,500]"
+          :page-size-opts="[100, 200, 300, 400, 500]"
           show-total
           show-elevator
           show-sizer
@@ -34,42 +51,42 @@
 </template>
 
 <script>
-import { GetOrderDeliverList as getList } from "@/api/Order";
+import { GetOrderDeliverList as getList } from "@/api/order";
 export default {
   data() {
     return {
       filters: {
-        shippingMethodNo: ""
+        shippingMethodNo: "",
       },
       listData: [],
       listColumns: [
         {
           title: "运单号",
-          key: "shippingMethodNo"
+          key: "shippingMethodNo",
         },
         {
           title: "发货时间",
           key: "platformShipTime",
-          sortable: true
+          sortable: true,
         },
         {
           title: "妥投时间",
           key: "deliveredTime",
-          sortable: true
+          sortable: true,
         },
         {
           title: "妥投状态",
-          key: "deliveredStatus"
+          key: "deliveredStatus",
         },
         {
           title: "停留天数",
           key: "residenceTime",
-          sortable: true
+          sortable: true,
         },
         {
           title: "运输天数",
           key: "transportationTime",
-          sortable: true
+          sortable: true,
         },
         {
           title: "物流明细",
@@ -78,15 +95,15 @@ export default {
           render(h, params) {
             return h("div", {
               domProps: {
-                innerHTML: params.row.logisticsDetails
-              }
+                innerHTML: params.row.logisticsDetails,
+              },
             });
-          }
-        }
+          },
+        },
       ],
       pageTotal: 1,
       pageCurrent: 1,
-      pageSize: 100
+      pageSize: 100,
     };
   },
   methods: {
@@ -98,16 +115,16 @@ export default {
           key: "shippingMethodNo",
           binaryop: "eq",
           value: _this.filters.shippingMethodNo,
-          andorop: "and"
+          andorop: "and",
         });
       }
       let data = {
         pageNum: _this.pageCurrent,
         pageSize: _this.pageSize,
-        query: filtersQuery
+        query: filtersQuery,
       };
       getList(data)
-        .then(res => {
+        .then((res) => {
           const resData = res.data;
           if (resData.code == 200) {
             _this.listData = resData.data;
@@ -116,11 +133,11 @@ export default {
             this.$Message.error({
               content: resData.msg,
               duration: 10,
-              closable: true
+              closable: true,
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -138,11 +155,11 @@ export default {
       let _this = this;
       _this.pageSize = val;
       _this.loadData();
-    }
+    },
   },
   mounted() {
     this.loadData();
-  }
+  },
 };
 </script>
 

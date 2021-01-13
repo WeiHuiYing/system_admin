@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import { Drawer, Button, Input, Upload, Select, notification, message } from 'antd';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import MarkdownIt from 'markdown-it';
-import MdEditor from 'react-markdown-editor-lite';
-import 'react-markdown-editor-lite/lib/index.css';
+import { LoadingOutlined, PictureOutlined } from '@ant-design/icons';
 import { addNews, editNew, picUpload } from '@/services/newsList';
 const { TextArea } = Input;
 const { Option } = Select;
-const mdParser = new MarkdownIt();
-import request from '@/utils/request';
+import BraftEditor from 'braft-editor'
+import { ContentUtils } from 'braft-utils'
+import { ImageUtils } from 'braft-finder'
+import 'braft-editor/dist/index.css'
+import 'braft-extensions/dist/color-picker.css'
+import ColorPicker from 'braft-extensions/dist/color-picker'
 
+BraftEditor.use(ColorPicker({
+  includeEditors: ['editor-with-color-picker'],
+  theme: 'light' // 支持dark和light两种主题，默认为dark
+}))
 class Detils extends React.Component {
   state = {
     loading: false,
@@ -17,7 +22,7 @@ class Detils extends React.Component {
     subTitle: '',
     image: '',
     dingClassify: {},
-    originalContent: '',
+    editorState: BraftEditor.createEditorState(null),
     htmlContent: '',
     id: '',
     editer: '',
@@ -30,7 +35,7 @@ class Detils extends React.Component {
         subTitle: this.props.editForm.subTitle,
         image: this.props.editForm.image,
         dingClassify: this.props.editForm.dingClassify,
-        originalContent: this.props.editForm.originalContent,
+        editorState: BraftEditor.createEditorState(this.props.editForm.htmlContent),
         htmlContent: this.props.editForm.htmlContent,
         id: this.props.editForm.id,
         editer: this.props.editForm.editer,
@@ -42,7 +47,7 @@ class Detils extends React.Component {
         subTitle: '',
         image: '',
         dingClassify: {},
-        originalContent: '',
+        editorState: BraftEditor.createEditorState(null),
         htmlContent: '',
         id: '',
         editer: '',
@@ -50,12 +55,12 @@ class Detils extends React.Component {
       });
     }
   } // markdown内容修改
-  handleChange = content => {
+  handleContentChange = (editorState) => {
     this.setState({
-      originalContent: content.text,
-      htmlContent: content.html,
-    });
-  };
+      editorState,
+      htmlContent:editorState.toHTML()
+    })
+  }
   // 图片类型判断与压缩
   canvasCompress = file => {
     let _this = this;
@@ -132,7 +137,7 @@ class Detils extends React.Component {
             subTitle: this.state.subTitle,
             image: this.state.image,
             htmlContent: this.state.htmlContent,
-            originalContent: this.state.originalContent,
+            originalContent: this.state.htmlContent,
             id: this.state.id,
             status: status,
             editer: this.state.editer,
@@ -168,7 +173,7 @@ class Detils extends React.Component {
             subTitle: this.state.subTitle,
             image: this.state.image,
             htmlContent: this.state.htmlContent,
-            originalContent: this.state.originalContent,
+            originalContent: this.state.htmlContent,
             editer: this.state.editer,
             status: status,
           },
@@ -210,11 +215,17 @@ class Detils extends React.Component {
       formData.append('picName', fileData, 'image.png');
       try {
         const success = await picUpload(formData);
-        return 'http://antreport.bitcoding.top:8888' + success.data.url;
+        this.setState({
+          editorState:ContentUtils.insertMedias(this.state.editorState, [{
+            type: 'IMAGE',
+            url: 'http://antreport.bitcoding.top:8888' + success.data.url
+          }])
+        })
       } catch (error) {}
     } else {
       message.error('请上传img/png图片文件');
     }
+        return false
   };
   beforeUpload = file => {
     const isImg = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -229,6 +240,34 @@ class Detils extends React.Component {
   };
   render() {
     const { modalVisible, onCancel } = this.props;
+    const controls = [
+      'undo', 'redo', 'separator',
+      'font-size', 'line-height', 'letter-spacing', 'separator',
+      'text-color', 'bold', 'italic', 'underline', 'strike-through', 'separator',
+      'superscript', 'subscript', 'remove-styles', 'emoji', 'separator', 'text-indent', 'text-align', 'separator',
+      'headings', 'list-ul', 'list-ol', 'blockquote', 'code', 'separator',
+      'link', 'separator', 'hr', 'separator',
+      'separator',
+      'clear'
+    ]
+    
+    const extendControls = [
+      {
+        key: 'antd-uploader',
+        type: 'component',
+        component: (
+          <Upload
+            showUploadList={false}
+            beforeUpload={this.handleImageUpload}
+          >
+            {/* 这里的按钮最好加上type="button"，以避免在表单容器中触发表单提交，用Antd的Button组件则无需如此 */}
+            <Button type="button" className="control-item button upload-button" data-title="插入图片">
+              <PictureOutlined />
+            </Button>
+          </Upload>
+        )
+      }
+    ]
     return (
       <Drawer
         title="新闻详情"
@@ -326,6 +365,7 @@ class Detils extends React.Component {
                 ? this.state.dingClassify.name
                 : ''
             }
+            disabled={ this.props.isAdd ? false : true }
             style={{ width: 200 }}
             onChange={(value, text) => {
               let obj = {
@@ -338,7 +378,7 @@ class Detils extends React.Component {
             }}
           >
             {this.props.typeList.map(item => (
-              <Option key={item.id}>{item.name}</Option>
+              <Option key={item.id} value={item.id}>{item.name}</Option>
             ))}
           </Select>
         </div>
@@ -366,15 +406,14 @@ class Detils extends React.Component {
             )}
           </Upload>
         </div>
-
-        <MdEditor
-          value={this.state.originalContent}
-          style={{ height: '500px' }}
-          renderHTML={text => mdParser.render(text)}
-          onChange={this.handleChange}
-          onImageUpload={this.handleImageUpload}
-          handleDrop={this.handleImageUpload}
-          handlePaste={this.handleImageUpload}
+        <BraftEditor
+          id="editor-with-color-picker"
+          style={{height: 700}}
+          controls={controls}
+          extendControls={extendControls}
+          contentStyle={{ height: 500, boxShadow: 'inset 0 1px 3px rgba(0,0,0,.1)' }}
+          value={this.state.editorState}
+          onChange={this.handleContentChange}
         />
       </Drawer>
     );

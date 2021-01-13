@@ -119,7 +119,7 @@ import {
   GetSumList,
   ExportSumList,
   uploadLoanInfo,
-} from "@/api/Order";
+} from "@/api/order";
 import dayjs from "dayjs";
 export default {
   data() {

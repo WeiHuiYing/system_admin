@@ -27,7 +27,9 @@
             </FormItem>
             <FormItem prop="storename" label="店铺">
               <Select
-                :disabled="!filters.plateform ||filters.plateform == '' ? true : false"
+                :disabled="
+                  !filters.plateform || filters.plateform == '' ? true : false
+                "
                 v-model="filters.storename"
                 clearable
                 style="width: 200px"
@@ -291,7 +293,7 @@ import {
   GetPlateform,
   GetShop,
   ExportFinancialStatement as exportStatement,
-} from "@/api/Order";
+} from "@/api/order";
 import { getList as getWare } from "@/api/ECWarehouse";
 import { filtersNewDate as filtersDate } from "@/libs/validator";
 

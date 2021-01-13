@@ -83,7 +83,7 @@ import {
   NewProductList as getList,
   NewProductDisable,
   NewProductUpload,
-} from "@/api/Order";
+} from "@/api/order";
 export default {
   data() {
     return {

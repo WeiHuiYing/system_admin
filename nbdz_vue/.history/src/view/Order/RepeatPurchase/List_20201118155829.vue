@@ -95,7 +95,7 @@ import {
   GetShop,
   GetPlateform as getPlateform,
   ExportRepeatCust,
-} from "@/api/Order";
+} from "@/api/order";
 import store from "@/store";
 import dayjs from "dayjs";
 export default {

@@ -161,7 +161,7 @@ import {
   ExportSumList,
   uploadLoanInfo,
   GetPlateform,
-} from "@/api/Order";
+} from "@/api/order";
 import dayjs from "dayjs";
 import { filtersNewDate as filtersDate } from "@/libs/validator";
 export default {

@@ -106,7 +106,7 @@ import {
   NewProductList as getList,
   NewProductDisable,
   NewProductUpload,
-} from "@/api/Order";
+} from "@/api/order";
 import dayjs from "dayjs";
 export default {
   data() {

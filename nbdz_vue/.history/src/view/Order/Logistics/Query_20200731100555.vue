@@ -3,27 +3,44 @@
     <div class="search-con search-con-top">
       <Row>
         <Col :span="24">
-          <Form ref="formInline" label-position="right" :label-width="60" inline>
+          <Form
+            ref="formInline"
+            label-position="right"
+            :label-width="60"
+            inline
+          >
             <FormItem label="运单号">
-              <Input clearable class="search-input" v-model="filters.shippingMethodNo" />
+              <Input
+                clearable
+                class="search-input"
+                v-model="filters.shippingMethodNo"
+              />
             </FormItem>
             <FormItem>
-              <Button @click="loadFilter()" class="search-btn" type="primary">搜索</Button>
+              <Button @click="loadFilter()" class="search-btn" type="primary"
+                >搜索</Button
+              >
             </FormItem>
           </Form>
         </Col>
       </Row>
     </div>
-    <Table height="700" ref="tables" :data="listData" v-bind:columns="listColumns" stripe></Table>
-    <div style="margin: 10px;overflow: hidden">
-      <div style="float: right;">
+    <Table
+      height="700"
+      ref="tables"
+      :data="listData"
+      v-bind:columns="listColumns"
+      stripe
+    ></Table>
+    <div style="margin: 10px; overflow: hidden">
+      <div style="float: right">
         <Page
           :total="pageTotal"
           :current="pageCurrent"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
           :page-size="pageSize"
-          :page-size-opts="[100,200,300,400,500]"
+          :page-size-opts="[100, 200, 300, 400, 500]"
           show-total
           show-elevator
           show-sizer
@@ -34,7 +51,7 @@
 </template>
 
 <script>
-import { GetOrderDeliverList as getList } from "@/api/Order";
+import { GetOrderDeliverList as getList } from "@/api/order";
 export default {
   data() {
     return {

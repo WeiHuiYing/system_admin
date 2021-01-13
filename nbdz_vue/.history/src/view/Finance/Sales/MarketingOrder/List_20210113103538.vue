@@ -1,0 +1,617 @@
+/* 2020 / 08/ 14
+weihuiying
+营销订单统计报表  */
+<template>
+  <div class="content-main">
+    <div style="margin: 10px 0" class="search-con search-con-top">
+      <Row>
+        <Col :span="22">
+          <Form
+            ref="formInline"
+            label-position="right"
+            :label-width="80"
+            inline
+          >
+            <FormItem label=" sku">
+              <Input clearable v-model="filters.Sku" />
+            </FormItem>
+            <FormItem label="参考单号">
+              <Input clearable v-model="filters.RefNo" />
+            </FormItem>
+            <FormItem label="发货仓库">
+              <Select
+                v-model="filters.WarehouseCode"
+                style="width: 200px"
+                clearable
+              >
+                <Option
+                  v-for="(item, index) in warehouseList"
+                  :label="item.warehouseDesc"
+                  :value="item.warehouseDesc"
+                  :key="index"
+                  >{{ item.warehouseDesc }}</Option
+                >
+              </Select>
+            </FormItem>
+            <FormItem>
+              <Button
+                @click="loadFilter()"
+                style="margin-right: 5px"
+                class="search-btn"
+                type="primary"
+                >搜索</Button
+              >
+              <Button @click="filtersData()" class="search-btn" type="primary"
+                >更多筛选</Button
+              >
+            </FormItem>
+          </Form>
+        </Col>
+        <Col :span="2">
+          <Button @click="exportAll()" class="search-btn" type="primary"
+            >导出</Button
+          >
+        </Col>
+      </Row>
+    </div>
+    <Table
+      height="700"
+      ref="tables"
+      :loading="tableLoading"
+      :data="listData"
+      v-bind:columns="listColumns"
+      stripe
+    ></Table>
+    <div style="margin: 10px; overflow: hidden">
+      <div style="float: right">
+        <Page
+          :total="pageTotal"
+          :current="pageCurrent"
+          :page-size="pageSize"
+          @on-change="changePage"
+          @on-page-size-change="changePageSize"
+          :page-size-opts="[100, 200, 300, 400, 500]"
+          show-total
+          show-elevator
+          show-sizer
+        ></Page>
+      </div>
+    </div>
+    <Modal
+      title="筛选"
+      :mask-closable="false"
+      v-model="modelFilters"
+      width="90%"
+      scrollable
+      footer-hide
+    >
+      <Form ref="formInline" label-position="right" :label-width="150" inline>
+        <FormItem label="产品信息（sku）">
+          <Input clearable v-model="filters.Sku" />
+        </FormItem>
+        <FormItem label="参考单号">
+          <Input clearable v-model="filters.RefNo" />
+        </FormItem>
+        <FormItem label="公司">
+          <Input clearable v-model="filters.Company" />
+        </FormItem>
+        <FormItem label="发货仓库">
+          <Select
+            v-model="filters.WarehouseCode"
+            style="width: 200px"
+            clearable
+          >
+            <Option
+              v-for="(item, index) in warehouseList"
+              :label="item.warehouseDesc"
+              :value="item.warehouseDesc"
+              :key="index"
+              >{{ item.warehouseDesc }}</Option
+            >
+          </Select>
+        </FormItem>
+        <FormItem prop="Plateform" label="平台">
+          <Select
+            v-model="filters.Plateform"
+            @on-change="changePlate"
+            clearable
+            style="width: 200px"
+          >
+            <Option
+              v-for="(item, index) in plateList"
+              :key="index"
+              :label="item"
+              :value="item"
+              >{{ item }}</Option
+            >
+          </Select>
+        </FormItem>
+        <FormItem prop="Plateform" label="店铺">
+          <Select
+            :disabled="
+              !filters.Plateform || filters.Plateform == '' ? true : false
+            "
+            v-model="filters.platformUserName"
+            clearable
+            style="width: 200px"
+          >
+            <Option
+              v-for="(item, index) in shopList"
+              :key="index"
+              :label="item"
+              :value="item"
+              >{{ item }}</Option
+            >
+          </Select>
+        </FormItem>
+        <FormItem prop="fkstart" label="付款开始时间">
+          <DatePicker
+            v-model="filters.fkstart"
+            type="date"
+            :options="dateOptions"
+            placeholder="请选择开始时间"
+            style="width: 200px"
+            clearable
+          ></DatePicker>
+        </FormItem>
+        <FormItem prop="fkend" label="付款结束时间">
+          <DatePicker
+            v-model="filters.fkend"
+            type="date"
+            :options="dateOptions"
+            placeholder="请选择结束时间"
+            style="width: 200px"
+            clearable
+          ></DatePicker>
+        </FormItem>
+        <FormItem prop="fhstart" label="发货开始时间">
+          <DatePicker
+            v-model="filters.fhstart"
+            type="date"
+            :options="dateOptions"
+            placeholder="请选择开始时间"
+            style="width: 200px"
+            clearable
+          ></DatePicker>
+        </FormItem>
+        <FormItem prop="fhend" label="发货结束时间">
+          <DatePicker
+            v-model="filters.fhend"
+            type="date"
+            :options="dateOptions"
+            placeholder="请选择结束时间"
+            style="width: 200px"
+            clearable
+          ></DatePicker>
+        </FormItem>
+        <div style="text-align: right">
+          <Button @click="filtersLoad()" class="search-btn" type="primary"
+            >搜索</Button
+          >
+        </div>
+      </Form>
+    </Modal>
+  </div>
+</template>
+
+<script>
+import {
+  MarketingOrderReport as getList,
+  ExportMarketingOrderReport as exportReport,
+} from "@/api/finance";
+import { GetPlateform, getWareList as getWare, GetShop } from "@/api/public";
+import { filtersDate } from "@/libs/validator";
+import dayjs from "dayjs";
+import excel from "@/libs/excel";
+export default {
+  data() {
+    return {
+      filters: {
+        fhstart: "",
+        fhend: "",
+        fkstart: "",
+        fkend: "",
+        Company: "",
+        Plateform: "",
+        platformUserName: "",
+        WarehouseCode: "",
+        Sku: "",
+        RefNo: "",
+      },
+      dateOptions: {
+        disabledDate(date) {
+          return dayjs(date).isAfter(dayjs());
+        },
+      },
+      listData: [],
+      listColumns: [
+        {
+          title: "销售单号",
+          key: "saleOrderCode",
+          width: "200",
+        },
+        {
+          title: "参考单号",
+          key: "refNo",
+          width: "200",
+        },
+        {
+          title: "仓库单号",
+          key: "warehouseOrderCode",
+          width: "200",
+        },
+        {
+          title: "paypale交易ID",
+          key: "paypalTransactionId",
+          width: "80",
+        },
+        {
+          title: "币种",
+          key: "currency",
+          width: "100",
+        },
+        {
+          title: "发货仓库",
+          key: "warehouseCode",
+          width: "200",
+        },
+        {
+          title: "订单状态",
+          key: "status",
+          width: "200",
+        },
+        {
+          title: "产品信息(sku)",
+          key: "sku",
+          width: "200",
+        },
+        {
+          title: "产品条数",
+          key: "qty",
+          width: "100",
+        },
+        {
+          title: "公司",
+          key: "company",
+          width: "150",
+        },
+        {
+          title: "平台",
+          key: "plateform",
+          width: "200",
+        },
+        {
+          title: "店铺",
+          key: "platformUserName",
+          width: "200",
+        },
+        {
+          title: "售价",
+          key: "suggestPrice",
+          width: "80",
+        },
+        {
+          title: "成本",
+          key: "spUnitPrice",
+          width: "80",
+          sortable: true,
+        },
+        {
+          title: "总成本",
+          key: "totalSpUnitPrice",
+          width: "80",
+          sortable: true,
+        },
+        {
+          title: "重量",
+          key: "productWeight",
+          width: "200",
+        },
+        {
+          title: "总重量",
+          key: "totalProductWeight",
+          width: "200",
+        },
+        {
+          title: "买家名称",
+          key: "buyerName",
+          width: "200",
+        },
+        {
+          title: "电话",
+          key: "phone",
+          width: "200",
+        },
+        {
+          title: "国家",
+          key: "countryname",
+          width: "200",
+        },
+        {
+          title: "州",
+          key: "state",
+          width: "200",
+        },
+        {
+          title: "收货人",
+          key: "name",
+          width: "200",
+        },
+        {
+          title: "地址",
+          key: "line1",
+          width: "200",
+        },
+        {
+          title: "邮箱",
+          key: "buyerMail",
+          width: "200",
+        },
+      ],
+      pageTotal: 1,
+      pageCurrent: 1,
+      pageSize: 100,
+      tableLoading: false,
+      modelFilters: false,
+      warehouseList: [],
+      plateList: [],
+      shopList: [],
+    };
+  },
+  computed: {
+    statusList() {
+      return this.$store.state.orderStatus;
+    },
+  },
+  methods: {
+    loadData() {
+      let _this = this;
+      let data = {};
+      let filterQuery = _this.filtersObj();
+      let filterFk = filtersDate(
+        "fkstart",
+        _this.filters.fkstart,
+        _this.filters.fkend,
+        "fkend"
+      );
+      let filterFh = filtersDate(
+        "fhstart",
+        _this.filters.fhstart,
+        _this.filters.fhend,
+        "fhend"
+      );
+      if (filterFk && filterFh) {
+        if (filterFk.length > 0) {
+          filterQuery = filterQuery.concat(filterFk);
+        }
+        if (filterFh.length > 0) {
+          filterQuery = filterQuery.concat(filterFh);
+        }
+      } else {
+        return false;
+      }
+      data = {
+        pageNum: _this.pageCurrent,
+        pageSize: _this.pageSize,
+        query: filterQuery,
+      };
+      _this.tableLoading = true;
+      getList(data)
+        .then((res) => {
+          const resData = res.data;
+          _this.tableLoading = false;
+          if (resData.code == 200) {
+            _this.listData = resData.data;
+            _this.pageTotal = resData.totalCount;
+          } else {
+            this.$Message.error({
+              content: resData.msg,
+              duration: 10,
+              closable: true,
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          const response = err.response;
+          if (response.data && response.data.detail) {
+            this.$Message.error({
+              content: response.data.detail,
+              duration: 10,
+              closable: true,
+            });
+          } else if (response.data) {
+            let msg = "";
+            Object.keys(response.data).forEach((key) => {
+              msg += key + ":" + response.data[key];
+            });
+            this.$Message.error({
+              content: msg,
+              duration: 10,
+              closable: true,
+            });
+          }
+        });
+    },
+    // 筛选条件字段拼接
+    filtersObj() {
+      let _this = this;
+      let filterQuery = [];
+      if (_this.filters.Sku && _this.filters.Sku != "") {
+        let skuObj = {
+          key: "Sku",
+          binaryop: "like",
+          value: _this.filters.Sku,
+          andorop: "and",
+        };
+        filterQuery.push(skuObj);
+      }
+      if (_this.filters.RefNo && _this.filters.RefNo != "") {
+        let RefNoObj = {
+          key: "RefNo",
+          binaryop: "like",
+          value: _this.filters.RefNo,
+          andorop: "and",
+        };
+        filterQuery.push(RefNoObj);
+      }
+      if (_this.filters.Company && _this.filters.Company != "") {
+        let companyObj = {
+          key: "Company",
+          binaryop: "like",
+          value: _this.filters.Company,
+          andorop: "and",
+        };
+        filterQuery.push(companyObj);
+      }
+      if (_this.filters.Plateform && _this.filters.Plateform != "") {
+        let plateObj = {
+          key: "Plateform",
+          binaryop: "eq",
+          value: _this.filters.Plateform,
+          andorop: "and",
+        };
+        filterQuery.push(plateObj);
+      }
+      if (_this.filters.WarehouseCode && _this.filters.WarehouseCode != "") {
+        let wareObj = {
+          key: "WarehouseCode",
+          binaryop: "eq",
+          value: _this.filters.WarehouseCode,
+          andorop: "and",
+        };
+        filterQuery.push(wareObj);
+      }
+      if (
+        _this.filters.platformUserName &&
+        _this.filters.platformUserName != ""
+      ) {
+        let storeObj = {
+          key: "platformUserName",
+          binaryop: "eq",
+          value: _this.filters.platformUserName,
+          andorop: "and",
+        };
+        filterQuery.push(storeObj);
+      }
+      return filterQuery;
+    },
+    loadFilter() {
+      const _this = this;
+      _this.pageCurrent = 1;
+      _this.loadData();
+    },
+    loadWare() {
+      const _this = this;
+      let data = {};
+      getWare(data).then((res) => {
+        const resData = res.data;
+        if (resData.code == 200) {
+          _this.warehouseList = resData.data;
+        } else {
+          this.$Message.error(resData.msg);
+        }
+      });
+    },
+    loadPlate() {
+      let _this = this;
+      let data = {};
+      GetPlateform().then((res) => {
+        _this.plateList = res.data;
+      });
+    },
+    changePlate() {
+      let _this = this;
+      console.log(_this.filters.Plateform);
+      GetShop(_this.filters.Plateform)
+        .then((res) => {
+          _this.shopList = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    changePageSize(val) {
+      let _this = this;
+      _this.pageSize = val;
+      _this.loadData();
+    },
+    changePage(val) {
+      let _this = this;
+      _this.pageCurrent = val;
+      _this.loadData();
+    },
+    exportAll() {
+      let data = {};
+      let _this = this;
+      let filterQuery = _this.filtersObj();
+      let filterFk = filtersDate(
+        "fkstart",
+        _this.filters.fkstart,
+        _this.filters.fkend,
+        "fkend"
+      );
+      let filterFh = filtersDate(
+        "fhstart",
+        _this.filters.fhstart,
+        _this.filters.fhend,
+        "fhend"
+      );
+      if (filterFk && filterFh) {
+        if (filterFk.length > 0) {
+          filterQuery = filterQuery.concat(filterFk);
+        }
+        if (filterFh.length > 0) {
+          filterQuery = filterQuery.concat(filterFh);
+        }
+      } else {
+        return false;
+      }
+      data = {
+        query: filterQuery,
+      };
+      this.$Spin.show();
+      exportReport(data).then((res) => {
+        const content = res;
+        const blob = new Blob([content.data], {
+          type: "application/vnd.ms-excel",
+        });
+        const fileName = "营销订单统计报表.xlsx";
+        if ("download" in document.createElement("a")) {
+          // 非IE下载
+          const elink = document.createElement("a");
+          elink.download = fileName;
+          elink.style.display = "none";
+          elink.href = URL.createObjectURL(blob);
+          document.body.appendChild(elink);
+          elink.click();
+          URL.revokeObjectURL(elink.href); // 释放 URL对象
+          document.body.removeChild(elink);
+        } else {
+          // IE10+下载
+          navigator.msSaveBlob(blob, fileName);
+        }
+        this.$Spin.hide();
+      });
+    },
+    filtersData() {
+      let _this = this;
+      _this.modelFilters = true;
+    },
+    filtersLoad() {
+      let _this = this;
+      _this.modelFilters = false;
+      _this.pageCurrent = 1;
+      _this.loadData();
+    },
+  },
+  mounted() {
+    this.loadData();
+    this.loadWare();
+    this.loadPlate();
+  },
+};
+</script>
+
+<style lang="less" scoped>
+</style>

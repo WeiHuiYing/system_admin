@@ -57,7 +57,7 @@
 import {
   getShipFeeList as getList,
   exportShipFeeList as exportData,
-} from "@/api/Order";
+} from "@/api/order";
 export default {
   data() {
     return {

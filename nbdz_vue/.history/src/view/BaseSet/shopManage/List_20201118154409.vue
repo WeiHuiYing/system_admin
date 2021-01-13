@@ -93,7 +93,7 @@
 <script>
 import Detils from "./Detils";
 import { getShop as getList } from "@/api/ResManage";
-import { GetPlateform, GetShop } from "@/api/Order";
+import { GetPlateform, GetShop } from "@/api/order";
 import dayjs from "dayjs";
 export default {
   data() {

@@ -3,12 +3,23 @@
     <div class="search-con search-con-top">
       <Row>
         <Col :span="24">
-          <Form ref="formInline" label-position="right" :label-width="60" inline>
+          <Form
+            ref="formInline"
+            label-position="right"
+            :label-width="60"
+            inline
+          >
             <FormItem label="交易号">
-              <Input clearable class="search-input" v-model="filters.reportRequestId" />
+              <Input
+                clearable
+                class="search-input"
+                v-model="filters.reportRequestId"
+              />
             </FormItem>
             <FormItem>
-              <Button @click="loadFilter()" class="search-btn" type="primary">搜索</Button>
+              <Button @click="loadFilter()" class="search-btn" type="primary"
+                >搜索</Button
+              >
             </FormItem>
           </Form>
         </Col>
@@ -22,15 +33,15 @@
       v-bind:columns="listColumns"
       stripe
     ></Table>
-    <div style="margin: 10px;overflow: hidden">
-      <div style="float: right;">
+    <div style="margin: 10px; overflow: hidden">
+      <div style="float: right">
         <Page
           :total="pageTotal"
           :current="pageCurrent"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
           :page-size="pageSize"
-          :page-size-opts="[100,200,300,400,500]"
+          :page-size-opts="[100, 200, 300, 400, 500]"
           show-total
           show-elevator
           show-sizer
@@ -51,51 +62,51 @@
 </template>
 
 <script>
-import { GetAmazonList as getList } from "@/api/Order";
+import { GetAmazonList as getList } from "@/api/order";
 import Detils from "./Detils";
 export default {
   components: {
-    Detils
+    Detils,
   },
   data() {
     return {
       filters: {
-        reportRequestId: ""
+        reportRequestId: "",
       },
       listData: [],
       listColumns: [
         {
           title: "交易号",
           key: "reportRequestId",
-          width: "200"
+          width: "200",
         },
         {
           title: "交易类型",
-          key: "reportType"
+          key: "reportType",
         },
         {
           title: "交易创建时间",
           key: "createDate",
-          sortable: true
+          sortable: true,
         },
         {
           title: "店铺",
-          key: "store"
+          key: "store",
         },
         {
           title: "交易到期时间",
           key: "availableDate",
-          sortable: true
+          sortable: true,
         },
         {
           title: "交易结束时间",
           key: "endDate",
-          sortable: true
+          sortable: true,
         },
         {
           title: "交易开始时间",
           key: "startDate",
-          sortable: true
+          sortable: true,
         },
         {
           title: "操作",
@@ -108,26 +119,26 @@ export default {
                 {
                   props: {
                     type: "default",
-                    size: "small"
+                    size: "small",
                   },
                   on: {
                     click: () => {
                       this.viewDetils(params);
-                    }
-                  }
+                    },
+                  },
                 },
                 "详细"
-              )
+              ),
             ]);
-          }
-        }
+          },
+        },
       ],
       pageTotal: 1,
       pageCurrent: 1,
       pageSize: 100,
       detilsRow: {},
       modelDetils: false,
-      tableLoading: false
+      tableLoading: false,
     };
   },
   methods: {
@@ -142,17 +153,17 @@ export default {
           key: "reportRequestId",
           binaryop: "eq",
           value: _this.filters.reportRequestId,
-          andorop: "and"
+          andorop: "and",
         });
       }
       let data = {
         pageNum: _this.pageCurrent,
         pageSize: _this.pageSize,
-        query: filtersQuery
+        query: filtersQuery,
       };
       _this.tableLoading = true;
       getList(data)
-        .then(res => {
+        .then((res) => {
           const resData = res.data;
           _this.tableLoading = false;
           if (resData.code == 200) {
@@ -162,7 +173,7 @@ export default {
             this.$Message.error(resData.msg);
           }
         })
-        .catch(err => {
+        .catch((err) => {
           _this.tableLoading = false;
           console.log(err);
         });
@@ -188,11 +199,11 @@ export default {
       _this.detilsRow = {};
       _this.detilsRow = params.row;
       _this.modelDetils = true;
-    }
+    },
   },
   mounted() {
     this.loadData();
-  }
+  },
 };
 </script>
 

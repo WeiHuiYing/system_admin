@@ -84,7 +84,7 @@ weihuiying
 import {
   NewProductReport as getList,
   ExportNewProduct as exprotList,
-} from "@/api/Order";
+} from "@/api/order";
 import { filtersNewDate as filtersDate } from "@/libs/validator";
 import dayjs from "dayjs";
 export default {

@@ -82,7 +82,7 @@ import {
   OrderTurnoverRate as getList,
   ExportOrderTurnoverRate as exportReport,
   ImportOrderTurnoverRate as importReport,
-} from "@/api/Order";
+} from "@/api/order";
 import store from "@/store";
 import dayjs from "dayjs";
 export default {

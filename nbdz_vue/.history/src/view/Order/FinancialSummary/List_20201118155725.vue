@@ -295,7 +295,7 @@ import {
   GetPlateform,
   GetShop,
   ExportFinancialStatement as exportStatement,
-} from "@/api/Order";
+} from "@/api/order";
 import { getList as getWare } from "@/api/ECWarehouse";
 import { filtersNewDate as filtersDate } from "@/libs/validator";
 

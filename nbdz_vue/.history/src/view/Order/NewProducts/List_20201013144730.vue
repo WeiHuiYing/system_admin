@@ -115,7 +115,7 @@ import {
   NewProductDisable,
   NewProductUpload,
   NewProductEdit,
-} from "@/api/Order";
+} from "@/api/order";
 import dayjs from "dayjs";
 import { Switch } from "view-design";
 export default {

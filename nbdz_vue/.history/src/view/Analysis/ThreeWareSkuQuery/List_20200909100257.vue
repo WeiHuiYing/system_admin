@@ -3,36 +3,51 @@ weihuiying
 产品销售分析报表  */
 <template>
   <div class="content-main">
-    <div style="margin:10px 0" class="search-con search-con-top">
+    <div style="margin: 10px 0" class="search-con search-con-top">
       <Row>
         <Col :span="22">
-          <Form ref="formInline" label-position="right" :label-width="120" inline>
+          <Form
+            ref="formInline"
+            label-position="right"
+            :label-width="120"
+            inline
+          >
             <FormItem label="产品信息（sku）">
               <Input clearable v-model="filters.ProductSku" />
             </FormItem>
             <FormItem label="发货仓库">
-              <Select v-model="filters.wareHouseDesc" style="width:200px" clearable>
+              <Select
+                v-model="filters.wareHouseDesc"
+                style="width: 200px"
+                clearable
+              >
                 <Option
-                  v-for="(item,index) in warehouseList"
+                  v-for="(item, index) in warehouseList"
                   :label="item.warehouseDesc"
                   :value="item.warehouseDesc"
                   :key="index"
-                >{{ item.warehouseDesc }}</Option>
+                  >{{ item.warehouseDesc }}</Option
+                >
               </Select>
             </FormItem>
             <FormItem>
               <Button
                 @click="loadFilter()"
-                style="margin-right:5px"
+                style="margin-right: 5px"
                 class="search-btn"
                 type="primary"
-              >搜索</Button>
-              <Button @click="filtersData()" class="search-btn" type="primary">更多筛选</Button>
+                >搜索</Button
+              >
+              <Button @click="filtersData()" class="search-btn" type="primary"
+                >更多筛选</Button
+              >
             </FormItem>
           </Form>
         </Col>
         <Col :span="2">
-          <Button @click="exportAll()" class="search-btn" type="primary">导出</Button>
+          <Button @click="exportAll()" class="search-btn" type="primary"
+            >导出</Button
+          >
         </Col>
       </Row>
     </div>
@@ -44,15 +59,15 @@ weihuiying
       v-bind:columns="listColumns"
       stripe
     ></Table>
-    <div style="margin: 10px;overflow: hidden">
-      <div style="float: right;">
+    <div style="margin: 10px; overflow: hidden">
+      <div style="float: right">
         <Page
           :total="pageTotal"
           :current="pageCurrent"
           :page-size="pageSize"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
-          :page-size-opts="[100,200,300,400,500]"
+          :page-size-opts="[100, 200, 300, 400, 500]"
           show-total
           show-elevator
           show-sizer
@@ -72,13 +87,18 @@ weihuiying
           <Input clearable v-model="filters.RefNo" />
         </FormItem>
         <FormItem label="发货仓库">
-          <Select v-model="filters.wareHouseDesc" style="width:200px" clearable>
+          <Select
+            v-model="filters.wareHouseDesc"
+            style="width: 200px"
+            clearable
+          >
             <Option
-              v-for="(item,index) in warehouseList"
+              v-for="(item, index) in warehouseList"
               :label="item.warehouseDesc"
               :value="item.warehouseDesc"
               :key="index"
-            >{{ item.warehouseDesc }}</Option>
+              >{{ item.warehouseDesc }}</Option
+            >
           </Select>
         </FormItem>
         <FormItem prop="plateform" label="平台">
@@ -86,30 +106,32 @@ weihuiying
             v-model="filters.plateform"
             @on-change="changePlate"
             clearable
-            style="width:200px"
+            style="width: 200px"
           >
             <Option
-              v-for="(item,index) in plateList"
+              v-for="(item, index) in plateList"
               :key="index"
               :label="item"
               :value="item"
-            >{{item}}</Option>
+              >{{ item }}</Option
+            >
           </Select>
         </FormItem>
         <FormItem prop="storeName" label="店铺">
           <Select
-            :disabled="filters.plateform == ''? true : false"
+            :disabled="filters.plateform == '' ? true : false"
             v-model="filters.storeName"
             clearable
-            style="width:200px"
+            style="width: 200px"
             multiple
           >
             <Option
-              v-for="(item,index) in shopList"
+              v-for="(item, index) in shopList"
               :key="index"
               :label="item"
               :value="item"
-            >{{item}}</Option>
+              >{{ item }}</Option
+            >
           </Select>
         </FormItem>
         <FormItem prop="FkStart" label="付款开始时间">
@@ -152,8 +174,10 @@ weihuiying
             clearable
           ></DatePicker>
         </FormItem>
-        <div style="text-align:right;">
-          <Button @click="filtersLoad()" class="search-btn" type="primary">搜索</Button>
+        <div style="text-align: right">
+          <Button @click="filtersLoad()" class="search-btn" type="primary"
+            >搜索</Button
+          >
         </div>
       </Form>
     </Modal>
@@ -166,7 +190,7 @@ import {
   exportThreeWareSkuQuery as exportReport,
 } from "@/api/Analysis";
 import { getList as getWare } from "@/api/ECWarehouse";
-import { GetPlateform, GetShop } from "@/api/Order";
+import { GetPlateform, GetShop } from "@/api/order";
 import dayjs from "dayjs";
 export default {
   data() {

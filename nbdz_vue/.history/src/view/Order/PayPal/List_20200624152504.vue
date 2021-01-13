@@ -3,15 +3,30 @@
     <div class="search-con search-con-top">
       <Row>
         <Col :span="24">
-          <Form ref="formInline" label-position="right" :label-width="100" inline>
+          <Form
+            ref="formInline"
+            label-position="right"
+            :label-width="100"
+            inline
+          >
             <FormItem label="交易号">
-              <Input clearable class="search-input" v-model="filters.transactionInfoTransactionId" />
+              <Input
+                clearable
+                class="search-input"
+                v-model="filters.transactionInfoTransactionId"
+              />
             </FormItem>
             <FormItem label="原始平台账单号">
-              <Input clearable class="search-input" v-model="filters.TransactionInfoInvoiceId" />
+              <Input
+                clearable
+                class="search-input"
+                v-model="filters.TransactionInfoInvoiceId"
+              />
             </FormItem>
             <FormItem>
-              <Button @click="loadFilter()" class="search-btn" type="primary">搜索</Button>
+              <Button @click="loadFilter()" class="search-btn" type="primary"
+                >搜索</Button
+              >
             </FormItem>
           </Form>
         </Col>
@@ -25,15 +40,15 @@
       v-bind:columns="listColumns"
       stripe
     ></Table>
-    <div style="margin: 10px;overflow: hidden">
-      <div style="float: right;">
+    <div style="margin: 10px; overflow: hidden">
+      <div style="float: right">
         <Page
           :total="pageTotal"
           :current="pageCurrent"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
           :page-size="pageSize"
-          :page-size-opts="[100,200,300,400,500]"
+          :page-size-opts="[100, 200, 300, 400, 500]"
           show-total
           show-elevator
           show-sizer
@@ -54,74 +69,74 @@
 </template>
 
 <script>
-import { GetPaypalList as getList } from "@/api/Order";
+import { GetPaypalList as getList } from "@/api/order";
 import Detils from "./Detils";
 export default {
   components: {
-    Detils
+    Detils,
   },
   data() {
     return {
       filters: {
         TransactionInfoInvoiceId: "",
-        transactionInfoTransactionId: ""
+        transactionInfoTransactionId: "",
       },
       listData: [],
       listColumns: [
         {
           title: "原始平台账单号",
           key: "transactionInfoInvoiceId",
-          width: "200"
+          width: "200",
         },
         {
           title: "交易号",
           key: "transactionInfoTransactionId",
-          width: "200"
+          width: "200",
         },
         {
           title: "交易类型",
-          key: "transactionInfoTransactionEventCode"
+          key: "transactionInfoTransactionEventCode",
         },
         {
           title: "交易开始时间",
           key: "transactionInfoTransactionInitiationDate",
           width: "200",
-          sortable: true
+          sortable: true,
         },
         {
           title: "交易更新时间",
           key: "transactionInfoTransactionUpdatedDate",
           width: "200",
-          sortable: true
+          sortable: true,
         },
         {
           title: "交易币种",
-          key: "transactionInfoTransactionAmountCurrencyCode"
+          key: "transactionInfoTransactionAmountCurrencyCode",
         },
         {
           title: "交易总额",
-          key: "transactionInfoTransactionAmountValue"
+          key: "transactionInfoTransactionAmountValue",
         },
         {
           title: "交易费用币种",
-          key: "transactionInfoFeeAmountCurrencyCode"
+          key: "transactionInfoFeeAmountCurrencyCode",
         },
         {
           title: "交易费用",
-          key: "transactionInfoFeeAmountValue"
+          key: "transactionInfoFeeAmountValue",
         },
         {
           title: "营业税币种",
-          key: "transactionInfoSalesTaxAmountCurrencyCode"
+          key: "transactionInfoSalesTaxAmountCurrencyCode",
         },
         {
           title: "营业税",
-          key: "transactionInfoSalesTaxAmountValue"
+          key: "transactionInfoSalesTaxAmountValue",
         },
         {
           title: "paypal买家email",
           key: "payerInfoEmailAddress",
-          width: "200"
+          width: "200",
         },
         {
           title: "操作",
@@ -134,26 +149,26 @@ export default {
                 {
                   props: {
                     type: "default",
-                    size: "small"
+                    size: "small",
                   },
                   on: {
                     click: () => {
                       this.viewDetils(params);
-                    }
-                  }
+                    },
+                  },
                 },
                 "详细"
-              )
+              ),
             ]);
-          }
-        }
+          },
+        },
       ],
       pageTotal: 1,
       pageCurrent: 1,
       pageSize: 100,
       detilsRow: {},
       modelDetils: false,
-      tableLoading: false
+      tableLoading: false,
     };
   },
   methods: {
@@ -165,7 +180,7 @@ export default {
           key: "TransactionInfoInvoiceId",
           binaryop: "eq",
           value: _this.filters.TransactionInfoInvoiceId,
-          andorop: "and"
+          andorop: "and",
         });
       }
       if (_this.filters.transactionInfoTransactionId != "") {
@@ -173,17 +188,17 @@ export default {
           key: "transactionInfoTransactionId",
           binaryop: "eq",
           value: _this.filters.transactionInfoTransactionId,
-          andorop: "and"
+          andorop: "and",
         });
       }
       let data = {
         pageNum: _this.pageCurrent,
         pageSize: _this.pageSize,
-        query: filtersQuery
+        query: filtersQuery,
       };
       _this.tableLoading = true;
       getList(data)
-        .then(res => {
+        .then((res) => {
           _this.tableLoading = false;
           const resData = res.data;
           if (res.status == 200) {
@@ -193,11 +208,11 @@ export default {
             this.$Message.error({
               content: resData.msg,
               duration: 10,
-              closable: true
+              closable: true,
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           _this.tableLoading = false;
           console.log(err);
         });
@@ -222,11 +237,11 @@ export default {
       _this.detilsRow = {};
       _this.detilsRow = params.row;
       _this.modelDetils = true;
-    }
+    },
   },
   mounted() {
     this.loadData();
-  }
+  },
 };
 </script>
 

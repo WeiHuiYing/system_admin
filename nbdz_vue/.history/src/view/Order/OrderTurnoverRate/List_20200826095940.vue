@@ -3,10 +3,15 @@ weihuiying
 服装动销率  */
 <template>
   <div class="content-main">
-    <div style="margin:10px 0" class="search-con search-con-top">
+    <div style="margin: 10px 0" class="search-con search-con-top">
       <Row>
         <Col :span="22">
-          <Form ref="formInline" label-position="right" :label-width="80" inline>
+          <Form
+            ref="formInline"
+            label-position="right"
+            :label-width="80"
+            inline
+          >
             <FormItem label="sku">
               <Input clearable v-model="filters.sku" />
             </FormItem>
@@ -22,15 +27,18 @@ weihuiying
             <FormItem>
               <Button
                 @click="filtersLoad()"
-                style="margin-right:5px"
+                style="margin-right: 5px"
                 class="search-btn"
                 type="primary"
-              >搜索</Button>
+                >搜索</Button
+              >
             </FormItem>
           </Form>
         </Col>
         <Col :span="2">
-          <Button @click="exportAll()" class="search-btn" type="primary">导出</Button>
+          <Button @click="exportAll()" class="search-btn" type="primary"
+            >导出</Button
+          >
         </Col>
       </Row>
     </div>
@@ -42,15 +50,15 @@ weihuiying
       v-bind:columns="listColumns"
       stripe
     ></Table>
-    <div style="margin: 10px;overflow: hidden">
-      <div style="float: right;">
+    <div style="margin: 10px; overflow: hidden">
+      <div style="float: right">
         <Page
           :total="pageTotal"
           :current="pageCurrent"
           :page-size="pageSize"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
-          :page-size-opts="[100,200,300,400,500]"
+          :page-size-opts="[100, 200, 300, 400, 500]"
           show-total
           show-elevator
           show-sizer
@@ -64,9 +72,9 @@ weihuiying
 import {
   OrderTurnoverRate as getList,
   ExportOrderTurnoverRate as exportReport,
-} from "@/api/Order";
+} from "@/api/order";
 import { getList as getWare } from "@/api/ECWarehouse";
-import { GetPlateform, GetShop } from "@/api/Order";
+import { GetPlateform, GetShop } from "@/api/order";
 import dayjs from "dayjs";
 import excel from "@/libs/excel";
 export default {

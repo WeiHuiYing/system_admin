@@ -76,7 +76,7 @@
 
 <script>
 import store from "@/store";
-import { OrderAmount } from "@/api/Order";
+import { OrderAmount } from "@/api/order";
 export default {
   data() {
     return {

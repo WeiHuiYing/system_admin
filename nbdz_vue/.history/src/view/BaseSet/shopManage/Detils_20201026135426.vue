@@ -82,7 +82,7 @@
 
 <script>
 import { editShop, addShop } from "@/api/ResManage";
-import { GetShop } from "@/api/Order";
+import { GetShop } from "@/api/order";
 import dayjs from "dayjs";
 export default {
   props: { detilsRow: Object, parent: Object },

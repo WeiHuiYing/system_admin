@@ -130,7 +130,7 @@ import {
   ExportSumList,
   uploadLoanInfo,
   GetPlateform,
-} from "@/api/Order";
+} from "@/api/order";
 import dayjs from "dayjs";
 export default {
   data() {

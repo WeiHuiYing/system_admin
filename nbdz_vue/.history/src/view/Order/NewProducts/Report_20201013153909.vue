@@ -53,7 +53,7 @@ weihuiying
 </template>
 
 <script>
-import { NewProductReport as getList } from "@/api/Order";
+import { NewProductReport as getList } from "@/api/order";
 import dayjs from "dayjs";
 export default {
   data() {

@@ -42,7 +42,7 @@ weihuiying
 import {
   JurllysheGetList as getList,
   JurllysheExportList as exportList,
-} from "@/api/Order";
+} from "@/api/order";
 import dayjs from "dayjs";
 import { filtersLogDate as filtersDate } from "@/libs/validator";
 export default {

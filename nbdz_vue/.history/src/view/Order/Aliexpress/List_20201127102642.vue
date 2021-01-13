@@ -66,7 +66,7 @@ import {
   GetSumList,
   ExportSumList,
   uploadLoanInfo,
-} from "@/api/Order";
+} from "@/api/order";
 export default {
   data() {
     return {

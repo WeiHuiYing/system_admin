@@ -58,7 +58,7 @@ import {
   NewProductDisable,
   NewProductUpload,
   NewProductEdit,
-} from "@/api/Order";
+} from "@/api/order";
 import dayjs from "dayjs";
 export default {
   data() {

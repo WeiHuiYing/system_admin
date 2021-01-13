@@ -1,14 +1,29 @@
 <template>
   <div class="content-main">
-    <div style="margin:10px 0" class="search-con search-con-top">
+    <div style="margin: 10px 0" class="search-con search-con-top">
       <Row>
         <Col :span="22">
-          <Form ref="formInline" label-position="right" :label-width="85" inline>
+          <Form
+            ref="formInline"
+            label-position="right"
+            :label-width="85"
+            inline
+          >
             <FormItem prop="sku" label="SKU">
-              <Input clearable style="width:200px" v-model="filters.sku" placeholder="请输入搜索的sku"></Input>
+              <Input
+                clearable
+                style="width: 200px"
+                v-model="filters.sku"
+                placeholder="请输入搜索的sku"
+              ></Input>
             </FormItem>
             <FormItem prop="refNo" label="参考单号">
-              <Input clearable style="width:200px" v-model="filters.refNo" placeholder="请输入搜索的参考单号"></Input>
+              <Input
+                clearable
+                style="width: 200px"
+                v-model="filters.refNo"
+                placeholder="请输入搜索的参考单号"
+              ></Input>
             </FormItem>
             <FormItem prop="startTime" label="创建开始时间">
               <DatePicker
@@ -33,7 +48,7 @@
             <FormItem>
               <Button
                 @click="loadFilter()"
-                style="margin-right:5px"
+                style="margin-right: 5px"
                 class="search-btn"
                 type="primary"
               >
@@ -46,7 +61,9 @@
           </Form>
         </Col>
         <Col :span="2">
-          <Button @click="exportAll()" class="search-btn" type="primary">导出</Button>
+          <Button @click="exportAll()" class="search-btn" type="primary"
+            >导出</Button
+          >
         </Col>
       </Row>
     </div>
@@ -58,15 +75,15 @@
       v-bind:columns="listColumns"
       stripe
     ></Table>
-    <div style="margin: 10px;overflow: hidden">
-      <div style="float: right;">
+    <div style="margin: 10px; overflow: hidden">
+      <div style="float: right">
         <Page
           :total="pageTotal"
           :current="pageCurrent"
           :page-size="pageSize"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
-          :page-size-opts="[100,200,300,400,500]"
+          :page-size-opts="[100, 200, 300, 400, 500]"
           show-total
           show-elevator
           show-sizer
@@ -83,21 +100,36 @@
     >
       <Form ref="formInline" label-position="right" :label-width="150" inline>
         <FormItem prop="sku" label="SKU">
-          <Input clearable style="width:200px" v-model="filters.sku" placeholder="请输入搜索的sku"></Input>
+          <Input
+            clearable
+            style="width: 200px"
+            v-model="filters.sku"
+            placeholder="请输入搜索的sku"
+          ></Input>
         </FormItem>
         <FormItem prop="ProductCategory" label="商品类型">
           <Input
             clearable
-            style="width:200px"
+            style="width: 200px"
             v-model="filters.ProductCategory"
             placeholder="请输入搜索的商品类型"
           ></Input>
         </FormItem>
         <FormItem prop="CountryCode" label="国家">
-          <Input clearable style="width:200px" v-model="filters.CountryCode" placeholder="请输入搜索的国家"></Input>
+          <Input
+            clearable
+            style="width: 200px"
+            v-model="filters.CountryCode"
+            placeholder="请输入搜索的国家"
+          ></Input>
         </FormItem>
         <FormItem prop="refNo" label="参考单号">
-          <Input clearable style="width:200px" v-model="filters.refNo" placeholder="请输入搜索的参考单号"></Input>
+          <Input
+            clearable
+            style="width: 200px"
+            v-model="filters.refNo"
+            placeholder="请输入搜索的参考单号"
+          ></Input>
         </FormItem>
         <FormItem prop="startTime" label="创建开始时间">
           <DatePicker
@@ -144,34 +176,38 @@
             v-model="filters.plateform"
             @on-change="changePlate"
             clearable
-            style="width:200px"
+            style="width: 200px"
           >
             <Option
-              v-for="(item,index) in plateList"
+              v-for="(item, index) in plateList"
               :key="index"
               :label="item"
               :value="item"
-            >{{item}}</Option>
+              >{{ item }}</Option
+            >
           </Select>
         </FormItem>
         <FormItem prop="storeName" label="店铺">
           <Select
-            :disabled="filters.plateform == ''? true : false"
+            :disabled="filters.plateform == '' ? true : false"
             v-model="filters.storeName"
             clearable
-            style="width:200px"
+            style="width: 200px"
             multiple
           >
             <Option
-              v-for="(item,index) in shopList"
+              v-for="(item, index) in shopList"
               :key="index"
               :label="item"
               :value="item"
-            >{{item}}</Option>
+              >{{ item }}</Option
+            >
           </Select>
         </FormItem>
-        <div style="text-align:right;">
-          <Button @click="filtersLoad()" class="search-btn" type="primary">搜索</Button>
+        <div style="text-align: right">
+          <Button @click="filtersLoad()" class="search-btn" type="primary"
+            >搜索</Button
+          >
         </div>
       </Form>
     </Modal>
@@ -179,7 +215,7 @@
 </template>
 
 <script>
-import { GetPlateform, GetShop } from "@/api/Order";
+import { GetPlateform, GetShop } from "@/api/order";
 import {
   SkuSaleQuery as getList,
   ExportSkuSaleQuery as exportOrder,

@@ -275,11 +275,11 @@
 </template>
 
 <script>
-import { GetPlateform, GetShop } from "@/api/Order";
+import { GetPlateform, GetShop } from "@/api/order";
 import {
   SkuSaleQuery as getList,
   ExportSkuSaleQuery as exportOrder,
-} from "@/api/Order";
+} from "@/api/order";
 import { getList as getWare } from "@/api/ECWarehouse";
 import {
   filtersNewDate as filtersDate,

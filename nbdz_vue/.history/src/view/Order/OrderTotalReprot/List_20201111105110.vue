@@ -235,7 +235,7 @@ import {
   exportSaleNumberReport as exportReport,
 } from "@/api/Analysis";
 import { getList as getWare } from "@/api/ECWarehouse";
-import { GetPlateform, GetShop } from "@/api/Order";
+import { GetPlateform, GetShop } from "@/api/order";
 import { filtersDate } from "@/libs/validator";
 import dayjs from "dayjs";
 import excel from "@/libs/excel";

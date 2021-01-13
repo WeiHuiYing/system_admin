@@ -187,7 +187,7 @@
 </template>
 
 <script>
-import { GetPlateform, GetShop } from "@/api/Order";
+import { GetPlateform, GetShop } from "@/api/order";
 import {
   OrderCostTotal as getList,
   ExportOrderCostTotal as exportOrder,
