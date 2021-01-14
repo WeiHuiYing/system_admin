@@ -209,10 +209,10 @@ class Detils extends React.Component {
     } catch (error) {}
   };
   handleImageUpload = async file => {
-    if (file.type === 'image/jpeg' || file.type === 'image/png') {
+    if (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif') {
       const formData = new FormData();
       const fileData = await this.canvasCompress(file);
-      formData.append('picName', fileData, 'image.png');
+      formData.append('picName', fileData, file.name);
       try {
         const success = await picUpload(formData);
         this.setState({
@@ -223,12 +223,12 @@ class Detils extends React.Component {
         })
       } catch (error) {}
     } else {
-      message.error('请上传img/png图片文件');
+      message.error('请上传图片文件');
     }
-        return false
+    return false
   };
   beforeUpload = file => {
-    const isImg = file.type === 'image/jpeg' || file.type === 'image/png';
+    const isImg = file.type === 'image/jpeg' || file.type === 'image/png'|| file.type === 'image/gif';
     const imgSize = file.size < 1024 * 1024 * 2;
     if (!isImg) {
       message.error('请上传img/png图片文件');

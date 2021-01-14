@@ -9,7 +9,7 @@
               type="date"
               :options="dateOptions"
               placeholder="请选择开始时间"
-              style="width: 120px"
+              style="width: 200px"
             ></DatePicker>
           </FormItem>
           <FormItem prop="endTime" label="付款结束时间">
@@ -18,16 +18,15 @@
               type="date"
               :options="dateOptions"
               placeholder="请选择结束时间"
-              style="width: 120px"
+              style="width: 200px"
             ></DatePicker>
           </FormItem>
-          <FormItem prop="platform" label="平台">
+          <FormItem prop="plateform" label="平台">
             <Select
-              v-model="filters.platform"
-              multiple
+              v-model="filters.plateform"
               @on-change="changePlate"
               clearable
-              style="width: 150px"
+              style="width: 200px"
             >
               <Option
                 v-for="(item, index) in plateList"
@@ -41,12 +40,11 @@
           <FormItem prop="storename" label="店铺">
             <Select
               :disabled="
-                !filters.platform || filters.platform == '' ? true : false
+                !filters.plateform || filters.plateform == '' ? true : false
               "
               v-model="filters.storename"
-              multiple
               clearable
-              style="width: 150px"
+              style="width: 200px"
             >
               <Option
                 v-for="(item, index) in shopList"
@@ -63,7 +61,7 @@
               v-model="filters.type"
               multiple
               clearable
-              style="width: 150px"
+              style="width: 200px"
             >
               <Option
                 v-for="(item, index) in styleList"
@@ -112,7 +110,6 @@ import {
 } from "@/api/order";
 import { GetShop, GetPlateform } from "@/api/public";
 import dayjs from "dayjs";
-import { filtersNewDate as filtersDate } from "@/libs/validator";
 import excel from "@/libs/excel";
 export default {
   data() {
@@ -120,8 +117,6 @@ export default {
       filters: {
         startTime: "",
         endTime: "",
-        platform: [],
-        storename: [],
         type: [],
       },
       dateOptions: {
@@ -377,25 +372,30 @@ export default {
   methods: {
     loadData() {
       let _this = this;
-      if (_this.filters.startTime == "") {
-        _this.filters.startTime = dayjs()
-          .subtract(7, "day")
-          .format("YYYY-MM-DD");
+      let data = {};
+      if (_this.filters.startTime !== "") {
+        data.startTime = dayjs(_this.filters.startTime).format("YYYY-MM-DD");
+      } else {
+        data.startTime = dayjs().subtract(7, "day").format("YYYY-MM-DD");
+        _this.filters.startTime = data.startTime;
       }
-      if (_this.filters.endTime == "") {
-        _this.filters.endTime = dayjs().format("YYYY-MM-DD");
+      if (_this.filters.endTime !== "") {
+        data.endTime = dayjs(_this.filters.endTime).format("YYYY-MM-DD");
+      } else {
+        data.endTime = dayjs().format("YYYY-MM-DD");
+        _this.filters.endTime = data.endTime;
       }
-      let filterDate = filtersDate(
-        "startDate",
-        _this.filters.startTime,
-        _this.filters.endTime,
-        "endDate"
-      );
-      let filterQuery = _this.filtersObj();
-      filterQuery = filterQuery.concat(filterDate);
-      let data = {
-        query: filterQuery,
-      };
+      if (
+        !dayjs(data.endTime).isAfter(dayjs(data.startTime)) &&
+        dayjs(data.endTime).diff(dayjs(data.startTime), "day") != "0"
+      ) {
+        this.$Message.error({
+          content: "结束时间在开始时间之后",
+          duration: 10,
+          closable: true,
+        });
+        return false;
+      }
       _this.tableLoading = true;
       getList(data)
         .then((res) => {
@@ -434,27 +434,6 @@ export default {
             });
           }
         });
-    },
-    filtersObj() {
-      let _this = this;
-      let filterQuery = [];
-      Object.keys(_this.filters).forEach((keyItem) => {
-        if (
-          _this.filters[keyItem] &&
-          _this.filters[keyItem] != "" &&
-          keyItem != "startTime" &&
-          keyItem != "endTime" &&
-          keyItem != "type"
-        ) {
-          filterQuery.push({
-            key: keyItem,
-            value: _this.filters[keyItem],
-            option: "in",
-            isAnd: "true",
-          });
-        }
-      });
-      return filterQuery;
     },
     selectLoad() {
       let _this = this;
@@ -498,7 +477,7 @@ export default {
     },
     changePlate() {
       let _this = this;
-      GetShop(_this.filters.platform)
+      GetShop(_this.filters.plateform)
         .then((res) => {
           _this.shopList = res.data;
         })

@@ -21,9 +21,9 @@
               style="width: 120px"
             ></DatePicker>
           </FormItem>
-          <FormItem prop="platform" label="平台">
+          <FormItem prop="plateform" label="平台">
             <Select
-              v-model="filters.platform"
+              v-model="filters.plateform"
               multiple
               @on-change="changePlate"
               clearable
@@ -41,7 +41,7 @@
           <FormItem prop="storename" label="店铺">
             <Select
               :disabled="
-                !filters.platform || filters.platform == '' ? true : false
+                !filters.plateform || filters.plateform == '' ? true : false
               "
               v-model="filters.storename"
               multiple
@@ -120,7 +120,7 @@ export default {
       filters: {
         startTime: "",
         endTime: "",
-        platform: [],
+        plateform: [],
         storename: [],
         type: [],
       },
@@ -386,10 +386,10 @@ export default {
         _this.filters.endTime = dayjs().format("YYYY-MM-DD");
       }
       let filterDate = filtersDate(
-        "startDate",
+        "startTime",
         _this.filters.startTime,
         _this.filters.endTime,
-        "endDate"
+        "endTime"
       );
       let filterQuery = _this.filtersObj();
       filterQuery = filterQuery.concat(filterDate);
@@ -498,7 +498,7 @@ export default {
     },
     changePlate() {
       let _this = this;
-      GetShop(_this.filters.platform)
+      GetShop(_this.filters.plateform)
         .then((res) => {
           _this.shopList = res.data;
         })

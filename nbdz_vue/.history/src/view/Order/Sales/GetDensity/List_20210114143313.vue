@@ -21,9 +21,9 @@
               style="width: 120px"
             ></DatePicker>
           </FormItem>
-          <FormItem prop="platform" label="平台">
+          <FormItem prop="plateform" label="平台">
             <Select
-              v-model="filters.platform"
+              v-model="filters.plateform"
               multiple
               @on-change="changePlate"
               clearable
@@ -41,7 +41,7 @@
           <FormItem prop="storename" label="店铺">
             <Select
               :disabled="
-                !filters.platform || filters.platform == '' ? true : false
+                !filters.plateform || filters.plateform == '' ? true : false
               "
               v-model="filters.storename"
               multiple
@@ -112,7 +112,6 @@ import {
 } from "@/api/order";
 import { GetShop, GetPlateform } from "@/api/public";
 import dayjs from "dayjs";
-import { filtersNewDate as filtersDate } from "@/libs/validator";
 import excel from "@/libs/excel";
 export default {
   data() {
@@ -120,7 +119,7 @@ export default {
       filters: {
         startTime: "",
         endTime: "",
-        platform: [],
+        plateform: [],
         storename: [],
         type: [],
       },
@@ -385,76 +384,45 @@ export default {
       if (_this.filters.endTime == "") {
         _this.filters.endTime = dayjs().format("YYYY-MM-DD");
       }
-      let filterDate = filtersDate(
-        "startDate",
-        _this.filters.startTime,
-        _this.filters.endTime,
-        "endDate"
-      );
-      let filterQuery = _this.filtersObj();
-      filterQuery = filterQuery.concat(filterDate);
-      let data = {
-        query: filterQuery,
-      };
-      _this.tableLoading = true;
-      getList(data)
-        .then((res) => {
-          _this.tableLoading = false;
-          const resData = res.data;
-          if (resData.code == 200) {
-            _this.totalData = resData.data;
-            _this.listData = _this.totalData;
-            _this.filtersStyle();
-          } else {
-            this.$Message.error({
-              content: resData.msg,
-              duration: 10,
-              closable: true,
-            });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          const response = err.response;
-          if (response.data && response.data.detail) {
-            this.$Message.error({
-              content: response.data.detail,
-              duration: 10,
-              closable: true,
-            });
-          } else if (response.data) {
-            let msg = "";
-            Object.keys(response.data).forEach((key) => {
-              msg += key + ":" + response.data[key];
-            });
-            this.$Message.error({
-              content: msg,
-              duration: 10,
-              closable: true,
-            });
-          }
-        });
-    },
-    filtersObj() {
-      let _this = this;
-      let filterQuery = [];
-      Object.keys(_this.filters).forEach((keyItem) => {
-        if (
-          _this.filters[keyItem] &&
-          _this.filters[keyItem] != "" &&
-          keyItem != "startTime" &&
-          keyItem != "endTime" &&
-          keyItem != "type"
-        ) {
-          filterQuery.push({
-            key: keyItem,
-            value: _this.filters[keyItem],
-            option: "in",
-            isAnd: "true",
-          });
-        }
-      });
-      return filterQuery;
+      console.log(_this.filters);
+      // _this.tableLoading = true;
+      // getList(data)
+      //   .then((res) => {
+      //     _this.tableLoading = false;
+      //     const resData = res.data;
+      //     if (resData.code == 200) {
+      //       _this.totalData = resData.data;
+      //       _this.listData = _this.totalData;
+      //       _this.filtersStyle();
+      //     } else {
+      //       this.$Message.error({
+      //         content: resData.msg,
+      //         duration: 10,
+      //         closable: true,
+      //       });
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //     const response = err.response;
+      //     if (response.data && response.data.detail) {
+      //       this.$Message.error({
+      //         content: response.data.detail,
+      //         duration: 10,
+      //         closable: true,
+      //       });
+      //     } else if (response.data) {
+      //       let msg = "";
+      //       Object.keys(response.data).forEach((key) => {
+      //         msg += key + ":" + response.data[key];
+      //       });
+      //       this.$Message.error({
+      //         content: msg,
+      //         duration: 10,
+      //         closable: true,
+      //       });
+      //     }
+      //   });
     },
     selectLoad() {
       let _this = this;
@@ -498,7 +466,7 @@ export default {
     },
     changePlate() {
       let _this = this;
-      GetShop(_this.filters.platform)
+      GetShop(_this.filters.plateform)
         .then((res) => {
           _this.shopList = res.data;
         })
