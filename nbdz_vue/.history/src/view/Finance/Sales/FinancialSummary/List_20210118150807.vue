@@ -335,6 +335,16 @@ export default {
           align: "center",
         },
         {
+          title: "总放款金额",
+          key: "fkTotalAmount",
+          width: "200",
+        },
+        {
+          title: "是否全额放款",
+          key: "isFkTotal",
+          width: "200",
+        },
+        {
           title: "参考单号",
           key: "refno",
           width: "200",
@@ -885,16 +895,6 @@ export default {
         {
           title: "速卖通平台付款金额",
           key: "aliexpressamount",
-          width: "200",
-        },
-        {
-          title: "总放款金额",
-          key: "fkTotalAmount",
-          width: "200",
-        },
-        {
-          title: "是否全额放款",
-          key: "isFkTotal",
           width: "200",
         },
       ],

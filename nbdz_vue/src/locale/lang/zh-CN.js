@@ -53,6 +53,7 @@ export default {
   ESaleOrder: "E贸易订单",
   ClothingPeriod: "服装期间库存查询",
   QueryInOut: "国内海外仓发货占比",
+  StoreQueryInOut: "国内海外仓发货占比(店铺)",
   AmazonSellerRate: "亚马逊销售人员占比",
   TransportationList: "订单运费上传",
   TransportationListNew: "订单运费上传(新)",

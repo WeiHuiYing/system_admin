@@ -32,10 +32,7 @@ weihuiying
             ></Input>
           </FormItem>
           <FormItem :label-width="0">
-            <Button
-              style="margin-right: 5px"
-              @click="loadData('filter')"
-              type="primary"
+            <Button style="margin-right: 5px" @click="loadData()" type="primary"
               >搜索</Button
             >
             <Button
@@ -237,10 +234,9 @@ export default {
     };
   },
   methods: {
-    loadData(type) {
+    loadData() {
       let _this = this;
-      if (!_this.pageCurrent || (type && type == "filter"))
-        _this.pageCurrent = 1;
+      if (!_this.pageCurrent) _this.pageCurrent = 1;
       if (_this.filters.month && _this.filters.month != "") {
         let filtersquery = [
           {

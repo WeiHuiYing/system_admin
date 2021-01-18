@@ -31,11 +31,8 @@ weihuiying
               placeholder="请输入sku"
             ></Input>
           </FormItem>
-          <FormItem :label-width="0">
-            <Button
-              style="margin-right: 5px"
-              @click="loadData('filter')"
-              type="primary"
+          <FormItem>
+            <Button style="margin-right: 5px" @click="loadData()" type="primary"
               >搜索</Button
             >
             <Button
@@ -237,10 +234,9 @@ export default {
     };
   },
   methods: {
-    loadData(type) {
+    loadData() {
       let _this = this;
-      if (!_this.pageCurrent || (type && type == "filter"))
-        _this.pageCurrent = 1;
+      if (!_this.pageCurrent) _this.pageCurrent = 1;
       if (_this.filters.month && _this.filters.month != "") {
         let filtersquery = [
           {
@@ -251,7 +247,7 @@ export default {
           },
         ];
 
-        filtersquery = [...filtersquery, ..._this.filtersObj()];
+        filtersquery = [...filtersquery, _this.filtersObj()];
         let params = {
           method: "POST",
           data: {

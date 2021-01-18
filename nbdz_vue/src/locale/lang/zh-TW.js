@@ -53,6 +53,7 @@ export default {
   EC9610: "E貿易9610",
   ClothingPeriod: "服裝期間庫存查詢",
   QueryInOut: "國內海外倉發貨占比",
+  StoreQueryInOut: "國內海外倉發貨占比(店鋪)",
   AmazonSellerRate: "Amazon銷售員占比",
   CustomeerCenter: "客戶中心訂單情況",
   TransportationList: "訂單運費上傳",

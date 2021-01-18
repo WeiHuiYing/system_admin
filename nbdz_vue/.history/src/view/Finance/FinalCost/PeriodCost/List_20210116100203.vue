@@ -31,11 +31,8 @@ weihuiying
               placeholder="请输入sku"
             ></Input>
           </FormItem>
-          <FormItem :label-width="0">
-            <Button
-              style="margin-right: 5px"
-              @click="loadData('filter')"
-              type="primary"
+          <FormItem>
+            <Button style="margin-right: 5px" @click="loadData()" type="primary"
               >搜索</Button
             >
             <Button
@@ -237,10 +234,9 @@ export default {
     };
   },
   methods: {
-    loadData(type) {
+    loadData() {
       let _this = this;
-      if (!_this.pageCurrent || (type && type == "filter"))
-        _this.pageCurrent = 1;
+      if (!_this.pageCurrent) _this.pageCurrent = 1;
       if (_this.filters.month && _this.filters.month != "") {
         let filtersquery = [
           {
@@ -250,8 +246,17 @@ export default {
             value: dayjs(_this.filters.month).format("YYYY-MM"),
           },
         ];
-
-        filtersquery = [...filtersquery, ..._this.filtersObj()];
+        if (
+          _this.filters.productCategoryName &&
+          _this.filters.productCategoryName != ""
+        ) {
+          filtersquery.push({
+            key: "productCategoryName",
+            isAnd: "true",
+            option: "lk",
+            value: _this.filters.productCategoryName,
+          });
+        }
         let params = {
           method: "POST",
           data: {
@@ -304,21 +309,6 @@ export default {
           closable: true,
         });
       }
-    },
-    filtersObj() {
-      let _this = this;
-      let filterQuery = [];
-      Object.keys(_this.filters).forEach((keyItem) => {
-        if (keyItem != "month" && _this.filters[keyItem] != "") {
-          filterQuery.push({
-            key: keyItem,
-            isAnd: "true",
-            option: "lk",
-            value: _this.filters[keyItem],
-          });
-        }
-      });
-      return filterQuery;
     },
     // 月末结转
     PeriodEnd() {
@@ -458,8 +448,17 @@ export default {
             value: dayjs(_this.filters.month).format("YYYY-MM"),
           },
         ];
-
-        filtersquery = [...filtersquery, _this.filtersObj()];
+        if (
+          _this.filters.productCategoryName &&
+          _this.filters.productCategoryName != ""
+        ) {
+          filtersquery.push({
+            key: "productCategoryName",
+            isAnd: "true",
+            option: "lk",
+            value: _this.filters.productCategoryName,
+          });
+        }
         let params = {
           method: "POST",
           data: {

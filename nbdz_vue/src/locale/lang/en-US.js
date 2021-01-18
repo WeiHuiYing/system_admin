@@ -54,6 +54,7 @@ export default {
   ESaleOrder: "ESaleOrder",
   ClothingPeriod: "ClothingPeriod",
   QueryInOut: "QueryInOut",
+  StoreQueryInOut: "StoreQueryInOut",
   AmazonSellerRate: "AmazonSellerRate",
   CustomeerCenter: "CustomeerCenter",
   TransportationList: "OrderTransportation",
